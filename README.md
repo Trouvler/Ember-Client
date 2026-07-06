@@ -6,6 +6,7 @@ Next.js client for Ember.
 
 ```bash
 pnpm install
+cp .env.example .env.local
 pnpm dev
 pnpm lint
 pnpm build

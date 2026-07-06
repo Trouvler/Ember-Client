@@ -2,13 +2,16 @@
   "name": "ember-client",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.10.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm build"
   },
   "dependencies": {
     "next": "16.2.10",

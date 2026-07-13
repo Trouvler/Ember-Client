@@ -50,6 +50,33 @@ export default function MapView({ marker, onClickLocation }: MapViewProps) {
   }, [isSdkLoaded]);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    let debounceId: ReturnType<typeof setTimeout> | undefined;
+    const observer = new ResizeObserver(() => {
+      clearTimeout(debounceId);
+      debounceId = setTimeout(() => {
+        if (!mapRef.current) {
+          return;
+        }
+        mapRef.current.relayout();
+        const center = initialMarkerRef.current ?? DEFAULT_CENTER;
+        mapRef.current.setCenter(
+          new window.kakao.maps.LatLng(center.lat, center.lng),
+        );
+      }, 200);
+    });
+    observer.observe(container);
+    return () => {
+      clearTimeout(debounceId);
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     if (!mapRef.current) {
       return;
     }

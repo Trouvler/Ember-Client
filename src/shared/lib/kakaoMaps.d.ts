@@ -5,6 +5,7 @@ interface KakaoLatLng {
 
 interface KakaoMap {
   setCenter(latlng: KakaoLatLng): void;
+  relayout(): void;
 }
 
 interface KakaoMarker {

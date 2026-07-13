@@ -14,17 +14,21 @@ export default function IncidentTypeSelector({
   onChange,
 }: IncidentTypeSelectorProps) {
   return (
-    <div role="group" aria-label="사고 유형 선택" className="flex gap-2">
+    <div
+      role="group"
+      aria-label="사고 유형 선택"
+      className="grid grid-cols-3 gap-2"
+    >
       {INCIDENT_TYPES.map((type) => (
         <button
           key={type}
           type="button"
           aria-pressed={value === type}
           onClick={() => onChange(type)}
-          className={`rounded-md border px-4 py-2 text-sm font-medium ${
+          className={`rounded-xl border py-3 text-sm font-bold ${
             value === type
-              ? "border-zinc-900 bg-zinc-900 text-white"
-              : "border-zinc-300 bg-white text-zinc-700"
+              ? "border-ember bg-ember text-white"
+              : "border-[#ebedf0] bg-white text-[#5c6672] card-shadow"
           }`}
         >
           {INCIDENT_TYPE_LABELS[type]}

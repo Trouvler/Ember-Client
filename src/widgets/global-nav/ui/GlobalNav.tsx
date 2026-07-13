@@ -51,6 +51,7 @@ function formatClock(date: Date) {
 
 export default function GlobalNav() {
   const pathname = usePathname();
+  const isPublic = pathname === "/dashboard/policy";
   const showClock = pathname === "/dashboard" || isIncidentDetailPath(pathname);
   const [now, setNow] = useState<Date | null>(null);
 
@@ -62,7 +63,9 @@ export default function GlobalNav() {
 
   return (
     <header className="border-b border-[#edeff2] bg-white">
-      <div className="mx-auto flex h-[60px] max-w-[1280px] items-center justify-between px-6">
+      <div
+        className={`mx-auto flex h-[60px] items-center justify-between px-6 ${isPublic ? "max-w-[1120px]" : "max-w-[1280px]"}`}
+      >
         <div className="flex items-center gap-[30px]">
           <Link href="/" className="flex items-baseline gap-[9px]">
             <span className="text-xl font-bold tracking-[-0.03em] text-ember">
@@ -89,16 +92,24 @@ export default function GlobalNav() {
           </nav>
         </div>
         <div className="flex items-center gap-[13px] text-[12.5px]">
-          {showClock && now ? (
+          {isPublic ? (
+            <span className="text-[#adb3bd]">대국민 공개</span>
+          ) : (
             <>
-              <span className="mono text-[#adb3bd]">{formatClock(now)}</span>
-              <span className="text-[#e6e9ee]">|</span>
+              {showClock && now ? (
+                <>
+                  <span className="mono text-[#adb3bd]">
+                    {formatClock(now)}
+                  </span>
+                  <span className="text-[#e6e9ee]">|</span>
+                </>
+              ) : null}
+              <span className="font-medium text-[#4e5560]">김선우 관제사</span>
+              <a href="#" className="text-[#adb3bd]">
+                로그아웃
+              </a>
             </>
-          ) : null}
-          <span className="font-medium text-[#4e5560]">김선우 관제사</span>
-          <a href="#" className="text-[#adb3bd]">
-            로그아웃
-          </a>
+          )}
         </div>
       </div>
     </header>

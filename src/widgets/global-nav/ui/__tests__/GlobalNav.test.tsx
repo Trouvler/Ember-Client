@@ -55,4 +55,13 @@ describe("GlobalNav", () => {
     ).toBeInTheDocument();
     vi.useRealTimers();
   });
+
+  it("/dashboard/policy 경로에서는 대국민 공개 문구만 표시하고 로그인 정보는 표시하지 않는다", () => {
+    usePathname.mockReturnValue("/dashboard/policy");
+    render(<GlobalNav />);
+
+    expect(screen.getByText("대국민 공개")).toBeInTheDocument();
+    expect(screen.queryByText("김선우 관제사")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "통계" })).toHaveClass("font-bold");
+  });
 });

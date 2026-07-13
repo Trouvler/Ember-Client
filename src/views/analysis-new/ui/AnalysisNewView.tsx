@@ -13,7 +13,7 @@ export default function AnalysisNewView() {
   const [result, setResult] = useState<DispatchAnalysisResult | null>(null);
 
   return (
-    <div className="mx-auto max-w-[1280px] px-[22px] py-4">
+    <div className="mx-auto max-w-[1920px] px-[22px] py-4">
       <div className="mb-3.5">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           신고 시뮬레이션

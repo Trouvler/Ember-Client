@@ -22,7 +22,7 @@ export default function DashboardView() {
   );
 
   return (
-    <div className="mx-auto max-w-[1280px] px-[22px] py-4">
+    <div className="mx-auto max-w-[1920px] px-[22px] py-4">
       <div className="mb-3.5">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           위험도 상황 지도

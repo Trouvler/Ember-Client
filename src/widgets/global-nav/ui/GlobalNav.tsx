@@ -63,7 +63,7 @@ export default function GlobalNav() {
 
   return (
     <header className="border-b border-[#edeff2] bg-white">
-      <div className="mx-auto flex h-[60px] max-w-[1280px] items-center justify-between px-6">
+      <div className="mx-auto flex h-[60px] max-w-[1920px] items-center justify-between px-6">
         <div className="flex items-center gap-[30px]">
           <Link href="/" className="flex items-baseline gap-[9px]">
             <span className="text-xl font-bold tracking-[-0.03em] text-ember">

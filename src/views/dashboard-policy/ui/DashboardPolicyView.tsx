@@ -40,7 +40,7 @@ export default function DashboardPolicyView() {
     <div>
       {/* 타이틀 배너 */}
       <div className="border-b border-[#edeff2] bg-white">
-        <div className="mx-auto max-w-[1120px] px-6 pt-10 pb-11">
+        <div className="mx-auto max-w-[1920px] px-6 pt-10 pb-11">
           <div className="mb-3 text-[13px] font-bold text-ember">
             화재 안전 공공데이터
           </div>
@@ -54,7 +54,7 @@ export default function DashboardPolicyView() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1120px] px-6 pt-7 pb-10">
+      <div className="mx-auto max-w-[1920px] px-6 pt-7 pb-10">
         {/* 요약 카드 3개 */}
         <div className="mb-6 grid grid-cols-3 gap-3.5">
           {SUMMARY_CARDS.map((card) => (

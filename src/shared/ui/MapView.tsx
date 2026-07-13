@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
+import ErrorFallback from "./ErrorFallback";
 
 const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 };
+const LOAD_TIMEOUT_MS = 8000;
 
 interface MapViewProps {
   marker?: { lat: number; lng: number } | null;
@@ -18,11 +20,24 @@ export default function MapView({ marker, onClickLocation }: MapViewProps) {
   const initialMarkerRef = useRef(marker);
   const onClickLocationRef = useRef(onClickLocation);
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
+  const [hasLoadError, setHasLoadError] = useState(false);
 
   useEffect(() => {
     initialMarkerRef.current = marker;
     onClickLocationRef.current = onClickLocation;
   });
+
+  // ponytail: 8초 이내 로드를 못 하면 실패로 간주. 이후 지연 성공은 놓칠 수 있음(재시도는 새로고침으로 충분)
+  useEffect(() => {
+    if (isSdkLoaded) {
+      return;
+    }
+    const id = setTimeout(() => {
+      console.error("MapView: Kakao Maps SDK 로드 타임아웃");
+      setHasLoadError(true);
+    }, LOAD_TIMEOUT_MS);
+    return () => clearTimeout(id);
+  }, [isSdkLoaded]);
 
   useEffect(() => {
     if (!isSdkLoaded || !containerRef.current) {
@@ -107,8 +122,16 @@ export default function MapView({ marker, onClickLocation }: MapViewProps) {
         src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false`}
         strategy="afterInteractive"
         onLoad={() => setIsSdkLoaded(true)}
+        onError={() => {
+          console.error("MapView: Kakao Maps SDK 스크립트 로드 실패");
+          setHasLoadError(true);
+        }}
       />
-      <div ref={containerRef} className="h-[440px] w-full rounded-lg" />
+      {hasLoadError ? (
+        <ErrorFallback message="지도를 불러오지 못했습니다." />
+      ) : (
+        <div ref={containerRef} className="h-[440px] w-full rounded-lg" />
+      )}
     </>
   );
 }

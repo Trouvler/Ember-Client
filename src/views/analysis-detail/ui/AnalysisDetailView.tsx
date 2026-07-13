@@ -83,7 +83,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
         initialElapsedSeconds={SAMPLE_ELAPSED_SECONDS}
       />
 
-      <div className="mx-auto w-full max-w-[1280px] px-[22px] py-4">
+      <div className="mx-auto w-full max-w-[1920px] px-[22px] py-4">
         {result.degraded ? (
           <div className="mb-3.5">
             <DegradedBanner visible={result.degraded} />

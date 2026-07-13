@@ -41,7 +41,7 @@ export default function IncidentStatusBar({
 
   return (
     <div className="border-b border-[#edeff2] bg-white">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-5 px-6 py-3.5">
+      <div className="mx-auto flex max-w-[1920px] items-center justify-between gap-5 px-6 py-3.5">
         <div>
           <div className="mb-1.5 flex items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-risk-high-bg px-2.5 py-1 text-xs font-bold text-risk-high-text">

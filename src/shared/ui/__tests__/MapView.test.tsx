@@ -1,12 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useEffect } from "react";
-import { render } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import MapView from "../MapView";
 
-function MockScript({ onLoad }: { onLoad?: () => void }) {
+let scriptBehavior: "load" | "error" | "none" = "load";
+
+function MockScript({
+  onLoad,
+  onError,
+}: {
+  onLoad?: () => void;
+  onError?: () => void;
+}) {
   useEffect(() => {
-    onLoad?.();
-  }, [onLoad]);
+    if (scriptBehavior === "load") {
+      onLoad?.();
+    } else if (scriptBehavior === "error") {
+      onError?.();
+    }
+  }, [onLoad, onError]);
   return null;
 }
 
@@ -47,6 +59,7 @@ describe("MapView", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resizeCallback = undefined;
+    scriptBehavior = "load";
     vi.stubGlobal("ResizeObserver", FakeResizeObserver);
 
     window.kakao = {
@@ -84,6 +97,30 @@ describe("MapView", () => {
     vi.advanceTimersByTime(200);
 
     expect(relayoutSpy).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it("SDK 스크립트 로드가 실패하면 에러 메시지를 표시한다", () => {
+    scriptBehavior = "error";
+    render(<MapView />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "지도를 불러오지 못했습니다.",
+    );
+  });
+
+  it("SDK 로드가 타임아웃되면 에러 메시지를 표시한다", () => {
+    vi.useFakeTimers();
+    scriptBehavior = "none";
+    render(<MapView />);
+
+    act(() => {
+      vi.advanceTimersByTime(8000);
+    });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "지도를 불러오지 못했습니다.",
+    );
     vi.useRealTimers();
   });
 });

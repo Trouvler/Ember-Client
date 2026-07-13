@@ -81,7 +81,7 @@ export default function MapView({ marker, onClickLocation }: MapViewProps) {
         strategy="afterInteractive"
         onLoad={() => setIsSdkLoaded(true)}
       />
-      <div ref={containerRef} className="h-96 w-full rounded-lg" />
+      <div ref={containerRef} className="h-[440px] w-full rounded-lg" />
     </>
   );
 }

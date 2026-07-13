@@ -13,8 +13,8 @@ export default function AnalysisNewView() {
   const [result, setResult] = useState<DispatchAnalysisResult | null>(null);
 
   return (
-    <div className="mx-auto max-w-[1920px] px-[22px] py-4">
-      <div className="mb-3.5">
+    <div className="px-[22px] py-8">
+      <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           신고 시뮬레이션
         </h1>
@@ -23,10 +23,10 @@ export default function AnalysisNewView() {
         </p>
       </div>
 
-      <div className="grid grid-cols-[1.5fr_1fr] items-start gap-3.5">
+      <div className="grid grid-cols-[1.5fr_1fr] items-start gap-5">
         {/* 좌: 지도 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
-          <div className="flex items-center justify-between border-b border-[#e6e9ee] px-3.5 py-2.5">
+          <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
             <div className="flex items-center gap-2">
               <span className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">신고 위치 지정</h2>
@@ -86,11 +86,11 @@ export default function AnalysisNewView() {
 
         {/* 우: 입력 폼 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
-          <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-3.5 py-2.5">
+          <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
             <span className="h-3.5 w-[3px] bg-ember" />
             <h2 className="text-sm font-bold text-ink">신고 정보 입력</h2>
           </div>
-          <div className="px-[18px] pt-4 pb-5">
+          <div className="px-6 pt-6 pb-8">
             <DispatchRequestForm location={location} onSubmitted={setResult} />
 
             {result ? (

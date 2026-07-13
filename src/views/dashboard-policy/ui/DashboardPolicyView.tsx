@@ -40,7 +40,7 @@ export default function DashboardPolicyView() {
     <div>
       {/* 타이틀 배너 */}
       <div className="border-b border-[#edeff2] bg-white">
-        <div className="mx-auto max-w-[1920px] px-6 pt-10 pb-11">
+        <div className="px-6 pt-16 pb-16">
           <div className="mb-3 text-[13px] font-bold text-ember">
             화재 안전 공공데이터
           </div>
@@ -54,13 +54,13 @@ export default function DashboardPolicyView() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1920px] px-6 pt-7 pb-10">
+      <div className="px-6 pt-12 pb-16">
         {/* 요약 카드 3개 */}
-        <div className="mb-6 grid grid-cols-3 gap-3.5">
+        <div className="mb-8 grid grid-cols-3 gap-5">
           {SUMMARY_CARDS.map((card) => (
             <div
               key={card.label}
-              className="rounded-2xl border border-[#ebedf0] px-6 py-5.5 card-shadow"
+              className="rounded-2xl border border-[#ebedf0] px-7 py-8 card-shadow"
             >
               <div className="text-[13px] text-[#8b909a]">{card.label}</div>
               <div className="mt-2.5 flex items-baseline gap-1">
@@ -80,7 +80,7 @@ export default function DashboardPolicyView() {
 
         {/* 취약 행정동 TOP5 */}
         <section className="rounded-2xl border border-[#ebedf0] card-shadow">
-          <div className="flex items-center justify-between border-b border-[#eef0f3] px-6 py-4">
+          <div className="flex items-center justify-between border-b border-[#eef0f3] px-7 py-5">
             <div className="flex items-center gap-2.5">
               <span className="h-4 w-[3px] bg-ember" />
               <h2 className="text-base font-bold text-ink">
@@ -89,11 +89,11 @@ export default function DashboardPolicyView() {
             </div>
             <span className="text-xs text-[#adb3bd]">골든타임 실패율 기준</span>
           </div>
-          <div className="px-6 py-1.5">
+          <div className="px-7 py-2">
             {TOP_VULNERABLE_DISTRICTS.map((district) => (
               <div
                 key={district.rank}
-                className="flex items-center gap-4 border-b border-[#f2f4f6] py-3.5 last:border-b-0"
+                className="flex items-center gap-4 border-b border-[#f2f4f6] py-5 last:border-b-0"
               >
                 <span
                   className={`flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-xl text-[13px] font-bold text-white ${district.badgeClassName}`}
@@ -114,7 +114,7 @@ export default function DashboardPolicyView() {
         </section>
 
         {/* 안내문 */}
-        <div className="mt-5 text-center text-xs leading-[1.6] text-[#9aa1ab]">
+        <div className="mt-8 text-center text-xs leading-[1.6] text-[#9aa1ab]">
           이 데이터는 AI 예측 모델 기반이며 실제와 다를 수 있습니다.
           <br />
           <span className="text-[#c0c4cc]">

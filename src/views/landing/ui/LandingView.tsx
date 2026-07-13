@@ -29,7 +29,7 @@ export default function LandingView() {
     <div className="flex min-h-full flex-1 flex-col bg-white">
       {/* 히어로 */}
       <div className="border-b border-[#edeff2]">
-        <div className="mx-auto max-w-[1920px] px-6 py-20">
+        <div className="px-6 py-20">
           <div className="max-w-[720px]">
             <span className="inline-flex items-center gap-[7px] rounded-xl bg-[#fff3ec] px-3 py-1.5 text-[12.5px] font-bold text-[#c24e0a]">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-ember" />
@@ -78,7 +78,7 @@ export default function LandingView() {
       </div>
 
       {/* 통계 배지 */}
-      <div className="mx-auto w-full max-w-[1920px] px-6 pt-10">
+      <div className="w-full px-6 pt-10">
         <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-[#ebedf0] card-shadow">
           <div className="px-[26px] py-6">
             <div className="text-[13px] text-[#8b909a]">전체 분석 건수</div>
@@ -120,7 +120,7 @@ export default function LandingView() {
       </div>
 
       {/* 이용 방법 */}
-      <div className="mx-auto w-full max-w-[1920px] px-6 pt-14">
+      <div className="w-full px-6 pt-14">
         <div className="mb-6 flex items-baseline gap-2.5">
           <span className="h-5 w-1 bg-ember" />
           <h2 className="text-[22px] font-extrabold tracking-[-0.03em] text-ink">
@@ -155,7 +155,7 @@ export default function LandingView() {
       </div>
 
       {/* 결과 화면 미리보기 */}
-      <div className="mx-auto w-full max-w-[1920px] px-6 pt-12">
+      <div className="w-full px-6 pt-12">
         <div className="mb-6 flex items-baseline gap-2.5">
           <span className="h-5 w-1 bg-ember" />
           <h2 className="text-[22px] font-extrabold tracking-[-0.03em] text-ink">
@@ -270,7 +270,7 @@ export default function LandingView() {
 
       {/* 푸터 */}
       <div className="mt-auto">
-        <div className="mx-auto mt-10 flex max-w-[1920px] items-center justify-between border-t border-[#dfe3e9] px-6 py-8">
+        <div className="mt-10 flex items-center justify-between border-t border-[#dfe3e9] px-6 py-8">
           <span className="text-xs text-[#9aa1ab]">
             제6회 소방안전 빅데이터 활용 및 아이디어 경진대회 출품작
           </span>

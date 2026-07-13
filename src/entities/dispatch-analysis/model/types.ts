@@ -22,7 +22,29 @@ export interface DispatchAnalysisRequest {
   incidentType: IncidentType;
 }
 
+export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
+
+export interface RecommendedTeam {
+  id: string;
+  rank: number;
+  name: string;
+  jurisdiction: "관할" | "인접";
+  etaMinutes: number;
+  successRate: number;
+}
+
+export interface RecommendedEquipment {
+  id: string;
+  name: string;
+  needRate: number;
+  purpose: string;
+}
+
 export interface DispatchAnalysisResult {
   id: string;
   degraded: boolean;
+  riskLevel: RiskLevel;
+  probability: number;
+  equipment: RecommendedEquipment[];
+  teams: RecommendedTeam[];
 }

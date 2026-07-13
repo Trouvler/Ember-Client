@@ -19,8 +19,11 @@ function FakeLatLng(this: KakaoLatLng, lat: number, lng: number) {
   this.getLng = () => lng;
 }
 
+const relayoutSpy = vi.fn();
+
 function FakeMap(this: KakaoMap) {
   this.setCenter = vi.fn();
+  this.relayout = relayoutSpy;
 }
 
 function FakeMarker(this: KakaoMarker) {
@@ -30,9 +33,21 @@ function FakeMarker(this: KakaoMarker) {
 
 describe("MapView", () => {
   const addListener = vi.fn();
+  let resizeCallback: (() => void) | undefined;
+
+  class FakeResizeObserver {
+    constructor(callback: () => void) {
+      resizeCallback = callback;
+    }
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
 
   beforeEach(() => {
     vi.clearAllMocks();
+    resizeCallback = undefined;
+    vi.stubGlobal("ResizeObserver", FakeResizeObserver);
 
     window.kakao = {
       maps: {
@@ -59,5 +74,16 @@ describe("MapView", () => {
     clickHandler({ latLng: { getLat: () => 37.5, getLng: () => 127.0 } });
 
     expect(onClickLocation).toHaveBeenCalledWith({ lat: 37.5, lng: 127.0 });
+  });
+
+  it("컨테이너 크기가 변경되면 지도를 relayout한다", () => {
+    vi.useFakeTimers();
+    render(<MapView marker={{ lat: 37.5, lng: 127.0 }} />);
+
+    resizeCallback?.();
+    vi.advanceTimersByTime(200);
+
+    expect(relayoutSpy).toHaveBeenCalled();
+    vi.useRealTimers();
   });
 });

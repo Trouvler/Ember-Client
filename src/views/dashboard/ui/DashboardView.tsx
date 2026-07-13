@@ -22,8 +22,8 @@ export default function DashboardView() {
   );
 
   return (
-    <div className="mx-auto max-w-[1920px] px-[22px] py-4">
-      <div className="mb-3.5">
+    <div className="px-[22px] py-8">
+      <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           위험도 상황 지도
         </h1>
@@ -32,10 +32,10 @@ export default function DashboardView() {
         </p>
       </div>
 
-      <div className="grid grid-cols-[2.3fr_1fr] items-start gap-3.5">
+      <div className="grid grid-cols-[2.3fr_1fr] items-start gap-5">
         {/* 지도 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
-          <div className="flex items-center justify-between border-b border-[#e6e9ee] px-3.5 py-2.5">
+          <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
             <div className="flex items-center gap-2">
               <span className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">
@@ -51,12 +51,10 @@ export default function DashboardView() {
         </section>
 
         {/* 사이드바 */}
-        <div className="flex flex-col gap-3.5">
+        <div className="flex flex-col gap-5">
           {/* 레이어 토글 */}
-          <section className="rounded-xl border border-[#ebedf0] p-3.5 card-shadow">
-            <div className="mb-2.5 text-xs font-bold text-[#5c6672]">
-              레이어
-            </div>
+          <section className="rounded-xl border border-[#ebedf0] p-5 card-shadow">
+            <div className="mb-3 text-xs font-bold text-[#5c6672]">레이어</div>
             <div className="grid grid-cols-2 gap-2">
               {LAYERS.map((layer) => (
                 <button
@@ -77,13 +75,13 @@ export default function DashboardView() {
 
           {/* 선택 행정동 상세 */}
           <section className="rounded-xl border border-[#ebedf0] card-shadow">
-            <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-3.5 py-2.5">
+            <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
               <span className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">
                 {SAMPLE_DISTRICT.name}
               </h2>
             </div>
-            <div className="p-4">
+            <div className="p-6">
               <div className="flex items-center gap-3.5">
                 <RiskDonut value={SAMPLE_DISTRICT.riskValue} level="HIGH" />
                 <div>
@@ -98,8 +96,8 @@ export default function DashboardView() {
                   </div>
                 </div>
               </div>
-              <div className="mt-3.5 grid grid-cols-2 border-t border-[#eef0f3]">
-                <div className="border-r border-[#eef0f3] py-3 pr-3">
+              <div className="mt-5 grid grid-cols-2 border-t border-[#eef0f3]">
+                <div className="border-r border-[#eef0f3] py-4 pr-3">
                   <div className="mb-1 text-[11.5px] text-[#9aa1ab]">
                     평균 도착시간
                   </div>
@@ -110,7 +108,7 @@ export default function DashboardView() {
                     <span className="text-xs text-[#5c6672]"> 분</span>
                   </div>
                 </div>
-                <div className="py-3 pl-3.5">
+                <div className="py-4 pl-3.5">
                   <div className="mb-1 text-[11.5px] text-[#9aa1ab]">
                     노후건물 비율
                   </div>
@@ -122,7 +120,7 @@ export default function DashboardView() {
                   </div>
                 </div>
               </div>
-              <div className="mt-1 border-t border-[#eef0f3] pt-3 text-xs leading-[1.6] text-[#6b7280]">
+              <div className="mt-1 border-t border-[#eef0f3] pt-4 text-xs leading-[1.6] text-[#6b7280]">
                 최근 90일 신고{" "}
                 <span className="mono font-semibold text-ink">
                   {SAMPLE_DISTRICT.recentReportCount}
@@ -135,7 +133,7 @@ export default function DashboardView() {
             </div>
           </section>
 
-          <div className="rounded-xl border border-[#ebedf0] border-l-[3px] border-l-risk-high px-3.5 py-3 text-[11.5px] leading-[1.6] text-[#6b7280] card-shadow">
+          <div className="rounded-xl border border-[#ebedf0] border-l-[3px] border-l-risk-high px-4 py-4 text-[11.5px] leading-[1.6] text-[#6b7280] card-shadow">
             본 지도는 AI 예측 모델 기반이며 실제 상황과 다를 수 있습니다.
           </div>
         </div>

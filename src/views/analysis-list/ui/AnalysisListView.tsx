@@ -86,8 +86,8 @@ const SAMPLE_ROWS: HistoryRow[] = [
 
 export default function AnalysisListView() {
   return (
-    <div className="mx-auto max-w-[1920px] px-[22px] py-4">
-      <div className="mb-3.5">
+    <div className="px-[22px] py-8">
+      <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           출동 분석 이력
         </h1>
@@ -97,7 +97,7 @@ export default function AnalysisListView() {
       </div>
 
       {/* 필터 바 */}
-      <div className="mb-3.5 flex flex-wrap items-center gap-2.5 rounded-xl border border-[#ebedf0] px-3.5 py-3 card-shadow">
+      <div className="mb-6 flex flex-wrap items-center gap-2.5 rounded-xl border border-[#ebedf0] px-4 py-5 card-shadow">
         <select
           defaultValue="서울 전체"
           className="cursor-pointer rounded-xl border border-[#ebedf0] py-2.5 pr-9 pl-3 text-[13px] text-ink card-shadow"
@@ -145,7 +145,7 @@ export default function AnalysisListView() {
 
       {/* 목록 테이블 */}
       <div className="overflow-hidden rounded-xl border border-[#ebedf0] card-shadow">
-        <div className="flex items-center justify-between border-b border-[#e6e9ee] px-3.5 py-2.5">
+        <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-4">
           <span className="text-[13px] text-[#5c6672]">
             총 <span className="mono font-semibold text-ink">248</span>건 ·
             최근순
@@ -157,22 +157,22 @@ export default function AnalysisListView() {
         <table className="w-full text-left">
           <thead>
             <tr>
-              <th className="bg-[#f4f6f8] px-3.5 py-2.5 text-[11.5px] font-bold text-[#5c6672]">
+              <th className="bg-[#f4f6f8] px-4 py-4 text-[11.5px] font-bold text-[#5c6672]">
                 접수번호
               </th>
-              <th className="bg-[#f4f6f8] px-3.5 py-2.5 text-[11.5px] font-bold text-[#5c6672]">
+              <th className="bg-[#f4f6f8] px-4 py-4 text-[11.5px] font-bold text-[#5c6672]">
                 발생시각
               </th>
-              <th className="bg-[#f4f6f8] px-3.5 py-2.5 text-[11.5px] font-bold text-[#5c6672]">
+              <th className="bg-[#f4f6f8] px-4 py-4 text-[11.5px] font-bold text-[#5c6672]">
                 사고유형
               </th>
-              <th className="w-[96px] bg-[#f4f6f8] px-3.5 py-2.5 text-[11.5px] font-bold text-[#5c6672]">
+              <th className="w-[96px] bg-[#f4f6f8] px-4 py-4 text-[11.5px] font-bold text-[#5c6672]">
                 위험도
               </th>
-              <th className="bg-[#f4f6f8] px-3.5 py-2.5 text-[11.5px] font-bold text-[#5c6672]">
+              <th className="bg-[#f4f6f8] px-4 py-4 text-[11.5px] font-bold text-[#5c6672]">
                 위치
               </th>
-              <th className="w-[92px] bg-[#f4f6f8] px-3.5 py-2.5 text-center text-[11.5px] font-bold text-[#5c6672]" />
+              <th className="w-[92px] bg-[#f4f6f8] px-4 py-4 text-center text-[11.5px] font-bold text-[#5c6672]" />
             </tr>
           </thead>
           <tbody>
@@ -181,24 +181,24 @@ export default function AnalysisListView() {
                 key={row.id}
                 className="border-b border-[#eef0f3] last:border-b-0 hover:bg-[#f7f9fb]"
               >
-                <td className="mono px-3.5 py-3 text-[13px] text-ink">
+                <td className="mono px-4 py-5 text-[13px] text-ink">
                   {row.incidentNo}
                 </td>
-                <td className="mono px-3.5 py-3 text-[12.5px] text-[#5c6672]">
+                <td className="mono px-4 py-5 text-[12.5px] text-[#5c6672]">
                   {row.occurredAt}
                 </td>
-                <td className="px-3.5 py-3 text-[13.5px] text-ink">
+                <td className="px-4 py-5 text-[13.5px] text-ink">
                   {row.incidentType}
                 </td>
                 <td
-                  className={`px-3.5 py-3 text-[13px] font-bold ${RISK_TEXT_CLASS[row.riskLevel]}`}
+                  className={`px-4 py-5 text-[13px] font-bold ${RISK_TEXT_CLASS[row.riskLevel]}`}
                 >
                   {row.riskLevel}
                 </td>
-                <td className="px-3.5 py-3 text-[13px] text-[#5c6672]">
+                <td className="px-4 py-5 text-[13px] text-[#5c6672]">
                   {row.location}
                 </td>
-                <td className="px-3.5 py-3 text-center">
+                <td className="px-4 py-5 text-center">
                   <Link
                     href={`/analysis/${row.id}`}
                     className="text-[12.5px] font-semibold text-[#1c3c6e]"
@@ -213,7 +213,7 @@ export default function AnalysisListView() {
       </div>
 
       {/* 페이지네이션 */}
-      <div className="flex items-center justify-center gap-1 py-5">
+      <div className="flex items-center justify-center gap-1 py-10">
         <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#9aa1ab] card-shadow">
           ‹
         </span>

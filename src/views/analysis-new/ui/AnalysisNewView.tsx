@@ -1,19 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import DispatchRequestForm from "@/widgets/dispatch-request-form/ui/DispatchRequestForm";
 import MapView from "@/shared/ui/MapView";
-import type {
-  DispatchAnalysisResult,
-  DispatchLocation,
-} from "@/entities/dispatch-analysis/model/types";
+import type { DispatchLocation } from "@/entities/dispatch-analysis/model/types";
 
 export default function AnalysisNewView() {
+  const router = useRouter();
   const [location, setLocation] = useState<DispatchLocation | null>(null);
-  const [result, setResult] = useState<DispatchAnalysisResult | null>(null);
 
   return (
-    <div className="px-[22px] py-8">
+    <div className="px-4 py-6 sm:px-[22px] sm:py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           신고 시뮬레이션
@@ -23,7 +21,7 @@ export default function AnalysisNewView() {
         </p>
       </div>
 
-      <div className="grid grid-cols-[1.5fr_1fr] items-start gap-5">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.5fr_1fr] lg:items-start">
         {/* 좌: 지도 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
@@ -90,14 +88,11 @@ export default function AnalysisNewView() {
             <span className="h-3.5 w-[3px] bg-ember" />
             <h2 className="text-sm font-bold text-ink">신고 정보 입력</h2>
           </div>
-          <div className="px-6 pt-6 pb-8">
-            <DispatchRequestForm location={location} onSubmitted={setResult} />
-
-            {result ? (
-              <p className="mt-4 text-sm text-risk-low">
-                분석 요청이 접수되었습니다. (분석 ID: {result.id})
-              </p>
-            ) : null}
+          <div className="px-4 pt-5 pb-6 sm:px-6 sm:pt-6 sm:pb-8">
+            <DispatchRequestForm
+              location={location}
+              onSubmitted={(result) => router.push(`/analysis/${result.id}`)}
+            />
           </div>
         </section>
       </div>

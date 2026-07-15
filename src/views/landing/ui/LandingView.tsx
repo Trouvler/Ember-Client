@@ -29,24 +29,24 @@ export default function LandingView() {
     <div className="flex min-h-full flex-1 flex-col bg-white">
       {/* 히어로 */}
       <div className="border-b border-[#edeff2]">
-        <div className="px-6 py-20">
+        <div className="px-4 py-12 sm:px-6 sm:py-20">
           <div className="max-w-[720px]">
             <span className="inline-flex items-center gap-[7px] rounded-xl bg-[#fff3ec] px-3 py-1.5 text-[12.5px] font-bold text-[#c24e0a]">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-ember" />
               상황실 의사결정 보조 (Copilot)
             </span>
-            <h1 className="mt-6 text-[44px] leading-[1.24] font-extrabold tracking-[-0.035em] text-ink">
+            <h1 className="mt-6 text-[28px] leading-[1.3] font-extrabold tracking-[-0.03em] text-ink sm:text-[44px] sm:leading-[1.24] sm:tracking-[-0.035em]">
               신고 접수, 판단은 사람이.
               <br />
               <span className="text-ember">근거는 AI가.</span>
             </h1>
-            <p className="mt-[22px] max-w-[560px] text-[16.5px] leading-[1.75] text-[#5c6672]">
+            <p className="mt-[22px] max-w-[560px] text-[15px] leading-[1.7] text-[#5c6672] sm:text-[16.5px] sm:leading-[1.75]">
               화재 신고 위치와 유형만 입력하면 골든타임 실패 확률, 추천 출동대,
               필요 장비를{" "}
               <span className="font-semibold text-ink">30초 안에</span>{" "}
               분석합니다. 최종 판단은 언제나 상황실 담당자의 몫입니다.
             </p>
-            <div className="mt-[34px] flex items-center gap-3.5">
+            <div className="mt-[34px] flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-3.5">
               <Link
                 href="/analysis/new"
                 className="inline-flex items-center gap-2 rounded-lg bg-ember px-6 py-3.5 text-[15px] font-bold text-white"
@@ -78,9 +78,9 @@ export default function LandingView() {
       </div>
 
       {/* 통계 배지 */}
-      <div className="w-full px-6 pt-10">
-        <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-[#ebedf0] card-shadow">
-          <div className="px-[26px] py-6">
+      <div className="w-full px-4 pt-8 sm:px-6 sm:pt-10">
+        <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-[#ebedf0] card-shadow sm:grid-cols-3">
+          <div className="px-5 py-5 sm:px-[26px] sm:py-6">
             <div className="text-[13px] text-[#8b909a]">전체 분석 건수</div>
             <div className="mt-3 flex items-baseline gap-1">
               <span className="mono text-[34px] font-semibold text-ink">
@@ -92,7 +92,7 @@ export default function LandingView() {
               2024.03 시범 운영 이후 누적
             </div>
           </div>
-          <div className="border-l border-[#eef0f3] px-[26px] py-6">
+          <div className="border-t border-[#eef0f3] px-5 py-5 sm:border-t-0 sm:border-l sm:px-[26px] sm:py-6">
             <div className="text-[13px] text-[#8b909a]">
               평균 골든타임 확보율
             </div>
@@ -106,7 +106,7 @@ export default function LandingView() {
               7분 내 현장 도착 기준
             </div>
           </div>
-          <div className="border-l border-[#eef0f3] px-[26px] py-6">
+          <div className="border-t border-[#eef0f3] px-5 py-5 sm:border-t-0 sm:border-l sm:px-[26px] sm:py-6">
             <div className="text-[13px] text-[#8b909a]">평균 분석 소요</div>
             <div className="mt-3 flex items-baseline gap-1">
               <span className="mono text-[34px] font-bold text-ember">28</span>
@@ -120,8 +120,8 @@ export default function LandingView() {
       </div>
 
       {/* 이용 방법 */}
-      <div className="w-full px-6 pt-14">
-        <div className="mb-6 flex items-baseline gap-2.5">
+      <div className="w-full px-4 pt-10 sm:px-6 sm:pt-14">
+        <div className="mb-6 flex flex-wrap items-baseline gap-2.5">
           <span className="h-5 w-1 bg-ember" />
           <h2 className="text-[22px] font-extrabold tracking-[-0.03em] text-ink">
             이용 방법
@@ -130,11 +130,11 @@ export default function LandingView() {
             신고 접수부터 출동 판단까지 3단계
           </span>
         </div>
-        <div className="grid grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
           {USAGE_STEPS.map(({ step, title, description, badgeClassName }) => (
             <div
               key={step}
-              className="rounded-2xl border border-[#ebedf0] p-6 card-shadow"
+              className="rounded-2xl border border-[#ebedf0] p-5 card-shadow sm:p-6"
             >
               <div className="flex items-center gap-3">
                 <span
@@ -155,8 +155,8 @@ export default function LandingView() {
       </div>
 
       {/* 결과 화면 미리보기 */}
-      <div className="w-full px-6 pt-12">
-        <div className="mb-6 flex items-baseline gap-2.5">
+      <div className="w-full px-4 pt-10 sm:px-6 sm:pt-12">
+        <div className="mb-6 flex flex-wrap items-baseline gap-2.5">
           <span className="h-5 w-1 bg-ember" />
           <h2 className="text-[22px] font-extrabold tracking-[-0.03em] text-ink">
             이런 결과가 나옵니다
@@ -174,7 +174,7 @@ export default function LandingView() {
               ember.nfa.go.kr / 분석 결과 상세
             </div>
           </div>
-          <div className="grid grid-cols-[2fr_1fr] gap-3 bg-white p-[22px]">
+          <div className="grid grid-cols-1 gap-3 bg-white p-4 sm:grid-cols-[2fr_1fr] sm:p-[22px]">
             <div className="flex flex-col gap-3">
               <div className="rounded-xl border border-[#ebedf0] px-[18px] py-4 card-shadow">
                 <div className="mb-3.5 flex items-center gap-2">
@@ -270,7 +270,7 @@ export default function LandingView() {
 
       {/* 푸터 */}
       <div className="mt-auto">
-        <div className="mt-10 flex items-center justify-between border-t border-[#dfe3e9] px-6 py-8">
+        <div className="mt-10 flex flex-col gap-2 border-t border-[#dfe3e9] px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-8">
           <span className="text-xs text-[#9aa1ab]">
             제6회 소방안전 빅데이터 활용 및 아이디어 경진대회 출품작
           </span>

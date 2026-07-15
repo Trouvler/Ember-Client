@@ -41,7 +41,7 @@ export default function IncidentStatusBar({
 
   return (
     <div className="border-b border-[#edeff2] bg-white">
-      <div className="flex items-center justify-between gap-5 px-6 py-3.5">
+      <div className="flex flex-col gap-4 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-6">
         <div>
           <div className="mb-1.5 flex items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-risk-high-bg px-2.5 py-1 text-xs font-bold text-risk-high-text">
@@ -76,18 +76,18 @@ export default function IncidentStatusBar({
             </span>
           </div>
         </div>
-        <div className="flex shrink-0 gap-2">
+        <div className="flex gap-2 sm:shrink-0">
           <button
             type="button"
             disabled
-            className="rounded-[9px] bg-[#f2f4f6] px-[17px] py-2.5 text-[13.5px] font-semibold text-[#4e5560] disabled:cursor-not-allowed"
+            className="flex-1 rounded-[9px] bg-[#f2f4f6] px-[17px] py-2.5 text-[13.5px] font-semibold text-[#4e5560] disabled:cursor-not-allowed sm:flex-none"
           >
             분석서 출력
           </button>
           <button
             type="button"
             disabled
-            className="rounded-[9px] bg-ember px-[19px] py-2.5 text-[13.5px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex-1 rounded-[9px] bg-ember px-[19px] py-2.5 text-[13.5px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
           >
             출동 지령 전송
           </button>

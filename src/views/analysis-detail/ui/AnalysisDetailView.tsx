@@ -83,18 +83,18 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
         initialElapsedSeconds={SAMPLE_ELAPSED_SECONDS}
       />
 
-      <div className="w-full px-[22px] py-8">
+      <div className="w-full px-4 py-6 sm:px-[22px] sm:py-8">
         {result.degraded ? (
           <div className="mb-3.5">
             <DegradedBanner visible={result.degraded} />
           </div>
         ) : null}
 
-        <div className="grid grid-cols-[1.75fr_1fr] items-start gap-5">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.75fr_1fr] lg:items-start">
           {/* 좌측: 지도 + 표 */}
           <div className="flex flex-col gap-5">
             <section className="rounded-xl border border-[#ebedf0] card-shadow">
-              <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
                 <div className="flex items-center gap-2">
                   <span className="h-3.5 w-[3px] bg-ember" />
                   <h2 className="text-sm font-bold text-ink">
@@ -121,7 +121,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
             </section>
 
             <section className="rounded-xl border border-[#ebedf0] card-shadow">
-              <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
                 <div className="flex items-center gap-2">
                   <span className="h-3.5 w-[3px] bg-ember" />
                   <h2 className="text-sm font-bold text-ink">추천 출동대</h2>
@@ -134,7 +134,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
             </section>
 
             <section className="rounded-xl border border-[#ebedf0] card-shadow">
-              <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
                 <div className="flex items-center gap-2">
                   <span className="h-3.5 w-[3px] bg-ember" />
                   <h2 className="text-sm font-bold text-ink">추천 장비</h2>

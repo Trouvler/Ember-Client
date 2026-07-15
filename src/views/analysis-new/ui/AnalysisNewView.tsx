@@ -1,16 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import DispatchRequestForm from "@/widgets/dispatch-request-form/ui/DispatchRequestForm";
 import MapView from "@/shared/ui/MapView";
-import type {
-  DispatchAnalysisResult,
-  DispatchLocation,
-} from "@/entities/dispatch-analysis/model/types";
+import type { DispatchLocation } from "@/entities/dispatch-analysis/model/types";
 
 export default function AnalysisNewView() {
+  const router = useRouter();
   const [location, setLocation] = useState<DispatchLocation | null>(null);
-  const [result, setResult] = useState<DispatchAnalysisResult | null>(null);
 
   return (
     <div className="px-[22px] py-8">
@@ -91,13 +89,10 @@ export default function AnalysisNewView() {
             <h2 className="text-sm font-bold text-ink">신고 정보 입력</h2>
           </div>
           <div className="px-6 pt-6 pb-8">
-            <DispatchRequestForm location={location} onSubmitted={setResult} />
-
-            {result ? (
-              <p className="mt-4 text-sm text-risk-low">
-                분석 요청이 접수되었습니다. (분석 ID: {result.id})
-              </p>
-            ) : null}
+            <DispatchRequestForm
+              location={location}
+              onSubmitted={(result) => router.push(`/analysis/${result.id}`)}
+            />
           </div>
         </section>
       </div>

@@ -63,17 +63,17 @@ export default function GlobalNav() {
 
   return (
     <header className="border-b border-[#edeff2] bg-white">
-      <div className="flex h-[60px] items-center justify-between px-6">
-        <div className="flex items-center gap-[30px]">
-          <Link href="/" className="flex items-baseline gap-[9px]">
+      <div className="flex h-[60px] items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="flex min-w-0 items-center gap-4 sm:gap-[30px]">
+          <Link href="/" className="flex shrink-0 items-baseline gap-[9px]">
             <span className="text-xl font-bold tracking-[-0.03em] text-ember">
               잉걸불
             </span>
-            <span className="text-[11.5px] font-medium text-[#adb3bd]">
+            <span className="hidden text-[11.5px] font-medium text-[#adb3bd] sm:inline">
               AI 출동 의사결정 보조 시스템
             </span>
           </Link>
-          <nav className="flex items-center gap-[26px] text-sm">
+          <nav className="flex items-center gap-3 overflow-x-auto text-sm whitespace-nowrap sm:gap-[26px]">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
@@ -89,20 +89,22 @@ export default function GlobalNav() {
             ))}
           </nav>
         </div>
-        <div className="flex items-center gap-[13px] text-[12.5px]">
+        <div className="flex shrink-0 items-center gap-[13px] text-[12.5px]">
           {isPublic ? (
             <span className="text-[#adb3bd]">대국민 공개</span>
           ) : (
             <>
               {showClock && now ? (
                 <>
-                  <span className="mono text-[#adb3bd]">
+                  <span className="mono hidden text-[#adb3bd] sm:inline">
                     {formatClock(now)}
                   </span>
-                  <span className="text-[#e6e9ee]">|</span>
+                  <span className="hidden text-[#e6e9ee] sm:inline">|</span>
                 </>
               ) : null}
-              <span className="font-medium text-[#4e5560]">김선우 관제사</span>
+              <span className="hidden font-medium text-[#4e5560] sm:inline">
+                김선우 관제사
+              </span>
               <a href="#" className="text-[#adb3bd]">
                 로그아웃
               </a>

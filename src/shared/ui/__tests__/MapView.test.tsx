@@ -38,9 +38,12 @@ function FakeMap(this: KakaoMap) {
   this.relayout = relayoutSpy;
 }
 
+const markerInstances: KakaoMarker[] = [];
+
 function FakeMarker(this: KakaoMarker) {
   this.setMap = vi.fn();
   this.setPosition = vi.fn();
+  markerInstances.push(this);
 }
 
 describe("MapView", () => {
@@ -60,6 +63,7 @@ describe("MapView", () => {
     vi.clearAllMocks();
     resizeCallback = undefined;
     scriptBehavior = "load";
+    markerInstances.length = 0;
     vi.stubGlobal("ResizeObserver", FakeResizeObserver);
 
     window.kakao = {
@@ -87,6 +91,37 @@ describe("MapView", () => {
     clickHandler({ latLng: { getLat: () => 37.5, getLng: () => 127.0 } });
 
     expect(onClickLocation).toHaveBeenCalledWith({ lat: 37.5, lng: 127.0 });
+  });
+
+  it("마커 위치가 바뀌면 새로 만들지 않고 기존 마커의 위치만 갱신한다", () => {
+    const { rerender } = render(<MapView marker={{ lat: 37.5, lng: 127.0 }} />);
+
+    expect(markerInstances).toHaveLength(1);
+
+    rerender(<MapView marker={{ lat: 37.6, lng: 127.1 }} />);
+
+    expect(markerInstances).toHaveLength(1);
+    expect(markerInstances[0].setPosition).toHaveBeenCalledTimes(1);
+  });
+
+  it("마커가 제거되면 지도에서 마커를 지운다", () => {
+    const { rerender } = render(<MapView marker={{ lat: 37.5, lng: 127.0 }} />);
+
+    rerender(<MapView marker={null} />);
+
+    expect(markerInstances[0].setMap).toHaveBeenCalledWith(null);
+  });
+
+  it("SDK의 load 콜백이 비동기로 늦게 실행돼도 마운트 시점부터 있던 marker를 생성한다", async () => {
+    window.kakao.maps.load = (callback: () => void) => {
+      setTimeout(callback, 0);
+    };
+
+    render(<MapView marker={{ lat: 37.5, lng: 127.0 }} />);
+
+    await vi.waitFor(() => {
+      expect(markerInstances).toHaveLength(1);
+    });
   });
 
   it("컨테이너 크기가 변경되면 지도를 relayout한다", () => {

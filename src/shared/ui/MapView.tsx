@@ -20,6 +20,7 @@ export default function MapView({ marker, onClickLocation }: MapViewProps) {
   const initialMarkerRef = useRef(marker);
   const onClickLocationRef = useRef(onClickLocation);
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
+  const [isMapReady, setIsMapReady] = useState(false);
   const [hasLoadError, setHasLoadError] = useState(false);
 
   useEffect(() => {
@@ -61,6 +62,10 @@ export default function MapView({ marker, onClickLocation }: MapViewProps) {
           lng: event.latLng.getLng(),
         });
       });
+
+      // kakao.maps.load()의 콜백은 SDK 내부적으로 비동기 실행될 수 있어, mapRef가 실제로
+      // 채워진 시점을 별도 state로 알려야 marker 동기화 effect가 그 시점에 재실행됨
+      setIsMapReady(true);
     });
   }, [isSdkLoaded]);
 
@@ -114,7 +119,8 @@ export default function MapView({ marker, onClickLocation }: MapViewProps) {
     }
 
     mapRef.current.setCenter(position);
-  }, [marker]);
+    // isMapReady 의존성 필요: marker가 마운트 시점부터 고정값이면 지도 준비 완료 후에도 재실행돼야 마커가 생성됨
+  }, [marker, isMapReady]);
 
   return (
     <>

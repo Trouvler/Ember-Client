@@ -10,8 +10,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ember Client",
-  description: "Next.js client for Ember",
+  title: "잉걸불 · AI 출동 의사결정 보조 시스템",
+  description:
+    "화재 신고 위치와 유형을 입력하면 골든타임 실패 확률, 추천 출동대, 필요 장비를 분석하는 AI 출동 의사결정 보조 시스템",
 };
 
 export default function RootLayout({

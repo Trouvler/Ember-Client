@@ -40,11 +40,11 @@ export default function DashboardPolicyView() {
     <div>
       {/* 타이틀 배너 */}
       <div className="border-b border-[#edeff2] bg-white">
-        <div className="px-6 pt-16 pb-16">
+        <div className="px-4 pt-10 pb-10 sm:px-6 sm:pt-16 sm:pb-16">
           <div className="mb-3 text-[13px] font-bold text-ember">
             화재 안전 공공데이터
           </div>
-          <h1 className="text-[32px] font-extrabold tracking-[-0.035em] text-ink">
+          <h1 className="text-[26px] font-extrabold tracking-[-0.03em] text-ink sm:text-[32px] sm:tracking-[-0.035em]">
             우리 동네 화재 안전 정보
           </h1>
           <p className="mt-3.5 max-w-[560px] text-[15px] leading-[1.7] text-[#5c6672]">
@@ -54,13 +54,13 @@ export default function DashboardPolicyView() {
         </div>
       </div>
 
-      <div className="px-6 pt-12 pb-16">
+      <div className="px-4 pt-8 pb-10 sm:px-6 sm:pt-12 sm:pb-16">
         {/* 요약 카드 3개 */}
-        <div className="mb-8 grid grid-cols-3 gap-5">
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:mb-8 sm:grid-cols-3 sm:gap-5">
           {SUMMARY_CARDS.map((card) => (
             <div
               key={card.label}
-              className="rounded-2xl border border-[#ebedf0] px-7 py-8 card-shadow"
+              className="rounded-2xl border border-[#ebedf0] px-5 py-6 card-shadow sm:px-7 sm:py-8"
             >
               <div className="text-[13px] text-[#8b909a]">{card.label}</div>
               <div className="mt-2.5 flex items-baseline gap-1">
@@ -80,7 +80,7 @@ export default function DashboardPolicyView() {
 
         {/* 취약 행정동 TOP5 */}
         <section className="rounded-2xl border border-[#ebedf0] card-shadow">
-          <div className="flex items-center justify-between border-b border-[#eef0f3] px-7 py-5">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#eef0f3] px-5 py-4 sm:px-7 sm:py-5">
             <div className="flex items-center gap-2.5">
               <span className="h-4 w-[3px] bg-ember" />
               <h2 className="text-base font-bold text-ink">
@@ -89,7 +89,7 @@ export default function DashboardPolicyView() {
             </div>
             <span className="text-xs text-[#adb3bd]">골든타임 실패율 기준</span>
           </div>
-          <div className="px-7 py-2">
+          <div className="px-5 py-2 sm:px-7">
             {TOP_VULNERABLE_DISTRICTS.map((district) => (
               <div
                 key={district.rank}

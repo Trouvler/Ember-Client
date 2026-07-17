@@ -32,4 +32,30 @@ describe("RiskAnalysisCard", () => {
 
     expect(screen.getByText("+0.6")).toBeInTheDocument();
   });
+
+  it("위험도 MEDIUM이면 주의 관찰 필요 배지를 표시한다", () => {
+    render(
+      <RiskAnalysisCard
+        riskLevel="MEDIUM"
+        probability={45}
+        fastestEtaMinutes={6}
+      />,
+    );
+
+    expect(screen.getByText("MEDIUM")).toBeInTheDocument();
+    expect(screen.getByText("주의 관찰 필요")).toBeInTheDocument();
+  });
+
+  it("위험도 LOW이면 정상 범위 배지를 표시한다", () => {
+    render(
+      <RiskAnalysisCard
+        riskLevel="LOW"
+        probability={20}
+        fastestEtaMinutes={5}
+      />,
+    );
+
+    expect(screen.getByText("LOW")).toBeInTheDocument();
+    expect(screen.getByText("정상 범위")).toBeInTheDocument();
+  });
 });

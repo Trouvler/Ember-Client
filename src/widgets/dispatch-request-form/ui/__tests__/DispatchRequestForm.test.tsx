@@ -54,4 +54,31 @@ describe("DispatchRequestForm", () => {
       degraded: false,
     });
   });
+
+  it("제출에 실패하면 에러 메시지와 다시 시도 버튼을 표시한다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: () => Promise.resolve({}),
+      }),
+    );
+
+    render(
+      <DispatchRequestForm
+        location={{ lat: 37.5, lng: 127.0 }}
+        onSubmitted={vi.fn()}
+      />,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "화재" }));
+    await userEvent.click(screen.getByRole("button", { name: "분석 요청" }));
+
+    expect(
+      screen.getByText("신고 분석 요청에 실패했습니다."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "다시 시도" }),
+    ).toBeInTheDocument();
+  });
 });

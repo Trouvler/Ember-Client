@@ -14,15 +14,22 @@ describe("postDispatchAnalysis", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    const result = await postDispatchAnalysis({
-      location: { lat: 37.5, lng: 127.0 },
-      incidentType: "FIRE",
-    });
+    const request = {
+      incidentType: "FIRE" as const,
+      latitude: 37.5,
+      longitude: 127.0,
+      occurredAt: "2026-07-20T01:00:00.000Z",
+      buildingType: "COMMERCIAL" as const,
+    };
+    const result = await postDispatchAnalysis(request);
 
     expect(result).toEqual({ id: "analysis-1", degraded: false });
     expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining("/api/dispatch-analyses"),
-      expect.objectContaining({ method: "POST" }),
+      "/api/dispatch",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify(request),
+      }),
     );
   });
 });

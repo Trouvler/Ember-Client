@@ -4,25 +4,28 @@ import { useEffect, useState } from "react";
 import { postDispatchAnalysis } from "@/entities/dispatch-analysis/api/postDispatchAnalysis";
 import IncidentTypeSelector from "@/entities/dispatch-analysis/ui/IncidentTypeSelector";
 import type {
+  BuildingType,
   DispatchAnalysisResult,
   DispatchLocation,
   IncidentType,
 } from "@/entities/dispatch-analysis/model/types";
+import { BUILDING_TYPE_LABELS } from "@/entities/dispatch-analysis/model/types";
+import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 
 interface DispatchRequestFormProps {
   location: DispatchLocation | null;
-  onSubmitted: (result: DispatchAnalysisResult) => void;
+  onSubmitted: (
+    result: DispatchAnalysisResult,
+    equipmentError: boolean,
+  ) => void;
 }
 
-const BUILDING_TYPES = [
-  "주거시설 (단독·다세대)",
-  "공동주택 (아파트)",
-  "근린생활시설",
-  "공장·창고",
-  "기타",
-];
+const BUILDING_TYPES = Object.entries(BUILDING_TYPE_LABELS) as [
+  BuildingType,
+  string,
+][];
 
 function formatOccurredAt(date: Date) {
   const pad = (value: number) => String(value).padStart(2, "0");
@@ -37,13 +40,14 @@ export default function DispatchRequestForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [occurredAt, setOccurredAt] = useState("");
+  const [buildingType, setBuildingType] = useState<BuildingType | "">("");
 
   useEffect(() => {
-    const id = setTimeout(() => setOccurredAt(formatOccurredAt(new Date())), 0);
+    const id = setTimeout(() => setOccurredAt(new Date().toISOString()), 0);
     return () => clearTimeout(id);
   }, []);
 
-  const isDisabled = !location || !incidentType || isSubmitting;
+  const isDisabled = !location || !incidentType || !occurredAt || isSubmitting;
 
   const handleSubmit = async () => {
     if (!location || !incidentType) {
@@ -54,8 +58,22 @@ export default function DispatchRequestForm({
     setError(null);
 
     try {
-      const result = await postDispatchAnalysis({ location, incidentType });
-      onSubmitted(result);
+      const result = await postDispatchAnalysis({
+        incidentType,
+        latitude: location.lat,
+        longitude: location.lng,
+        occurredAt,
+        ...(buildingType ? { buildingType } : {}),
+      });
+      try {
+        const equipment = await getRecommendedEquipment(result.analysisId);
+        onSubmitted(
+          { ...result, recommendedEquipment: equipment.recommendedEquipment },
+          false,
+        );
+      } catch {
+        onSubmitted(result, true);
+      }
     } catch {
       setError("신고 분석 요청에 실패했습니다.");
     } finally {
@@ -109,7 +127,7 @@ export default function DispatchRequestForm({
           id="occurred-at"
           type="text"
           readOnly
-          value={occurredAt}
+          value={occurredAt ? formatOccurredAt(new Date(occurredAt)) : ""}
           className="mono mt-[9px] w-full rounded-xl border border-[#ebedf0] px-3 py-2.5 text-sm text-ink card-shadow"
         />
         <div className="mt-1 text-[11px] text-[#adb3bd]">기본값: 현재 시각</div>
@@ -124,11 +142,17 @@ export default function DispatchRequestForm({
         </label>
         <select
           id="building-type"
-          defaultValue={BUILDING_TYPES[0]}
+          value={buildingType}
+          onChange={(event) =>
+            setBuildingType(event.target.value as BuildingType | "")
+          }
           className="mt-[9px] w-full cursor-pointer rounded-xl border border-[#ebedf0] px-3 py-2.5 text-sm text-ink card-shadow"
         >
-          {BUILDING_TYPES.map((option) => (
-            <option key={option}>{option}</option>
+          <option value="">선택 안 함</option>
+          {BUILDING_TYPES.map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
       </div>

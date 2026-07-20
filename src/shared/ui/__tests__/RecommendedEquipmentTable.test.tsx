@@ -11,15 +11,23 @@ describe("RecommendedEquipmentTable", () => {
     render(
       <RecommendedEquipmentTable
         equipment={[
-          { id: "1", name: "펌프차", needRate: 95, purpose: "초기 진화" },
-          { id: "2", name: "고가사다리차", needRate: 78, purpose: "인명 구조" },
+          {
+            equipmentType: "PUMP_TRUCK",
+            requiredProbability: 95,
+            reason: "초기 진화",
+          },
+          {
+            equipmentType: "LADDER_TRUCK",
+            requiredProbability: 78,
+            reason: "인명 구조",
+          },
         ]}
       />,
     );
 
-    expect(screen.getByText("펌프차")).toBeInTheDocument();
+    expect(screen.getByText("PUMP_TRUCK")).toBeInTheDocument();
     expect(screen.getByText("95%")).toBeInTheDocument();
     expect(screen.getByText("초기 진화")).toBeInTheDocument();
-    expect(screen.getByText("고가사다리차")).toBeInTheDocument();
+    expect(screen.getByText("LADDER_TRUCK")).toBeInTheDocument();
   });
 });

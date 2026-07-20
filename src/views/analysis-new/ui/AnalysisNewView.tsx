@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import DispatchRequestForm from "@/widgets/dispatch-request-form/ui/DispatchRequestForm";
 import MapView from "@/shared/ui/MapView";
 import type { DispatchLocation } from "@/entities/dispatch-analysis/model/types";
+import { useDispatchAnalysis } from "@/entities/dispatch-analysis/model/DispatchAnalysisProvider";
 
 export default function AnalysisNewView() {
   const router = useRouter();
+  const { setAnalysis } = useDispatchAnalysis();
   const [location, setLocation] = useState<DispatchLocation | null>(null);
 
   return (
@@ -91,7 +93,11 @@ export default function AnalysisNewView() {
           <div className="px-4 pt-5 pb-6 sm:px-6 sm:pt-6 sm:pb-8">
             <DispatchRequestForm
               location={location}
-              onSubmitted={(result) => router.push(`/analysis/${result.id}`)}
+              onSubmitted={(result, equipmentError) => {
+                if (!location) return;
+                setAnalysis({ result, location, equipmentError });
+                router.push(`/analysis/${result.analysisId}`);
+              }}
             />
           </div>
         </section>

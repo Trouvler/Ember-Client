@@ -9,12 +9,14 @@ const LEVEL_STROKE: Record<RiskLevel, string> = {
   HIGH: "#c62828",
   MEDIUM: "#c2790a",
   LOW: "#1a7a4a",
+  UNKNOWN: "#8a919c",
 };
 
 const LEVEL_TEXT_CLASS: Record<RiskLevel, string> = {
   HIGH: "text-risk-high",
   MEDIUM: "text-risk-medium",
   LOW: "text-risk-low",
+  UNKNOWN: "text-[#5c6672]",
 };
 
 const RADIUS = 42;

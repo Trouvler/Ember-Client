@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import GlobalNav from "@/widgets/global-nav/ui/GlobalNav";
+import { DispatchAnalysisProvider } from "@/entities/dispatch-analysis/model/DispatchAnalysisProvider";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -35,8 +36,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <GlobalNav />
-        {children}
+        <DispatchAnalysisProvider>
+          <GlobalNav />
+          {children}
+        </DispatchAnalysisProvider>
       </body>
     </html>
   );

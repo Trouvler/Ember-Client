@@ -12,39 +12,51 @@ export const INCIDENT_TYPE_LABELS: Record<IncidentType, string> = {
   EMERGENCY: "구급",
 };
 
+export type BuildingType = "MULTI_FAMILY_HOUSE" | "SINGLE_HOUSE" | "COMMERCIAL";
+
+export const BUILDING_TYPE_LABELS: Record<BuildingType, string> = {
+  MULTI_FAMILY_HOUSE: "공동주택",
+  SINGLE_HOUSE: "단독주택",
+  COMMERCIAL: "상업시설",
+};
+
 export interface DispatchLocation {
   lat: number;
   lng: number;
 }
 
 export interface DispatchAnalysisRequest {
-  location: DispatchLocation;
   incidentType: IncidentType;
+  latitude: number;
+  longitude: number;
+  occurredAt: string;
+  buildingType?: BuildingType;
 }
 
-export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
+export type RiskLevel = "LOW" | "MEDIUM" | "HIGH" | "UNKNOWN";
 
-export interface RecommendedTeam {
-  id: string;
+export interface DispatchUnitCandidate {
+  stationId: number;
   rank: number;
-  name: string;
-  jurisdiction: "관할" | "인접";
-  etaMinutes: number;
-  successRate: number;
+  stationName: string;
+  estimatedArrivalMinutes: number;
+  successProbability: number;
+  reason: string;
 }
 
-export interface RecommendedEquipment {
-  id: string;
-  name: string;
-  needRate: number;
-  purpose: string;
+export interface AiEquipmentRecommendation {
+  equipmentType: string;
+  requiredProbability: number;
+  reason: string;
 }
 
 export interface DispatchAnalysisResult {
-  id: string;
+  analysisId: number;
   degraded: boolean;
   riskLevel: RiskLevel;
-  probability: number;
-  equipment: RecommendedEquipment[];
-  teams: RecommendedTeam[];
+  estimatedArrivalMinutes: number;
+  goldenTimeFailureProbability: number;
+  recommendedUnits: DispatchUnitCandidate[];
+  recommendedEquipment: AiEquipmentRecommendation[];
+  briefing: string;
 }

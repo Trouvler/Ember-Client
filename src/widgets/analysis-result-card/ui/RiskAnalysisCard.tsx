@@ -21,6 +21,10 @@ const LEVEL_BADGE: Record<RiskLevel, { text: string; className: string }> = {
     text: "정상 범위",
     className: "bg-[#e8f5ee] text-risk-low",
   },
+  UNKNOWN: {
+    text: "분석 불가",
+    className: "bg-[#eef1f5] text-[#5c6672]",
+  },
 };
 
 export default function RiskAnalysisCard({
@@ -49,7 +53,9 @@ export default function RiskAnalysisCard({
                   ? "text-risk-high"
                   : riskLevel === "MEDIUM"
                     ? "text-risk-medium"
-                    : "text-risk-low"
+                    : riskLevel === "LOW"
+                      ? "text-risk-low"
+                      : "text-[#5c6672]"
               }`}
             >
               {riskLevel}

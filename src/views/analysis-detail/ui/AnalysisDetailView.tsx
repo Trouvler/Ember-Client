@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import IncidentStatusBar from "@/widgets/incident-status-bar/ui/IncidentStatusBar";
 import RiskAnalysisCard from "@/widgets/analysis-result-card/ui/RiskAnalysisCard";
 import AiBriefingCard from "@/widgets/analysis-result-card/ui/AiBriefingCard";
@@ -5,82 +8,63 @@ import RecommendedTeamTable from "@/shared/ui/RecommendedTeamTable";
 import RecommendedEquipmentTable from "@/shared/ui/RecommendedEquipmentTable";
 import DegradedBanner from "@/shared/ui/DegradedBanner";
 import MapView from "@/shared/ui/MapView";
-import type { DispatchAnalysisResult } from "@/entities/dispatch-analysis/model/types";
+import ErrorFallback from "@/shared/ui/ErrorFallback";
+import { useDispatchAnalysis } from "@/entities/dispatch-analysis/model/DispatchAnalysisProvider";
+import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
 
 interface AnalysisDetailViewProps {
   id: string;
 }
 
-const SAMPLE_LOCATION = { lat: 37.5726, lng: 127.0107 };
-const SAMPLE_ADDRESS = "서울 종로구 창신동 일대";
-const SAMPLE_ELAPSED_SECONDS = 3 * 60 + 34;
-
-// 조회 API(GET /api/dispatch-analyses/:id)가 아직 문서화되지 않아 샘플 데이터로 렌더링
-function buildSampleResult(id: string): DispatchAnalysisResult {
-  return {
-    id,
-    degraded: false,
-    riskLevel: "HIGH",
-    probability: 62,
-    teams: [
-      {
-        id: "1",
-        rank: 1,
-        name: "종로소방서",
-        jurisdiction: "관할",
-        etaMinutes: 6.3,
-        successRate: 82,
-      },
-      {
-        id: "2",
-        rank: 2,
-        name: "강남소방서",
-        jurisdiction: "인접",
-        etaMinutes: 8.1,
-        successRate: 71,
-      },
-    ],
-    equipment: [
-      {
-        id: "1",
-        name: "펌프차",
-        needRate: 95,
-        purpose: "초기 진화 · 주수 활동 필수",
-      },
-      {
-        id: "2",
-        name: "고가사다리차",
-        needRate: 78,
-        purpose: "고층부 인명 구조 · 접근 대응",
-      },
-    ],
-  };
+function probabilityAsPercent(probability: number) {
+  return probability <= 1 ? probability * 100 : probability;
 }
 
-const SAMPLE_BRIEFING = {
-  summary:
-    "해당 신고지는 노후 건물 밀집 지역으로 출동 지연 위험이 높습니다. 도로 폭이 좁아 접근 지연이 예상되며, 인근 소방서까지의 거리가 지연 요인으로 작용합니다.",
-  reasons: [
-    "반경 300m 내 준공 30년 이상 건물 비율 71%",
-    "진입 도로 최소 폭 2.8m · 소방차 교행 불가",
-    "관할서 최근 3년 유사 화재 평균 도착 7.9분",
-  ],
-};
-
 export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
-  const result = buildSampleResult(id);
-  const fastestEtaMinutes = Math.min(...result.teams.map((t) => t.etaMinutes));
+  const { analysis, updateEquipment } = useDispatchAnalysis();
+  const [isRetryingEquipment, setIsRetryingEquipment] = useState(false);
+
+  if (!analysis || String(analysis.result.analysisId) !== id) {
+    return (
+      <main className="px-4 py-6 sm:px-[22px] sm:py-8">
+        <h1 className="text-xl font-bold text-ink">분석 결과가 없습니다.</h1>
+        <p className="mt-2 text-sm text-[#5c6672]">
+          분석 결과는 새로고침 후 유지되지 않습니다. 신고 시뮬레이션에서 다시
+          분석해 주세요.
+        </p>
+      </main>
+    );
+  }
+
+  const { result, location } = analysis;
+  const probability = probabilityAsPercent(result.goldenTimeFailureProbability);
+
+  const retryEquipment = async () => {
+    setIsRetryingEquipment(true);
+    try {
+      const equipment = await getRecommendedEquipment(result.analysisId);
+      updateEquipment(equipment.recommendedEquipment);
+    } catch {
+      // 기존 오류 상태를 유지해 다시 시도할 수 있게 한다.
+    } finally {
+      setIsRetryingEquipment(false);
+    }
+  };
 
   return (
     <div className="flex flex-col">
       <IncidentStatusBar
         incidentId={id}
-        title="화재 · 주거시설 신고 분석"
-        address={SAMPLE_ADDRESS}
-        lat={SAMPLE_LOCATION.lat}
-        lng={SAMPLE_LOCATION.lng}
-        receivedAtLabel="14:23:07"
-        initialElapsedSeconds={SAMPLE_ELAPSED_SECONDS}
+        title="신고 분석 결과"
+        address="선택한 신고 위치"
+        lat={location.lat}
+        lng={location.lng}
+        receivedAtLabel={new Date().toLocaleTimeString("ko-KR", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })}
+        initialElapsedSeconds={0}
       />
 
       <div className="w-full px-4 py-6 sm:px-[22px] sm:py-8">
@@ -91,33 +75,13 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
         ) : null}
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.75fr_1fr] lg:items-start">
-          {/* 좌측: 지도 + 표 */}
           <div className="flex flex-col gap-5">
             <section className="rounded-xl border border-[#ebedf0] card-shadow">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
-                <div className="flex items-center gap-2">
-                  <span className="h-3.5 w-[3px] bg-ember" />
-                  <h2 className="text-sm font-bold text-ink">
-                    실시간 관제 지도
-                  </h2>
-                </div>
-                <div className="flex items-center gap-3.5 text-[11.5px] text-[#6b7280]">
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="inline-block h-[9px] w-[9px] rounded-full bg-risk-high" />
-                    신고 지점
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="inline-block h-[9px] w-[9px] bg-ink" />
-                    1순위 출동대
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="inline-block h-[9px] w-[9px] bg-[#8a919c]" />
-                    대체 출동대
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
+                <span className="h-3.5 w-[3px] bg-ember" />
+                <h2 className="text-sm font-bold text-ink">실시간 관제 지도</h2>
               </div>
-              {/* 도로망·경로 렌더링은 GeoJSON 데이터 확보 후 진행(P1 이후), 현재는 신고 지점 마커만 표시 */}
-              <MapView marker={SAMPLE_LOCATION} />
+              <MapView marker={location} />
             </section>
 
             <section className="rounded-xl border border-[#ebedf0] card-shadow">
@@ -130,7 +94,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
                   도착시간 · 성공률 종합 순위
                 </span>
               </div>
-              <RecommendedTeamTable teams={result.teams} />
+              <RecommendedTeamTable teams={result.recommendedUnits} />
             </section>
 
             <section className="rounded-xl border border-[#ebedf0] card-shadow">
@@ -143,30 +107,28 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
                   현장 조건 기반 필요도
                 </span>
               </div>
-              <RecommendedEquipmentTable equipment={result.equipment} />
+              {analysis.equipmentError ? (
+                <div className="p-4">
+                  <ErrorFallback
+                    message="추천 장비를 불러오지 못했습니다."
+                    onRetry={isRetryingEquipment ? undefined : retryEquipment}
+                  />
+                </div>
+              ) : (
+                <RecommendedEquipmentTable
+                  equipment={result.recommendedEquipment}
+                />
+              )}
             </section>
           </div>
 
-          {/* 우측: 위험도 + AI 브리핑 */}
           <div className="flex flex-col gap-5">
             <RiskAnalysisCard
               riskLevel={result.riskLevel}
-              probability={result.probability}
-              fastestEtaMinutes={fastestEtaMinutes}
+              probability={probability}
+              fastestEtaMinutes={result.estimatedArrivalMinutes}
             />
-            <AiBriefingCard
-              summary={SAMPLE_BRIEFING.summary}
-              reasons={SAMPLE_BRIEFING.reasons}
-            />
-            <div className="rounded-xl border border-[#ebedf0] border-l-[3px] border-l-risk-high px-[15px] py-3.5 card-shadow">
-              <div className="text-[12.5px] leading-[1.55] font-bold text-ink">
-                본 분석은 참고 자료이며, 최종 출동 판단은 상황실 담당자의
-                권한입니다.
-              </div>
-              <div className="mt-1.5 text-[11.5px] text-[#8a919c]">
-                AI는 상황실의 판단을 보조할 뿐 대체하지 않습니다.
-              </div>
-            </div>
+            <AiBriefingCard summary={result.briefing} reasons={[]} />
           </div>
         </div>
       </div>

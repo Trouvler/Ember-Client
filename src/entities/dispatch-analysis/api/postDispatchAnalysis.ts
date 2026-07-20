@@ -7,7 +7,7 @@ import type {
 export function postDispatchAnalysis(
   request: DispatchAnalysisRequest,
 ): Promise<DispatchAnalysisResult> {
-  return apiFetch<DispatchAnalysisResult>("/api/dispatch-analyses", {
+  return apiFetch<DispatchAnalysisResult>("/api/dispatch", {
     method: "POST",
     body: JSON.stringify(request),
   });

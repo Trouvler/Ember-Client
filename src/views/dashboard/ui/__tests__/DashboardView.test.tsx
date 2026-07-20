@@ -1,29 +1,22 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useEffect } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import DashboardView from "../DashboardView";
 
 function MockScript({ onLoad }: { onLoad?: () => void }) {
-  useEffect(() => {
-    onLoad?.();
-  }, [onLoad]);
+  useEffect(() => onLoad?.(), [onLoad]);
   return null;
 }
-
-vi.mock("next/script", () => ({
-  default: MockScript,
-}));
-
+vi.mock("next/script", () => ({ default: MockScript }));
 function FakeLatLng(this: KakaoLatLng, lat: number, lng: number) {
   this.getLat = () => lat;
   this.getLng = () => lng;
 }
-
 function FakeMap(this: KakaoMap) {
   this.setCenter = vi.fn();
+  this.relayout = vi.fn();
 }
-
 function FakeMarker(this: KakaoMarker) {
   this.setMap = vi.fn();
   this.setPosition = vi.fn();
@@ -32,7 +25,13 @@ function FakeMarker(this: KakaoMarker) {
 describe("DashboardView", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        disconnect() {}
+      },
+    );
     window.kakao = {
       maps: {
         LatLng: FakeLatLng as unknown as KakaoMapsSdk["maps"]["LatLng"],
@@ -44,29 +43,72 @@ describe("DashboardView", () => {
     };
   });
 
-  it("선택 행정동 상세 정보를 표시한다", () => {
+  it("레이어를 전환하고 빈 소방서 목록을 표시한다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve([]) }),
+    );
     render(<DashboardView />);
-
-    expect(screen.getByText("종로구 창신동")).toBeInTheDocument();
-    expect(screen.getByText("중점 관리 대상")).toBeInTheDocument();
-    expect(screen.getByText("8.4")).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "평균 도착시간" }),
+    );
+    expect(screen.getByRole("button", { name: "평균 도착시간" })).toHaveClass(
+      "bg-ink",
+    );
+    expect(
+      await screen.findByText("조회된 소방서가 없습니다."),
+    ).toBeInTheDocument();
   });
 
-  it("레이어 토글 버튼을 클릭하면 활성 레이어가 바뀐다", async () => {
+  it("소방서 선택 후 상세 정보를 표시한다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve([
+              {
+                stationId: 1,
+                name: "종로소방서",
+                type: "소방서",
+                latitude: 37.5,
+                longitude: 127,
+                address: "종로구",
+              },
+            ]),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              stationId: 1,
+              name: "종로소방서",
+              type: "소방서",
+              latitude: 37.5,
+              longitude: 127,
+              address: "종로구",
+              equipment: ["펌프차"],
+            }),
+        }),
+    );
+    render(<DashboardView />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: /종로소방서/ }),
+    );
+    expect(await screen.findByText("보유 장비: 펌프차")).toBeInTheDocument();
+  });
+
+  it("소방서 목록 조회 오류를 재시도 UI로 표시한다", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     render(<DashboardView />);
 
-    const goldenTimeButton = screen.getByRole("button", {
-      name: "골든타임 실패율",
-    });
-    const arrivalTimeButton = screen.getByRole("button", {
-      name: "평균 도착시간",
-    });
-
-    expect(goldenTimeButton).toHaveClass("bg-ink");
-
-    await userEvent.click(arrivalTimeButton);
-
-    expect(arrivalTimeButton).toHaveClass("bg-ink");
-    expect(goldenTimeButton).not.toHaveClass("bg-ink");
+    expect(
+      await screen.findByText("소방서 목록을 불러오지 못했습니다."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "다시 시도" }),
+    ).toBeInTheDocument();
   });
 });

@@ -1,8 +1,8 @@
-import type { RecommendedEquipment } from "@/entities/dispatch-analysis/model/types";
+import type { AiEquipmentRecommendation } from "@/entities/dispatch-analysis/model/types";
 import ProgressBarCell from "./ProgressBarCell";
 
 interface RecommendedEquipmentTableProps {
-  equipment: RecommendedEquipment[];
+  equipment: AiEquipmentRecommendation[];
 }
 
 export default function RecommendedEquipmentTable({
@@ -26,18 +26,20 @@ export default function RecommendedEquipmentTable({
         </thead>
         <tbody>
           {equipment.map((item) => (
-            <tr key={item.id} className="border-b border-[#eef0f3]">
+            <tr key={item.equipmentType} className="border-b border-[#eef0f3]">
               <td className="px-3.5 py-3 text-sm font-bold text-ink">
-                {item.name}
+                {item.equipmentType}
               </td>
               <td className="px-3.5 py-3">
                 <ProgressBarCell
-                  value={item.needRate}
-                  colorClassName={item.needRate >= 90 ? "bg-ember" : "bg-ink"}
+                  value={item.requiredProbability}
+                  colorClassName={
+                    item.requiredProbability >= 90 ? "bg-ember" : "bg-ink"
+                  }
                 />
               </td>
               <td className="px-3.5 py-3 text-[12.5px] text-[#6b7280]">
-                {item.purpose}
+                {item.reason}
               </td>
             </tr>
           ))}

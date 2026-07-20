@@ -1,8 +1,8 @@
-import type { RecommendedTeam } from "@/entities/dispatch-analysis/model/types";
+import type { DispatchUnitCandidate } from "@/entities/dispatch-analysis/model/types";
 import ProgressBarCell from "./ProgressBarCell";
 
 interface RecommendedTeamTableProps {
-  teams: RecommendedTeam[];
+  teams: DispatchUnitCandidate[];
 }
 
 export default function RecommendedTeamTable({
@@ -29,7 +29,7 @@ export default function RecommendedTeamTable({
         </thead>
         <tbody>
           {teams.map((team) => (
-            <tr key={team.id} className="border-b border-[#eef0f3]">
+            <tr key={team.stationId} className="border-b border-[#eef0f3]">
               <td className="py-3 text-center">
                 <span
                   className={`inline-flex h-5 w-5 items-center justify-center rounded-[3px] text-[11px] font-bold ${
@@ -42,20 +42,22 @@ export default function RecommendedTeamTable({
                 </span>
               </td>
               <td className="px-3.5 py-3">
-                <span className="text-sm font-bold text-ink">{team.name}</span>{" "}
+                <span className="text-sm font-bold text-ink">
+                  {team.stationName}
+                </span>{" "}
                 <span className="text-[11px] text-[#8a919c]">
-                  {team.jurisdiction}
+                  {team.reason}
                 </span>
               </td>
               <td className="px-3.5 py-3 text-right">
                 <span className="mono text-sm font-semibold text-ink">
-                  {team.etaMinutes}
+                  {team.estimatedArrivalMinutes}
                 </span>
                 <span className="text-[11px] text-[#9aa1ab]">분</span>
               </td>
               <td className="px-3.5 py-3">
                 <ProgressBarCell
-                  value={team.successRate}
+                  value={team.successProbability}
                   colorClassName={
                     team.rank === 1 ? "bg-risk-low" : "bg-[#8a919c]"
                   }

@@ -12,20 +12,20 @@ describe("RecommendedTeamTable", () => {
       <RecommendedTeamTable
         teams={[
           {
-            id: "1",
+            stationId: 1,
             rank: 1,
-            name: "종로소방서",
-            jurisdiction: "관할",
-            etaMinutes: 6.3,
-            successRate: 82,
+            stationName: "종로소방서",
+            estimatedArrivalMinutes: 6.3,
+            successProbability: 82,
+            reason: "관할",
           },
           {
-            id: "2",
+            stationId: 2,
             rank: 2,
-            name: "강남소방서",
-            jurisdiction: "인접",
-            etaMinutes: 8.1,
-            successRate: 71,
+            stationName: "강남소방서",
+            estimatedArrivalMinutes: 8.1,
+            successProbability: 71,
+            reason: "인접",
           },
         ]}
       />,

@@ -86,4 +86,66 @@ describe("AnalysisNewView", () => {
     await userEvent.click(screen.getByRole("button", { name: "분석 요청" }));
     expect(push).toHaveBeenCalledWith("/analysis/1");
   });
+
+  it("주소와 장소 검색 결과를 선택해 신고 위치를 설정한다", async () => {
+    const addressSearch = vi.fn((_: string, callback) =>
+      callback(
+        [{ x: "127", y: "37.5", address_name: "서울 중구 세종대로" }],
+        "OK",
+      ),
+    );
+    const keywordSearch = vi.fn((_: string, callback) =>
+      callback(
+        [
+          {
+            x: "126.978",
+            y: "37.5665",
+            place_name: "서울시청",
+            address_name: "서울 중구 태평로1가",
+            road_address_name: "서울 중구 세종대로 110",
+          },
+        ],
+        "OK",
+      ),
+    );
+    window.kakao.maps.services = {
+      Geocoder: function () {
+        return { addressSearch };
+      } as unknown as KakaoMapServices["Geocoder"],
+      Places: function () {
+        return { keywordSearch };
+      } as unknown as KakaoMapServices["Places"],
+      Status: { OK: "OK" },
+    };
+    render(
+      <DispatchAnalysisProvider>
+        <AnalysisNewView />
+      </DispatchAnalysisProvider>,
+    );
+
+    await userEvent.type(
+      screen.getByRole("textbox", { name: "주소 또는 장소명" }),
+      "서울시청",
+    );
+    await userEvent.click(screen.getByRole("button", { name: "주소 검색" }));
+    await userEvent.click(
+      await screen.findByRole("button", { name: /서울시청/ }),
+    );
+
+    expect(screen.getByText("37.5665, 126.9780")).toBeInTheDocument();
+  });
+
+  it("빈 검색어에는 안내 메시지를 표시한다", async () => {
+    render(
+      <DispatchAnalysisProvider>
+        <AnalysisNewView />
+      </DispatchAnalysisProvider>,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "주소 검색" }));
+
+    expect(
+      screen.getByText("주소 또는 장소명을 입력하세요."),
+    ).toBeInTheDocument();
+  });
 });

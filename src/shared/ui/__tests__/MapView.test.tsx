@@ -112,6 +112,29 @@ describe("MapView", () => {
     expect(markerInstances[0].setMap).toHaveBeenCalledWith(null);
   });
 
+  it("여러 마커를 표시하고 마커 클릭을 전달한다", () => {
+    const onClickMarker = vi.fn();
+    const { rerender } = render(
+      <MapView
+        markers={[
+          { id: 1, lat: 37.5, lng: 127 },
+          { id: 2, lat: 37.6, lng: 127.1 },
+        ]}
+        onClickMarker={onClickMarker}
+      />,
+    );
+
+    expect(markerInstances).toHaveLength(2);
+    const markerClickHandler = addListener.mock.calls.find(
+      ([target, type]) => target === markerInstances[0] && type === "click",
+    )?.[2];
+    markerClickHandler();
+    expect(onClickMarker).toHaveBeenCalledWith(1);
+
+    rerender(<MapView markers={[{ id: 2, lat: 37.6, lng: 127.1 }]} />);
+    expect(markerInstances[0].setMap).toHaveBeenCalledWith(null);
+  });
+
   it("SDK의 load 콜백이 비동기로 늦게 실행돼도 마운트 시점부터 있던 marker를 생성한다", async () => {
     window.kakao.maps.load = (callback: () => void) => {
       setTimeout(callback, 0);

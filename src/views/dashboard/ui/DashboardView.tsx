@@ -38,6 +38,11 @@ export default function DashboardView() {
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [stationError, setStationError] = useState<string | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
+  const stationMarkers = stations.map((station) => ({
+    id: station.stationId,
+    lat: station.latitude,
+    lng: station.longitude,
+  }));
 
   const loadStations = async (nextRegion = "") => {
     setIsLoadingStations(true);
@@ -97,14 +102,21 @@ export default function DashboardView() {
             </span>
           </div>
           <MapView
-            marker={
+            markers={stationMarkers}
+            center={
               selectedStation
                 ? {
                     lat: selectedStation.latitude,
                     lng: selectedStation.longitude,
                   }
-                : SAMPLE_DISTRICT.location
+                : null
             }
+            onClickMarker={(stationId) => {
+              const station = stations.find(
+                (item) => item.stationId === stationId,
+              );
+              if (station) void selectStation(station);
+            }}
           />
         </section>
 

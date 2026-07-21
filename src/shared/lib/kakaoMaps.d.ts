@@ -13,6 +13,33 @@ interface KakaoMarker {
   setPosition(latlng: KakaoLatLng): void;
 }
 
+interface KakaoAddressSearchResult {
+  x: string;
+  y: string;
+  address_name: string;
+}
+
+interface KakaoPlaceSearchResult extends KakaoAddressSearchResult {
+  place_name: string;
+  road_address_name: string;
+}
+
+interface KakaoMapServices {
+  Geocoder: new () => {
+    addressSearch(
+      query: string,
+      callback: (result: KakaoAddressSearchResult[], status: string) => void,
+    ): void;
+  };
+  Places: new () => {
+    keywordSearch(
+      query: string,
+      callback: (result: KakaoPlaceSearchResult[], status: string) => void,
+    ): void;
+  };
+  Status: { OK: string };
+}
+
 interface KakaoMouseEvent {
   latLng: KakaoLatLng;
 }
@@ -30,11 +57,12 @@ interface KakaoMapsSdk {
     }) => KakaoMarker;
     event: {
       addListener(
-        target: KakaoMap,
+        target: KakaoMap | KakaoMarker,
         type: string,
-        handler: (event: KakaoMouseEvent) => void,
+        handler: (event?: KakaoMouseEvent) => void,
       ): void;
     };
+    services?: KakaoMapServices;
     load(callback: () => void): void;
   };
 }

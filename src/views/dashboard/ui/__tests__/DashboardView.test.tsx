@@ -20,11 +20,15 @@ function FakeMap(this: KakaoMap) {
 function FakeMarker(this: KakaoMarker) {
   this.setMap = vi.fn();
   this.setPosition = vi.fn();
+  markerInstances.push(this);
 }
+
+const markerInstances: KakaoMarker[] = [];
 
 describe("DashboardView", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    markerInstances.length = 0;
     vi.stubGlobal(
       "ResizeObserver",
       class {
@@ -97,6 +101,53 @@ describe("DashboardView", () => {
     await userEvent.click(
       await screen.findByRole("button", { name: /종로소방서/ }),
     );
+    expect(await screen.findByText("보유 장비: 펌프차")).toBeInTheDocument();
+  });
+
+  it("소방서 마커 클릭으로 상세 정보를 표시한다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve([
+              {
+                stationId: 1,
+                name: "종로소방서",
+                type: "소방서",
+                latitude: 37.5,
+                longitude: 127,
+                address: "종로구",
+              },
+            ]),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              stationId: 1,
+              name: "종로소방서",
+              type: "소방서",
+              latitude: 37.5,
+              longitude: 127,
+              address: "종로구",
+              equipment: ["펌프차"],
+            }),
+        }),
+    );
+    render(<DashboardView />);
+
+    await vi.waitFor(() => expect(markerInstances).toHaveLength(1));
+    const addListener = window.kakao.maps.event.addListener as ReturnType<
+      typeof vi.fn
+    >;
+    const clickHandler = addListener.mock.calls.find(
+      ([target, type]) => target === markerInstances[0] && type === "click",
+    )?.[2];
+    clickHandler();
+
     expect(await screen.findByText("보유 장비: 펌프차")).toBeInTheDocument();
   });
 

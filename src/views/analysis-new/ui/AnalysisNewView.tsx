@@ -117,6 +117,7 @@ export default function AnalysisNewView() {
           <div className="relative">
             <MapView
               marker={location}
+              enableServices
               onClickLocation={(nextLocation) => {
                 setLocation(nextLocation);
                 setResults([]);

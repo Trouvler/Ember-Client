@@ -67,10 +67,10 @@ export default function LandingView() {
                 </svg>
               </Link>
               <Link
-                href="/analysis/sample-1"
+                href="/analysis/new"
                 className="px-1 py-3.5 text-[14.5px] font-semibold text-[#5c6672]"
               >
-                분석 결과 예시 보기 ›
+                직접 분석해 보기 ›
               </Link>
             </div>
           </div>
@@ -247,10 +247,10 @@ export default function LandingView() {
         </div>
         <div className="mt-5 text-center">
           <Link
-            href="/analysis/sample-1"
+            href="/analysis/new"
             className="inline-flex items-center gap-[7px] text-sm font-bold text-ink"
           >
-            전체 분석 결과 화면 보기
+            신고 분석 시작하기
             <svg
               width="16"
               height="16"

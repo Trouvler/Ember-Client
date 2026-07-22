@@ -79,14 +79,15 @@ export default function IncidentStatusBar({
         <div className="flex gap-2 sm:shrink-0">
           <button
             type="button"
-            disabled
-            className="flex-1 rounded-[9px] bg-[#f2f4f6] px-[17px] py-2.5 text-[13.5px] font-semibold text-[#4e5560] disabled:cursor-not-allowed sm:flex-none"
+            onClick={() => window.print()}
+            className="flex-1 rounded-[9px] bg-[#f2f4f6] px-[17px] py-2.5 text-[13.5px] font-semibold text-[#4e5560] hover:bg-[#e6e9ee] sm:flex-none"
           >
             분석서 출력
           </button>
           <button
             type="button"
             disabled
+            title="출동 지령 전송 API가 제공되면 사용할 수 있습니다."
             className="flex-1 rounded-[9px] bg-ember px-[19px] py-2.5 text-[13.5px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
           >
             출동 지령 전송

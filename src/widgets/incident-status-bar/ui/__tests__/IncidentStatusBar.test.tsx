@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import IncidentStatusBar from "../IncidentStatusBar";
 
 describe("IncidentStatusBar", () => {
@@ -29,7 +30,8 @@ describe("IncidentStatusBar", () => {
     expect(screen.getByText("00:03:34")).toBeInTheDocument();
   });
 
-  it("출동 지령 전송·분석서 출력 버튼은 비활성화되어 있다", () => {
+  it("분석서는 출력하고 출동 지령 전송은 비활성화되어 있다", async () => {
+    window.print = vi.fn();
     render(
       <IncidentStatusBar
         incidentId="2026-0712-00847"
@@ -45,7 +47,8 @@ describe("IncidentStatusBar", () => {
     expect(
       screen.getByRole("button", { name: "출동 지령 전송" }),
     ).toBeDisabled();
-    expect(screen.getByRole("button", { name: "분석서 출력" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "분석서 출력" }));
+    expect(window.print).toHaveBeenCalledOnce();
   });
 
   it("경과 시간은 1초마다 실제로 증가한다", () => {

@@ -15,12 +15,12 @@ describe("LandingView", () => {
     ).toHaveAttribute("href", "/analysis/new");
   });
 
-  it("분석 결과 예시 링크는 분석 상세 페이지로 연결된다", () => {
+  it("분석 안내 링크는 신고 분석 화면으로 연결된다", () => {
     render(<LandingView />);
 
-    const links = screen.getAllByRole("link", { name: /분석 결과/ });
+    const links = screen.getAllByRole("link", { name: /분석/ });
     for (const link of links) {
-      expect(link).toHaveAttribute("href", "/analysis/sample-1");
+      expect(link).toHaveAttribute("href", "/analysis/new");
     }
   });
 });

@@ -105,9 +105,9 @@ export default function GlobalNav() {
               <span className="hidden font-medium text-[#4e5560] sm:inline">
                 김선우 관제사
               </span>
-              <a href="#" className="text-[#adb3bd]">
-                로그아웃
-              </a>
+              <Link href="/" className="text-[#adb3bd] hover:text-[#5c6672]">
+                홈으로
+              </Link>
             </>
           )}
         </div>

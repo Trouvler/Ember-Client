@@ -5,5 +5,5 @@ export interface HealthResponse {
 }
 
 export function getHealth() {
-  return apiFetch<HealthResponse>("/api/health");
+  return apiFetch<HealthResponse>("/health");
 }

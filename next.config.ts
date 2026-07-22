@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: "/health",
+        destination: "http://ssh.gsmsv.site:25150/health",
+      },
+      {
         source: "/api/:path*",
         destination: "http://ssh.gsmsv.site:25150/api/:path*",
       },

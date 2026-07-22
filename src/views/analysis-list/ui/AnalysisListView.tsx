@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 type RiskLevel = "HIGH" | "MEDIUM" | "LOW";
 
@@ -85,6 +88,27 @@ const SAMPLE_ROWS: HistoryRow[] = [
 ];
 
 export default function AnalysisListView() {
+  const [region, setRegion] = useState("서울 전체");
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const filteredRows = useMemo(
+    () =>
+      SAMPLE_ROWS.filter(
+        (row) =>
+          (region === "서울 전체" || row.location.includes(region)) &&
+          [row.incidentNo, row.location, row.incidentType]
+            .join(" ")
+            .includes(query.trim()),
+      ),
+    [query, region],
+  );
+  const pageSize = 4;
+  const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+  const visibleRows = filteredRows.slice(
+    page * pageSize,
+    (page + 1) * pageSize,
+  );
+
   return (
     <div className="px-[22px] py-8">
       <div className="mb-6">
@@ -99,7 +123,11 @@ export default function AnalysisListView() {
       {/* 필터 바 */}
       <div className="mb-6 flex flex-wrap items-center gap-2.5 rounded-xl border border-[#ebedf0] px-4 py-5 card-shadow">
         <select
-          defaultValue="서울 전체"
+          value={region}
+          onChange={(event) => {
+            setRegion(event.target.value);
+            setPage(0);
+          }}
           className="cursor-pointer rounded-xl border border-[#ebedf0] py-2.5 pr-9 pl-3 text-[13px] text-ink card-shadow"
         >
           <option>서울 전체</option>
@@ -117,7 +145,7 @@ export default function AnalysisListView() {
           <option>최근 90일</option>
           <option>기간 직접 지정</option>
         </select>
-        <div className="flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border border-[#ebedf0] px-3 py-2 card-shadow">
+        <label className="flex min-w-[180px] flex-1 items-center gap-2 rounded-xl border border-[#ebedf0] px-3 py-2 card-shadow">
           <svg
             width="15"
             height="15"
@@ -131,12 +159,20 @@ export default function AnalysisListView() {
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.3-4.3" />
           </svg>
-          <span className="text-[13px] text-[#adb3bd]">
-            접수번호 · 위치 검색
-          </span>
-        </div>
+          <input
+            aria-label="접수번호 또는 위치 검색"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setPage(0);
+            }}
+            placeholder="접수번호 · 위치 검색"
+            className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none placeholder:text-[#adb3bd]"
+          />
+        </label>
         <button
           type="button"
+          onClick={() => setPage(0)}
           className="rounded-xl bg-ink px-5 py-2.5 text-[13px] font-semibold text-white"
         >
           검색
@@ -147,8 +183,11 @@ export default function AnalysisListView() {
       <div className="overflow-hidden rounded-xl border border-[#ebedf0] card-shadow">
         <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-4">
           <span className="text-[13px] text-[#5c6672]">
-            총 <span className="mono font-semibold text-ink">248</span>건 ·
-            최근순
+            총{" "}
+            <span className="mono font-semibold text-ink">
+              {filteredRows.length}
+            </span>
+            건 · 최근순
           </span>
           <span className="text-[11.5px] text-[#adb3bd]">
             위험도 HIGH 표시 우선
@@ -176,7 +215,7 @@ export default function AnalysisListView() {
             </tr>
           </thead>
           <tbody>
-            {SAMPLE_ROWS.map((row) => (
+            {visibleRows.map((row) => (
               <tr
                 key={row.id}
                 className="border-b border-[#eef0f3] last:border-b-0 hover:bg-[#f7f9fb]"
@@ -200,10 +239,10 @@ export default function AnalysisListView() {
                 </td>
                 <td className="px-4 py-5 text-center">
                   <Link
-                    href={`/analysis/${row.id}`}
+                    href="/analysis/new"
                     className="text-[12.5px] font-semibold text-[#1c3c6e]"
                   >
-                    상세보기
+                    분석 시작
                   </Link>
                 </td>
               </tr>
@@ -214,27 +253,34 @@ export default function AnalysisListView() {
 
       {/* 페이지네이션 */}
       <div className="flex items-center justify-center gap-1 py-10">
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#9aa1ab] card-shadow">
+        <button
+          type="button"
+          aria-label="이전 페이지"
+          disabled={page === 0}
+          onClick={() => setPage((value) => value - 1)}
+          className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#5c6672] disabled:text-[#9aa1ab] card-shadow"
+        >
           ‹
-        </span>
-        <span className="mono flex h-8 w-8 items-center justify-center rounded-xl border border-ink bg-ink font-semibold text-white">
-          1
-        </span>
-        <span className="mono flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#5c6672] card-shadow">
-          2
-        </span>
-        <span className="mono flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#5c6672] card-shadow">
-          3
-        </span>
-        <span className="flex h-8 w-8 items-center justify-center text-[#adb3bd]">
-          …
-        </span>
-        <span className="mono flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#5c6672] card-shadow">
-          25
-        </span>
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#5c6672] card-shadow">
+        </button>
+        {Array.from({ length: pageCount }, (_, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => setPage(index)}
+            className={`mono flex h-8 w-8 items-center justify-center rounded-xl border font-semibold ${page === index ? "border-ink bg-ink text-white" : "border-[#ebedf0] text-[#5c6672] card-shadow"}`}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          type="button"
+          aria-label="다음 페이지"
+          disabled={page >= pageCount - 1}
+          onClick={() => setPage((value) => value + 1)}
+          className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#ebedf0] text-[#5c6672] disabled:text-[#9aa1ab] card-shadow"
+        >
           ›
-        </span>
+        </button>
       </div>
     </div>
   );

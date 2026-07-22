@@ -10,6 +10,6 @@ describe("getHealth", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     await expect(getHealth()).resolves.toEqual({ status: "OK" });
-    expect(fetchMock).toHaveBeenCalledWith("/api/health", expect.anything());
+    expect(fetchMock).toHaveBeenCalledWith("/health", expect.anything());
   });
 });

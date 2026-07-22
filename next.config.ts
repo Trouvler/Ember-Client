@@ -1,5 +1,18 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {/* config options here */};
+const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/health",
+        destination: "http://ssh.gsmsv.site:25150/health",
+      },
+      {
+        source: "/api/:path*",
+        destination: "http://ssh.gsmsv.site:25150/api/:path*",
+      },
+    ];
+  },
+};
 
 export default nextConfig;

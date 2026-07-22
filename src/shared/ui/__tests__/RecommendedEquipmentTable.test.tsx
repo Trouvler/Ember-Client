@@ -1,0 +1,33 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen } from "@testing-library/react";
+import RecommendedEquipmentTable from "../RecommendedEquipmentTable";
+
+describe("RecommendedEquipmentTable", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("장비명·필요도·용도를 행으로 표시한다", () => {
+    render(
+      <RecommendedEquipmentTable
+        equipment={[
+          {
+            equipmentType: "PUMP_TRUCK",
+            requiredProbability: 95,
+            reason: "초기 진화",
+          },
+          {
+            equipmentType: "LADDER_TRUCK",
+            requiredProbability: 78,
+            reason: "인명 구조",
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText("PUMP_TRUCK")).toBeInTheDocument();
+    expect(screen.getByText("95%")).toBeInTheDocument();
+    expect(screen.getByText("초기 진화")).toBeInTheDocument();
+    expect(screen.getByText("LADDER_TRUCK")).toBeInTheDocument();
+  });
+});

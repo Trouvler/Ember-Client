@@ -4,21 +4,25 @@ import { render, screen, act } from "@testing-library/react";
 import MapView from "../MapView";
 
 let scriptBehavior: "load" | "error" | "none" = "load";
+let scriptSrc = "";
 
 function MockScript({
+  src,
   onLoad,
   onError,
 }: {
+  src: string;
   onLoad?: () => void;
   onError?: () => void;
 }) {
   useEffect(() => {
+    scriptSrc = src;
     if (scriptBehavior === "load") {
       onLoad?.();
     } else if (scriptBehavior === "error") {
       onError?.();
     }
-  }, [onLoad, onError]);
+  }, [src, onLoad, onError]);
   return null;
 }
 
@@ -63,6 +67,7 @@ describe("MapView", () => {
     vi.clearAllMocks();
     resizeCallback = undefined;
     scriptBehavior = "load";
+    scriptSrc = "";
     markerInstances.length = 0;
     vi.stubGlobal("ResizeObserver", FakeResizeObserver);
 
@@ -81,6 +86,14 @@ describe("MapView", () => {
     const { container } = render(<MapView />);
 
     expect(container.querySelector("div")).toBeInTheDocument();
+  });
+
+  it("주소 검색이 필요할 때만 services 라이브러리를 불러온다", () => {
+    const { rerender } = render(<MapView />);
+    expect(scriptSrc).not.toContain("libraries=services");
+
+    rerender(<MapView enableServices />);
+    expect(scriptSrc).toContain("libraries=services");
   });
 
   it("지도 클릭 시 onClickLocation에 좌표를 전달한다", () => {

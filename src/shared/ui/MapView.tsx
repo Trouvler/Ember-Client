@@ -7,6 +7,7 @@ import ErrorFallback from "./ErrorFallback";
 const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 };
 const LOAD_TIMEOUT_MS = 8000;
+const EMPTY_MARKERS: readonly MapMarker[] = [];
 
 export interface MapLocation {
   lat: number;
@@ -20,6 +21,7 @@ export interface MapMarker extends MapLocation {
 interface MapViewProps {
   marker?: MapLocation | null;
   markers?: readonly MapMarker[];
+  enableServices?: boolean;
   center?: MapLocation | null;
   onClickLocation?: (location: MapLocation) => void;
   onClickMarker?: (id: MapMarker["id"]) => void;
@@ -28,7 +30,8 @@ interface MapViewProps {
 
 export default function MapView({
   marker,
-  markers = [],
+  markers = EMPTY_MARKERS,
+  enableServices = false,
   center,
   onClickLocation,
   onClickMarker,
@@ -202,7 +205,7 @@ export default function MapView({
   return (
     <>
       <Script
-        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&libraries=services&autoload=false`}
+        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}${enableServices ? "&libraries=services" : ""}&autoload=false`}
         strategy="afterInteractive"
         onLoad={() => setIsSdkLoaded(true)}
         onError={() => {

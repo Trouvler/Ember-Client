@@ -5,6 +5,13 @@ import LandingView from "../LandingView";
 describe("LandingView", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ status: "OK" }),
+      }),
+    );
   });
 
   it("신고 시뮬레이션 시작하기 버튼은 /analysis/new로 연결된다", () => {
@@ -22,5 +29,19 @@ describe("LandingView", () => {
     for (const link of links) {
       expect(link).toHaveAttribute("href", "/analysis/new");
     }
+  });
+
+  it("골든타임 배분과 출동 단계 3개를 안내한다", () => {
+    render(<LandingView />);
+
+    expect(
+      screen.getByRole("heading", {
+        name: "38초 뒤, 판단은 다시 사람에게 넘어갑니다",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "AI 분석" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).not.toHaveLength(0);
   });
 });

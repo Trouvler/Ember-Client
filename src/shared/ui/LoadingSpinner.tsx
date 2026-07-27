@@ -16,9 +16,12 @@ export default function LoadingSpinner({
   return (
     <div className="flex flex-col items-center gap-2" role="status">
       <span
-        className={`inline-block animate-spin rounded-full border-zinc-300 border-t-zinc-600 ${SIZE_CLASSES[size]}`}
+        aria-hidden="true"
+        className={`inline-block animate-spin rounded-full border-[#e6e9ee] border-t-ember ${SIZE_CLASSES[size]}`}
       />
-      {label ? <span className="text-sm text-zinc-500">{label}</span> : null}
+      {label ? (
+        <span className="text-[13px] text-[#5c6672]">{label}</span>
+      ) : null}
     </div>
   );
 }

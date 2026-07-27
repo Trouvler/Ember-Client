@@ -10,14 +10,16 @@ export default function ErrorFallback({
   return (
     <div
       role="alert"
-      className="flex flex-col items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-6 py-8 text-center"
+      className="flex flex-col items-center gap-3.5 rounded-xl border border-[#f0dada] bg-risk-high-bg px-6 py-7 text-center"
     >
-      <p className="text-sm text-red-700">{message}</p>
+      <p className="text-[13.5px] leading-[1.6] text-risk-high-text">
+        {message}
+      </p>
       {onRetry ? (
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          className="rounded-lg bg-risk-high px-4 py-2 text-[13px] font-semibold text-white hover:bg-risk-high-text"
         >
           다시 시도
         </button>

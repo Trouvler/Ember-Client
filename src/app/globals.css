@@ -105,3 +105,39 @@ a:focus-visible {
     transition-duration: 1ms !important;
   }
 }
+
+/* 분석서 출력(window.print) 결과가 상황실에서 쓸 수 있는 문서가 되게 한다.
+   화면 요소 숨김은 컴포넌트의 print:hidden으로 처리하고, 여기서는 문서 수준만 다룬다. */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  /* 그림자는 잉크만 쓰고 종이에서 읽히지 않는다 */
+  .card-shadow {
+    box-shadow: none !important;
+  }
+
+  /* 카드가 페이지 경계에서 잘리지 않게 한다 */
+  section,
+  table,
+  tr {
+    break-inside: avoid;
+  }
+
+  /* 스크롤 컨테이너는 종이에서 내용이 잘린다 */
+  .overflow-x-auto,
+  .overflow-y-auto {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  /* 링크 밑줄 장식은 종이에서 노이즈가 된다 */
+  a {
+    text-decoration: none;
+  }
+}

@@ -79,7 +79,7 @@ export default function IncidentStatusBar({
             </span>
           </div>
         </div>
-        <div className="flex gap-2 sm:shrink-0">
+        <div className="flex gap-2 sm:shrink-0 print:hidden">
           <button
             type="button"
             onClick={() => window.print()}

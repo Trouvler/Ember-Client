@@ -146,7 +146,7 @@ export default function DashboardView() {
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
             <div className="flex items-center gap-2">
-              <span className="h-3.5 w-[3px] bg-ember" />
+              <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">
                 서울시 골든타임 실패율
               </h2>
@@ -335,7 +335,7 @@ export default function DashboardView() {
 
           <section className="rounded-xl border border-[#ebedf0] card-shadow">
             <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
-              <span className="h-3.5 w-[3px] bg-ember" />
+              <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">소방서 현황</h2>
             </div>
             <form

@@ -62,7 +62,7 @@ export default function GlobalNav() {
   }, [showClock]);
 
   return (
-    <header className="border-b border-[#edeff2] bg-white">
+    <header className="border-b border-[#edeff2] bg-white print:hidden">
       <div className="flex h-[60px] items-center justify-between gap-3 px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-4 sm:gap-[30px]">
           <Link href="/" className="flex shrink-0 items-baseline gap-[9px]">

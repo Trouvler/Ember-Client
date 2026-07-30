@@ -107,7 +107,7 @@ export default function AnalysisNewView() {
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
             <div className="flex items-center gap-2">
-              <span className="h-3.5 w-[3px] bg-ember" />
+              <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">신고 위치 지정</h2>
             </div>
             <span className="text-[11.5px] text-[#6b7280]">
@@ -217,7 +217,7 @@ export default function AnalysisNewView() {
         {/* 우: 입력 폼 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
-            <span className="h-3.5 w-[3px] bg-ember" />
+            <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
             <h2 className="text-sm font-bold text-ink">신고 정보 입력</h2>
           </div>
           <div className="px-4 pt-5 pb-6 sm:px-6 sm:pt-6 sm:pb-8">

@@ -10,7 +10,7 @@ export default function AiBriefingCard({
   return (
     <section className="overflow-hidden rounded-xl border border-[#ebedf0] border-l-[3px] border-l-ember card-shadow">
       <div className="flex items-center gap-2 border-b border-[#eef0f3] px-4 py-2.5">
-        <span className="h-3.5 w-[3px] bg-ember" />
+        <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
         <h2 className="text-sm font-bold text-ink">AI 상황 브리핑</h2>
       </div>
       <div className="p-4">

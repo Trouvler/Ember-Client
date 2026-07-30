@@ -47,11 +47,23 @@ describe("AnalysisNewView", () => {
   });
 
   it("분석 생성 후 상세 페이지로 이동한다", async () => {
+    // 사고 유형 선택 시 인접 출동대 조회가 함께 발생하므로 URL로 응답을 정한다.
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValueOnce({
+      vi.fn((path: string) => {
+        if (path.startsWith("/api/station/nearby")) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve([]),
+          });
+        }
+        if (path.startsWith("/api/equipment/")) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ recommendedEquipment: [] }),
+          });
+        }
+        return Promise.resolve({
           ok: true,
           json: () =>
             Promise.resolve({
@@ -64,11 +76,8 @@ describe("AnalysisNewView", () => {
               recommendedEquipment: [],
               briefing: "정상",
             }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: () => Promise.resolve({ recommendedEquipment: [] }),
-        }),
+        });
+      }),
     );
     render(
       <DispatchAnalysisProvider>

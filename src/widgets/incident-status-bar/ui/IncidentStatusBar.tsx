@@ -6,8 +6,9 @@ interface IncidentStatusBarProps {
   incidentId: string;
   title: string;
   address: string;
-  lat: number;
-  lng: number;
+  // API로만 복원한 분석에는 좌표가 없다.
+  lat?: number;
+  lng?: number;
   receivedAtLabel: string;
   initialElapsedSeconds: number;
 }
@@ -59,9 +60,11 @@ export default function IncidentStatusBar({
             <span className="inline-flex items-center gap-1.5 text-[#4e5560]">
               {address}
             </span>
-            <span className="mono text-[#c0c4cc]">
-              {lat.toFixed(4)}, {lng.toFixed(4)}
-            </span>
+            {lat !== undefined && lng !== undefined ? (
+              <span className="mono text-[#6b7280]">
+                {lat.toFixed(4)}, {lng.toFixed(4)}
+              </span>
+            ) : null}
             <span className="text-[#e6e9ee]">·</span>
             <span>
               접수{" "}

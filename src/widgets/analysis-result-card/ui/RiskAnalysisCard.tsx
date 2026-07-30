@@ -46,7 +46,7 @@ export default function RiskAnalysisCard({
         <div className="flex items-center gap-4">
           <RiskDonut value={probability} level={riskLevel} />
           <div>
-            <div className="mb-1.5 text-xs text-[#9aa1ab]">종합 위험도</div>
+            <div className="mb-1.5 text-xs text-[#6b7280]">종합 위험도</div>
             <div
               className={`text-2xl leading-none font-bold ${
                 riskLevel === "HIGH"
@@ -70,7 +70,7 @@ export default function RiskAnalysisCard({
       </div>
       <div className="grid grid-cols-2 border-t border-[#eef0f3]">
         <div className="border-r border-[#eef0f3] px-4 py-3">
-          <div className="mb-1 text-[11.5px] text-[#9aa1ab]">
+          <div className="mb-1 text-[11.5px] text-[#6b7280]">
             예상 최단 도착
           </div>
           <div>
@@ -81,7 +81,7 @@ export default function RiskAnalysisCard({
           </div>
         </div>
         <div className="px-4 py-3">
-          <div className="mb-1 text-[11.5px] text-[#9aa1ab]">목표 대비</div>
+          <div className="mb-1 text-[11.5px] text-[#6b7280]">목표 대비</div>
           <div>
             <span
               className={`mono text-xl font-bold ${diff > 0 ? "text-risk-high" : "text-risk-low"}`}

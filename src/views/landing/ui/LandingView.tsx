@@ -1,30 +1,7 @@
 import Link from "next/link";
 import RiskDonut from "@/shared/ui/RiskDonut";
 import SystemStatus from "./SystemStatus";
-
-const SUMMARY_STATS = [
-  {
-    label: "전체 분석 건수",
-    value: "12,847",
-    unit: "건",
-    valueClassName: "text-ink",
-    caption: "2024.03 시범 운영 이후 누적",
-  },
-  {
-    label: "평균 골든타임 확보율",
-    value: "78.3",
-    unit: "%",
-    valueClassName: "text-risk-low",
-    caption: "7분 내 현장 도착 기준",
-  },
-  {
-    label: "평균 분석 소요",
-    value: "28",
-    unit: "초",
-    valueClassName: "text-ember",
-    caption: "신고 입력 → 결과 산출",
-  },
-];
+import HeroStats from "./HeroStats";
 
 const DISPATCH_PHASES = [
   {
@@ -130,33 +107,7 @@ export default function LandingView() {
               {/* 운영 현황 원장 */}
               <div className="w-full shrink-0 lg:w-[288px]">
                 <SystemStatus />
-                <dl className="mt-4 grid grid-cols-1 gap-x-6 sm:grid-cols-3 lg:grid-cols-1">
-                  {SUMMARY_STATS.map(
-                    ({ label, value, unit, valueClassName, caption }) => (
-                      <div
-                        key={label}
-                        className="border-t border-[#e6e9ee] py-4"
-                      >
-                        <dt className="text-[12.5px] text-[#5c6672]">
-                          {label}
-                        </dt>
-                        <dd className="mt-2.5">
-                          <span
-                            className={`mono text-[26px] leading-none font-semibold ${valueClassName}`}
-                          >
-                            {value}
-                          </span>
-                          <span className="ml-1 text-[13px] text-[#6b7280]">
-                            {unit}
-                          </span>
-                          <span className="mt-2.5 block text-[11.5px] leading-[1.5] text-[#6b7280]">
-                            {caption}
-                          </span>
-                        </dd>
-                      </div>
-                    ),
-                  )}
-                </dl>
+                <HeroStats />
               </div>
             </div>
           </div>

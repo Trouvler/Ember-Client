@@ -188,7 +188,7 @@ describe("DispatchRequestForm", () => {
     expect(nearbyCall?.[0]).toContain("lat=37.5");
   });
 
-  it("인접 출동대가 없으면 빈 상태를 표시한다", async () => {
+  it("인접 출동대가 비면 시연 데이터와 배지를 표시한다", async () => {
     stubFetch({ nearby: [] });
     render(
       <DispatchRequestForm
@@ -199,9 +199,36 @@ describe("DispatchRequestForm", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "화재" }));
 
+    expect(await screen.findByText("종로소방서")).toBeInTheDocument();
     expect(
-      await screen.findByText("인접 출동대 정보가 없습니다."),
+      screen.getByText("시연 데이터 · 실제 집계가 아닙니다"),
     ).toBeInTheDocument();
+  });
+
+  it("인접 출동대 실데이터가 있으면 배지를 표시하지 않는다", async () => {
+    stubFetch({
+      nearby: [
+        {
+          stationId: 3,
+          name: "중부소방서",
+          distanceMeters: 900,
+          estimatedArrivalMinutes: 5.2,
+        },
+      ],
+    });
+    render(
+      <DispatchRequestForm
+        location={{ lat: 37.5, lng: 127 }}
+        onSubmitted={vi.fn()}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "화재" }));
+    await screen.findByText("중부소방서");
+
+    expect(
+      screen.queryByText("시연 데이터 · 실제 집계가 아닙니다"),
+    ).not.toBeInTheDocument();
   });
 
   it("인접 출동대 조회가 실패하면 안내를 표시한다", async () => {

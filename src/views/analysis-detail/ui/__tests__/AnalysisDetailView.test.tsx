@@ -179,7 +179,7 @@ describe("AnalysisDetailView", () => {
     ).toBeInTheDocument();
   });
 
-  it("상세 API가 실패하면 안내와 다시 시도를 표시한다", async () => {
+  it("상세 API가 실패하면 시연 데이터와 배지·다시 시도를 함께 표시한다", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("500")));
 
     render(
@@ -189,14 +189,33 @@ describe("AnalysisDetailView", () => {
     );
 
     expect(
-      await screen.findByText("분석 결과가 없습니다."),
+      await screen.findByText("시연 데이터 · 분석 결과를 불러오지 못했습니다"),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText("분석 결과 조회에 실패했습니다."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("종로소방서")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "다시 시도" }),
     ).toBeInTheDocument();
+  });
+
+  it("상세 API가 성공하면 시연 배지를 표시하지 않는다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(API_RESULT),
+      }),
+    );
+
+    render(
+      <DispatchAnalysisProvider>
+        <AnalysisDetailView id="7" />
+      </DispatchAnalysisProvider>,
+    );
+    await screen.findByText("강남소방서");
+
+    expect(
+      screen.queryByText("시연 데이터 · 분석 결과를 불러오지 못했습니다"),
+    ).not.toBeInTheDocument();
   });
 
   it("다시 시도가 성공하면 결과를 표시한다", async () => {
@@ -207,7 +226,7 @@ describe("AnalysisDetailView", () => {
         <AnalysisDetailView id="7" />
       </DispatchAnalysisProvider>,
     );
-    await screen.findByText("분석 결과 조회에 실패했습니다.");
+    await screen.findByText("시연 데이터 · 분석 결과를 불러오지 못했습니다");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({

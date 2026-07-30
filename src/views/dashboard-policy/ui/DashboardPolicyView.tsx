@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
+import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 import { probabilityAsPercent } from "@/shared/utils/probability";
 import { getPolicyDashboard } from "@/entities/policy-dashboard/api/getPolicyDashboard";
 import type { PolicyDashboard } from "@/entities/policy-dashboard/model/types";
+import { DEMO_POLICY_DASHBOARD } from "@/entities/policy-dashboard/model/demoData";
 
 const RANK_BADGE_CLASSES = [
   "bg-risk-high",
@@ -46,7 +48,12 @@ export default function DashboardPolicyView() {
     setReloadToken((current) => current + 1);
   };
 
-  const districts = dashboard?.vulnerableDistrictTop5 ?? [];
+  const isDemo =
+    dashboard !== null &&
+    dashboard.totalAnalyzedCases === 0 &&
+    dashboard.vulnerableDistrictTop5.length === 0;
+  const shown = isDemo ? DEMO_POLICY_DASHBOARD : dashboard;
+  const districts = shown?.vulnerableDistrictTop5 ?? [];
 
   return (
     <main>
@@ -79,20 +86,26 @@ export default function DashboardPolicyView() {
           </div>
         ) : null}
 
-        {!isLoading && !error && dashboard ? (
+        {!isLoading && !error && shown ? (
           <>
+            {isDemo ? (
+              <div className="mb-4">
+                <DemoDataBadge visible />
+              </div>
+            ) : null}
+
             {/* 요약 카드 */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:mb-8 sm:grid-cols-2 sm:gap-5">
               <div className="rounded-2xl border border-[#ebedf0] px-5 py-6 card-shadow sm:px-7 sm:py-8">
                 <div className="text-[13px] text-[#6b7280]">전체 분석 건수</div>
                 <div className="mt-2.5 flex items-baseline gap-1">
                   <span className="mono text-[32px] font-bold text-ink">
-                    {dashboard.totalAnalyzedCases.toLocaleString("ko-KR")}
+                    {shown.totalAnalyzedCases.toLocaleString("ko-KR")}
                   </span>
                   <span className="text-sm text-[#5c6672]">건</span>
                 </div>
                 <div className="mt-2 text-xs text-[#6b7280]">
-                  {dashboard.region} 기준 누적
+                  {shown.region} 기준 누적
                 </div>
               </div>
               <div className="rounded-2xl border border-[#ebedf0] px-5 py-6 card-shadow sm:px-7 sm:py-8">
@@ -102,7 +115,7 @@ export default function DashboardPolicyView() {
                 <div className="mt-2.5 flex items-baseline gap-1">
                   <span className="mono text-[32px] font-bold text-risk-high">
                     {probabilityAsPercent(
-                      dashboard.avgGoldenTimeFailureRate,
+                      shown.avgGoldenTimeFailureRate,
                     ).toFixed(1)}
                   </span>
                   <span className="text-sm text-[#5c6672]">%</span>

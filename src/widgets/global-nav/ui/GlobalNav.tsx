@@ -103,7 +103,7 @@ export default function GlobalNav() {
                 </>
               ) : null}
               <span className="hidden font-medium text-[#4e5560] sm:inline">
-                김선우 관제사
+                관제사
               </span>
               <Link href="/" className="text-[#6b7280] hover:text-ink">
                 홈으로

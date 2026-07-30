@@ -90,11 +90,14 @@ export default function IncidentStatusBar({
           <button
             type="button"
             disabled
-            title="출동 지령 전송 API가 제공되면 사용할 수 있습니다."
+            aria-describedby="dispatch-order-pending"
             className="flex-1 rounded-[9px] bg-ember px-[19px] py-2.5 text-[13.5px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
           >
-            출동 지령 전송
+            출동 지령 전송 (준비 중)
           </button>
+          <span id="dispatch-order-pending" className="sr-only">
+            출동 지령 전송 API가 제공되면 사용할 수 있습니다.
+          </span>
         </div>
       </div>
     </div>

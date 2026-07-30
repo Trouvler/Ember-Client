@@ -61,7 +61,7 @@ describe("GlobalNav", () => {
     render(<GlobalNav />);
 
     expect(screen.getByText("대국민 공개")).toBeInTheDocument();
-    expect(screen.queryByText("김선우 관제사")).not.toBeInTheDocument();
+    expect(screen.queryByText("관제사")).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "통계" })).toHaveClass("font-bold");
   });
 });

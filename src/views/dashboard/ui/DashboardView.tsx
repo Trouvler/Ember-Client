@@ -5,6 +5,7 @@ import MapView from "@/shared/ui/MapView";
 import RiskDonut from "@/shared/ui/RiskDonut";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
+import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 import {
   getFireStation,
   getFireStations,
@@ -13,18 +14,27 @@ import type {
   FireStation,
   FireStationDetail,
 } from "@/entities/fire-station/model/types";
-
-const SAMPLE_DISTRICT = {
-  name: "종로구 창신동",
-  location: { lat: 37.5744, lng: 127.0157 },
-  riskValue: 71,
-  avgArrivalMinutes: 8.4,
-  oldBuildingRate: 71,
-  recentReportCount: 37,
-  jurisdiction: "종로소방서",
-};
+import { DEMO_FIRE_STATIONS } from "@/entities/fire-station/model/demoData";
+import { getRiskLayers } from "@/entities/risk-layer/api/getRiskLayers";
+import type { RiskLayerFeature } from "@/entities/risk-layer/model/types";
+import { DEMO_RISK_FEATURES } from "@/entities/risk-layer/model/demoData";
+import { probabilityAsPercent } from "@/shared/utils/probability";
+import type { RiskLevel } from "@/entities/dispatch-analysis/model/types";
 
 const LAYERS = ["골든타임 실패율", "평균 도착시간"] as const;
+
+function riskLevelOf(score: number): RiskLevel {
+  if (score >= 60) return "HIGH";
+  if (score >= 30) return "MEDIUM";
+  return "LOW";
+}
+
+const RISK_TEXT_CLASS: Record<RiskLevel, string> = {
+  HIGH: "text-risk-high",
+  MEDIUM: "text-risk-medium",
+  LOW: "text-risk-low",
+  UNKNOWN: "text-[#5c6672]",
+};
 
 export default function DashboardView() {
   const [activeLayer, setActiveLayer] = useState<(typeof LAYERS)[number]>(
@@ -38,7 +48,16 @@ export default function DashboardView() {
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [stationError, setStationError] = useState<string | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
-  const stationMarkers = stations.map((station) => ({
+  const [features, setFeatures] = useState<RiskLayerFeature[]>([]);
+  const [selectedDong, setSelectedDong] = useState<string | null>(null);
+  const [isLoadingLayers, setIsLoadingLayers] = useState(true);
+  const [layerError, setLayerError] = useState<string | null>(null);
+  const isDemoStations =
+    !isLoadingStations && !stationError && stations.length === 0;
+  const shownStations: FireStation[] = isDemoStations
+    ? DEMO_FIRE_STATIONS
+    : stations;
+  const stationMarkers = shownStations.map((station) => ({
     id: station.stationId,
     lat: station.latitude,
     lng: station.longitude,
@@ -59,6 +78,14 @@ export default function DashboardView() {
   };
 
   const selectStation = async (station: FireStation) => {
+    const demo = DEMO_FIRE_STATIONS.find(
+      (item) => item.stationId === station.stationId,
+    );
+    if (demo) {
+      setDetailError(null);
+      setSelectedStation(demo);
+      return;
+    }
     setIsLoadingDetail(true);
     setDetailError(null);
     try {
@@ -70,23 +97,51 @@ export default function DashboardView() {
     }
   };
 
+  const loadRiskLayers = async (nextRegion = "") => {
+    setIsLoadingLayers(true);
+    setLayerError(null);
+    setSelectedDong(null);
+    try {
+      const collection = await getRiskLayers(nextRegion);
+      setFeatures(collection.features ?? []);
+    } catch {
+      setLayerError("위험도 레이어를 불러오지 못했습니다.");
+    } finally {
+      setIsLoadingLayers(false);
+    }
+  };
+
   useEffect(() => {
-    const id = setTimeout(() => void loadStations(), 0);
+    const id = setTimeout(() => {
+      void loadStations();
+      void loadRiskLayers();
+    }, 0);
     return () => clearTimeout(id);
   }, []);
 
+  const isDemoFeatures =
+    !isLoadingLayers && !layerError && features.length === 0;
+  const shownFeatures: RiskLayerFeature[] = isDemoFeatures
+    ? DEMO_RISK_FEATURES
+    : features;
+  const selectedFeature =
+    shownFeatures.find(
+      (feature) => feature.properties.dongName === selectedDong,
+    ) ?? shownFeatures[0];
+  const isArrivalLayer = activeLayer === LAYERS[1];
+
   return (
-    <div className="px-[22px] py-8">
+    <main className="px-4 py-8 sm:px-[22px]">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           위험도 상황 지도
         </h1>
-        <p className="mt-1.5 text-[13px] text-[#8b909a]">
+        <p className="mt-1.5 text-[13px] text-[#5c6672]">
           행정동별 화재 출동 위험도를 지도 위에 시각화합니다.
         </p>
       </div>
 
-      <div className="grid grid-cols-[2.3fr_1fr] items-start gap-5">
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[2.3fr_1fr]">
         {/* 지도 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
@@ -112,7 +167,7 @@ export default function DashboardView() {
                 : null
             }
             onClickMarker={(stationId) => {
-              const station = stations.find(
+              const station = shownStations.find(
                 (item) => item.stationId === stationId,
               );
               if (station) void selectStation(station);
@@ -146,61 +201,132 @@ export default function DashboardView() {
           {/* 선택 행정동 상세 */}
           <section className="rounded-xl border border-[#ebedf0] card-shadow">
             <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
-              <span className="h-3.5 w-[3px] bg-ember" />
+              <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">
-                {SAMPLE_DISTRICT.name}
+                {selectedFeature?.properties.dongName ?? "행정동 위험도"}
               </h2>
             </div>
-            <div className="p-6">
-              <div className="flex items-center gap-3.5">
-                <RiskDonut value={SAMPLE_DISTRICT.riskValue} level="HIGH" />
-                <div>
-                  <div className="mb-1.5 text-[11.5px] text-[#9aa1ab]">
-                    등급
-                  </div>
-                  <div className="text-[22px] leading-none font-bold text-risk-high">
-                    HIGH
-                  </div>
-                  <div className="mt-2 inline-block rounded bg-risk-high-bg px-2 py-0.5 text-[11px] font-bold text-risk-high-text">
-                    중점 관리 대상
-                  </div>
-                </div>
+
+            {isLoadingLayers ? (
+              <div className="p-6">
+                <LoadingSpinner label="위험도 레이어 조회 중" size="sm" />
               </div>
-              <div className="mt-5 grid grid-cols-2 border-t border-[#eef0f3]">
-                <div className="border-r border-[#eef0f3] py-4 pr-3">
-                  <div className="mb-1 text-[11.5px] text-[#9aa1ab]">
-                    평균 도착시간
-                  </div>
+            ) : null}
+
+            {!isLoadingLayers && layerError ? (
+              <div className="p-4">
+                <ErrorFallback
+                  message={layerError}
+                  onRetry={() => void loadRiskLayers(region)}
+                />
+              </div>
+            ) : null}
+
+            {isDemoFeatures ? (
+              <div className="px-4 pt-3">
+                <DemoDataBadge visible />
+              </div>
+            ) : null}
+
+            {!isLoadingLayers && !layerError && selectedFeature ? (
+              <div className="p-6">
+                <div className="flex items-center gap-3.5">
+                  <RiskDonut
+                    value={Math.round(
+                      probabilityAsPercent(
+                        selectedFeature.properties.riskScore,
+                      ),
+                    )}
+                    level={riskLevelOf(
+                      probabilityAsPercent(
+                        selectedFeature.properties.riskScore,
+                      ),
+                    )}
+                  />
                   <div>
-                    <span className="mono text-lg font-bold text-ink">
-                      {SAMPLE_DISTRICT.avgArrivalMinutes}
-                    </span>
-                    <span className="text-xs text-[#5c6672]"> 분</span>
+                    <div className="mb-1.5 text-[11.5px] text-[#6b7280]">
+                      등급
+                    </div>
+                    <div
+                      className={`text-[22px] leading-none font-bold ${RISK_TEXT_CLASS[riskLevelOf(probabilityAsPercent(selectedFeature.properties.riskScore))]}`}
+                    >
+                      {riskLevelOf(
+                        probabilityAsPercent(
+                          selectedFeature.properties.riskScore,
+                        ),
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="py-4 pl-3.5">
-                  <div className="mb-1 text-[11.5px] text-[#9aa1ab]">
-                    노후건물 비율
+                <div className="mt-5 grid grid-cols-2 border-t border-[#eef0f3]">
+                  <div className="border-r border-[#eef0f3] py-4 pr-3">
+                    <div
+                      className={`mb-1 text-[11.5px] ${isArrivalLayer ? "font-bold text-ember" : "text-[#6b7280]"}`}
+                    >
+                      평균 도착시간
+                    </div>
+                    <div>
+                      <span className="mono text-lg font-bold text-ink">
+                        {selectedFeature.properties.avgArrivalMinutes}
+                      </span>
+                      <span className="text-xs text-[#5c6672]"> 분</span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="mono text-lg font-bold text-risk-high">
-                      {SAMPLE_DISTRICT.oldBuildingRate}
-                    </span>
-                    <span className="text-xs text-[#5c6672]"> %</span>
+                  <div className="py-4 pl-3.5">
+                    <div
+                      className={`mb-1 text-[11.5px] ${isArrivalLayer ? "text-[#6b7280]" : "font-bold text-ember"}`}
+                    >
+                      골든타임 실패율
+                    </div>
+                    <div>
+                      <span className="mono text-lg font-bold text-risk-high">
+                        {probabilityAsPercent(
+                          selectedFeature.properties.riskScore,
+                        ).toFixed(0)}
+                      </span>
+                      <span className="text-xs text-[#5c6672]"> %</span>
+                    </div>
                   </div>
                 </div>
+
+                {shownFeatures.length > 1 ? (
+                  <div className="mt-1 border-t border-[#eef0f3] pt-3">
+                    <div className="mb-2 text-[11.5px] text-[#6b7280]">
+                      행정동 선택
+                    </div>
+                    <ul className="max-h-40 overflow-y-auto">
+                      {shownFeatures.map((feature) => (
+                        <li key={feature.properties.dongName}>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setSelectedDong(feature.properties.dongName)
+                            }
+                            aria-current={
+                              feature.properties.dongName ===
+                              selectedFeature.properties.dongName
+                                ? "true"
+                                : undefined
+                            }
+                            className={`flex w-full items-center justify-between py-1.5 text-left text-xs ${
+                              feature.properties.dongName ===
+                              selectedFeature.properties.dongName
+                                ? "font-bold text-ink"
+                                : "text-[#5c6672]"
+                            }`}
+                          >
+                            {feature.properties.dongName}
+                            <span className="mono">
+                              {`${probabilityAsPercent(feature.properties.riskScore).toFixed(0)}%`}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
               </div>
-              <div className="mt-1 border-t border-[#eef0f3] pt-4 text-xs leading-[1.6] text-[#6b7280]">
-                최근 90일 신고{" "}
-                <span className="mono font-semibold text-ink">
-                  {SAMPLE_DISTRICT.recentReportCount}
-                </span>
-                건 · 관할{" "}
-                <span className="font-semibold text-ink">
-                  {SAMPLE_DISTRICT.jurisdiction}
-                </span>
-              </div>
-            </div>
+            ) : null}
           </section>
 
           <div className="rounded-xl border border-[#ebedf0] border-l-[3px] border-l-risk-high px-4 py-4 text-[11.5px] leading-[1.6] text-[#6b7280] card-shadow">
@@ -217,6 +343,7 @@ export default function DashboardView() {
               onSubmit={(event) => {
                 event.preventDefault();
                 void loadStations(region);
+                void loadRiskLayers(region);
               }}
             >
               <input
@@ -243,14 +370,12 @@ export default function DashboardView() {
                   onRetry={() => void loadStations(region)}
                 />
               ) : null}
-              {!isLoadingStations && !stationError && stations.length === 0 ? (
-                <p className="py-3 text-center text-xs text-[#8b909a]">
-                  조회된 소방서가 없습니다.
-                </p>
-              ) : null}
-              {!isLoadingStations && !stationError && stations.length > 0 ? (
-                <ul className="max-h-48 overflow-y-auto">
-                  {stations.map((station) => (
+              <DemoDataBadge visible={isDemoStations} />
+              {!isLoadingStations &&
+              !stationError &&
+              shownStations.length > 0 ? (
+                <ul className="mt-2 max-h-48 overflow-y-auto">
+                  {shownStations.map((station) => (
                     <li
                       key={station.stationId}
                       className="border-b border-[#f2f4f6] last:border-b-0"
@@ -263,7 +388,7 @@ export default function DashboardView() {
                         <span className="block text-sm font-semibold text-ink">
                           {station.name}
                         </span>
-                        <span className="block text-[11px] text-[#8b909a]">
+                        <span className="block text-[11px] text-[#6b7280]">
                           {station.address}
                         </span>
                       </button>
@@ -293,6 +418,6 @@ export default function DashboardView() {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

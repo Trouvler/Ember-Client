@@ -11,8 +11,12 @@ import type {
 } from "@/entities/dispatch-analysis/model/types";
 import { BUILDING_TYPE_LABELS } from "@/entities/dispatch-analysis/model/types";
 import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
+import { getNearbyStations } from "@/entities/fire-station/api/fireStations";
+import type { NearbyStation } from "@/entities/fire-station/model/types";
+import { DEMO_NEARBY_STATIONS } from "@/entities/fire-station/model/demoData";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
+import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 
 interface DispatchRequestFormProps {
   location: DispatchLocation | null;
@@ -46,6 +50,42 @@ export default function DispatchRequestForm({
     const id = setTimeout(() => setOccurredAt(new Date().toISOString()), 0);
     return () => clearTimeout(id);
   }, []);
+
+  // 요청 서명을 키로 들고 있어 결과가 어긋나지 않고, 로딩 상태를 파생할 수 있다.
+  const nearbyKey =
+    location && incidentType
+      ? `${location.lat},${location.lng},${incidentType}`
+      : null;
+  const [nearby, setNearby] = useState<{
+    key: string;
+    stations: NearbyStation[] | null;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!nearbyKey || !location || !incidentType) return;
+    let isMounted = true;
+    void getNearbyStations({
+      lat: location.lat,
+      lng: location.lng,
+      incidentType,
+    })
+      .then((stations) => {
+        if (isMounted) setNearby({ key: nearbyKey, stations });
+      })
+      .catch(() => {
+        if (isMounted) setNearby({ key: nearbyKey, stations: null });
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [nearbyKey, location, incidentType]);
+
+  const nearbyResult = nearby?.key === nearbyKey ? nearby : null;
+  const isLoadingNearby = nearbyKey !== null && nearbyResult === null;
+  const isDemoNearby = nearbyResult?.stations?.length === 0;
+  const shownNearby = isDemoNearby
+    ? DEMO_NEARBY_STATIONS
+    : (nearbyResult?.stations ?? []);
 
   const isDisabled = !location || !incidentType || !occurredAt || isSubmitting;
 
@@ -116,6 +156,56 @@ export default function DispatchRequestForm({
         </div>
       </div>
 
+      {nearbyKey ? (
+        <div>
+          <div className="text-[13px] font-semibold text-[#374151]">
+            인접 출동대
+          </div>
+          <div className="mt-[9px] rounded-xl border border-[#ebedf0] px-3 py-2.5 card-shadow">
+            {isLoadingNearby ? (
+              <LoadingSpinner label="인접 출동대 조회 중" size="sm" />
+            ) : null}
+
+            {!isLoadingNearby && nearbyResult?.stations === null ? (
+              <p className="py-1 text-center text-xs text-[#6b7280]">
+                인접 출동대를 불러오지 못했습니다.
+              </p>
+            ) : null}
+
+            {isDemoNearby ? (
+              <div className="pb-2">
+                <DemoDataBadge visible />
+              </div>
+            ) : null}
+
+            {!isLoadingNearby && shownNearby.length > 0 ? (
+              <ul>
+                {shownNearby.map((station) => (
+                  <li
+                    key={station.stationId}
+                    className="flex items-center justify-between gap-2 border-b border-[#eef0f3] py-2 text-xs last:border-b-0"
+                  >
+                    <span className="font-semibold text-ink">
+                      {station.name}
+                    </span>
+                    <span className="text-[#5c6672]">
+                      <span className="mono">
+                        {(station.distanceMeters / 1000).toFixed(1)}
+                      </span>
+                      km ·{" "}
+                      <span className="mono">
+                        {station.estimatedArrivalMinutes}
+                      </span>
+                      분
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
       <div>
         <label
           htmlFor="occurred-at"
@@ -130,7 +220,7 @@ export default function DispatchRequestForm({
           value={occurredAt ? formatOccurredAt(new Date(occurredAt)) : ""}
           className="mono mt-[9px] w-full rounded-xl border border-[#ebedf0] px-3 py-2.5 text-sm text-ink card-shadow"
         />
-        <div className="mt-1 text-[11px] text-[#adb3bd]">기본값: 현재 시각</div>
+        <div className="mt-1 text-[11px] text-[#6b7280]">기본값: 현재 시각</div>
       </div>
 
       <div>
@@ -138,7 +228,7 @@ export default function DispatchRequestForm({
           htmlFor="building-type"
           className="text-[13px] font-semibold text-[#374151]"
         >
-          건물 유형 <span className="font-normal text-[#adb3bd]">(선택)</span>
+          건물 유형 <span className="font-normal text-[#6b7280]">(선택)</span>
         </label>
         <select
           id="building-type"

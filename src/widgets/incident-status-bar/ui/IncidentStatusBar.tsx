@@ -6,8 +6,9 @@ interface IncidentStatusBarProps {
   incidentId: string;
   title: string;
   address: string;
-  lat: number;
-  lng: number;
+  // API로만 복원한 분석에는 좌표가 없다.
+  lat?: number;
+  lng?: number;
   receivedAtLabel: string;
   initialElapsedSeconds: number;
 }
@@ -48,20 +49,22 @@ export default function IncidentStatusBar({
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-risk-high" />
               출동 대기
             </span>
-            <span className="mono text-[12.5px] text-[#adb3bd]">
+            <span className="mono text-[12.5px] text-[#6b7280]">
               #{incidentId}
             </span>
           </div>
           <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
             {title}
           </h1>
-          <div className="mt-1.5 flex flex-wrap items-center gap-3 text-[13px] text-[#8b909a]">
+          <div className="mt-1.5 flex flex-wrap items-center gap-3 text-[13px] text-[#5c6672]">
             <span className="inline-flex items-center gap-1.5 text-[#4e5560]">
               {address}
             </span>
-            <span className="mono text-[#c0c4cc]">
-              {lat.toFixed(4)}, {lng.toFixed(4)}
-            </span>
+            {lat !== undefined && lng !== undefined ? (
+              <span className="mono text-[#6b7280]">
+                {lat.toFixed(4)}, {lng.toFixed(4)}
+              </span>
+            ) : null}
             <span className="text-[#e6e9ee]">·</span>
             <span>
               접수{" "}
@@ -87,11 +90,14 @@ export default function IncidentStatusBar({
           <button
             type="button"
             disabled
-            title="출동 지령 전송 API가 제공되면 사용할 수 있습니다."
+            aria-describedby="dispatch-order-pending"
             className="flex-1 rounded-[9px] bg-ember px-[19px] py-2.5 text-[13.5px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
           >
-            출동 지령 전송
+            출동 지령 전송 (준비 중)
           </button>
+          <span id="dispatch-order-pending" className="sr-only">
+            출동 지령 전송 API가 제공되면 사용할 수 있습니다.
+          </span>
         </div>
       </div>
     </div>

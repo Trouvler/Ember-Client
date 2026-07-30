@@ -69,7 +69,7 @@ export default function GlobalNav() {
             <span className="text-xl font-bold tracking-[-0.03em] text-ember">
               잉걸불
             </span>
-            <span className="hidden text-[11.5px] font-medium text-[#adb3bd] sm:inline">
+            <span className="hidden text-[11.5px] font-medium text-[#6b7280] sm:inline">
               AI 출동 의사결정 보조 시스템
             </span>
           </Link>
@@ -81,7 +81,7 @@ export default function GlobalNav() {
                 className={
                   item.isActive(pathname)
                     ? "font-bold text-[#191f28]"
-                    : "font-medium text-[#8b909a]"
+                    : "font-medium text-[#6b7280]"
                 }
               >
                 {item.label}
@@ -91,21 +91,21 @@ export default function GlobalNav() {
         </div>
         <div className="flex shrink-0 items-center gap-[13px] text-[12.5px]">
           {isPublic ? (
-            <span className="text-[#adb3bd]">대국민 공개</span>
+            <span className="text-[#6b7280]">대국민 공개</span>
           ) : (
             <>
               {showClock && now ? (
                 <>
-                  <span className="mono hidden text-[#adb3bd] sm:inline">
+                  <span className="mono hidden text-[#6b7280] sm:inline">
                     {formatClock(now)}
                   </span>
                   <span className="hidden text-[#e6e9ee] sm:inline">|</span>
                 </>
               ) : null}
               <span className="hidden font-medium text-[#4e5560] sm:inline">
-                김선우 관제사
+                관제사
               </span>
-              <Link href="/" className="text-[#adb3bd] hover:text-[#5c6672]">
+              <Link href="/" className="text-[#6b7280] hover:text-ink">
                 홈으로
               </Link>
             </>

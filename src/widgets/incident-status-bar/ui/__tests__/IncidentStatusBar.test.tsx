@@ -45,7 +45,7 @@ describe("IncidentStatusBar", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: "출동 지령 전송" }),
+      screen.getByRole("button", { name: "출동 지령 전송 (준비 중)" }),
     ).toBeDisabled();
     await userEvent.click(screen.getByRole("button", { name: "분석서 출력" }));
     expect(window.print).toHaveBeenCalledOnce();

@@ -13,8 +13,10 @@ import { BUILDING_TYPE_LABELS } from "@/entities/dispatch-analysis/model/types";
 import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
 import { getNearbyStations } from "@/entities/fire-station/api/fireStations";
 import type { NearbyStation } from "@/entities/fire-station/model/types";
+import { DEMO_NEARBY_STATIONS } from "@/entities/fire-station/model/demoData";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
+import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 
 interface DispatchRequestFormProps {
   location: DispatchLocation | null;
@@ -80,6 +82,10 @@ export default function DispatchRequestForm({
 
   const nearbyResult = nearby?.key === nearbyKey ? nearby : null;
   const isLoadingNearby = nearbyKey !== null && nearbyResult === null;
+  const isDemoNearby = nearbyResult?.stations?.length === 0;
+  const shownNearby = isDemoNearby
+    ? DEMO_NEARBY_STATIONS
+    : (nearbyResult?.stations ?? []);
 
   const isDisabled = !location || !incidentType || !occurredAt || isSubmitting;
 
@@ -166,15 +172,15 @@ export default function DispatchRequestForm({
               </p>
             ) : null}
 
-            {!isLoadingNearby && nearbyResult?.stations?.length === 0 ? (
-              <p className="py-1 text-center text-xs text-[#6b7280]">
-                인접 출동대 정보가 없습니다.
-              </p>
+            {isDemoNearby ? (
+              <div className="pb-2">
+                <DemoDataBadge visible />
+              </div>
             ) : null}
 
-            {!isLoadingNearby && nearbyResult?.stations?.length ? (
+            {!isLoadingNearby && shownNearby.length > 0 ? (
               <ul>
-                {nearbyResult.stations.map((station) => (
+                {shownNearby.map((station) => (
                   <li
                     key={station.stationId}
                     className="flex items-center justify-between gap-2 border-b border-[#eef0f3] py-2 text-xs last:border-b-0"

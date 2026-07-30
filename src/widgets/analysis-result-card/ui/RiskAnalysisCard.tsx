@@ -39,7 +39,7 @@ export default function RiskAnalysisCard({
   return (
     <section className="rounded-xl border border-[#ebedf0] card-shadow">
       <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-3.5 py-2.5">
-        <span className="h-3.5 w-[3px] bg-ember" />
+        <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
         <h2 className="text-sm font-bold text-ink">위험도 분석</h2>
       </div>
       <div className="p-4">

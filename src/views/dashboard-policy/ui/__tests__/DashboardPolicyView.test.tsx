@@ -65,14 +65,32 @@ describe("DashboardPolicyView", () => {
     expect(screen.getByText("71%")).toBeInTheDocument();
   });
 
-  it("취약 행정동이 없으면 빈 상태를 표시한다", async () => {
-    stubFetch({ ...DASHBOARD, vulnerableDistrictTop5: [] });
+  it("집계가 비면 시연 데이터와 배지를 표시한다", async () => {
+    stubFetch({
+      region: "서울",
+      totalAnalyzedCases: 0,
+      avgGoldenTimeFailureRate: 0,
+      vulnerableDistrictTop5: [],
+    });
 
     render(<DashboardPolicyView />);
 
+    expect(await screen.findByText("12,847")).toBeInTheDocument();
+    expect(screen.getByText("종로구 창신동")).toBeInTheDocument();
     expect(
-      await screen.findByText("아직 집계된 취약 행정동이 없습니다."),
+      screen.getByText("시연 데이터 · 실제 집계가 아닙니다"),
     ).toBeInTheDocument();
+  });
+
+  it("실데이터가 있으면 배지를 표시하지 않는다", async () => {
+    stubFetch();
+
+    render(<DashboardPolicyView />);
+    await screen.findByText("12,847");
+
+    expect(
+      screen.queryByText("시연 데이터 · 실제 집계가 아닙니다"),
+    ).not.toBeInTheDocument();
   });
 
   it("조회에 실패하면 오류와 다시 시도를 표시한다", async () => {

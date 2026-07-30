@@ -92,7 +92,7 @@ describe("DashboardView", () => {
     };
   });
 
-  it("레이어를 전환하고 빈 소방서 목록을 표시한다", async () => {
+  it("레이어를 전환한다", async () => {
     stubFetch();
 
     render(<DashboardView />);
@@ -103,9 +103,48 @@ describe("DashboardView", () => {
     expect(screen.getByRole("button", { name: "평균 도착시간" })).toHaveClass(
       "bg-ink",
     );
+  });
+
+  it("소방서 목록이 비면 시연 데이터와 배지를 표시한다", async () => {
+    stubFetch({ stations: [] });
+
+    render(<DashboardView />);
+
     expect(
-      await screen.findByText("조회된 소방서가 없습니다."),
+      await screen.findByRole("button", { name: /종로소방서/ }),
     ).toBeInTheDocument();
+    expect(
+      screen.getAllByText("시연 데이터 · 실제 집계가 아닙니다").length,
+    ).toBeGreaterThan(0);
+  });
+
+  it("시연 소방서를 선택하면 상세를 조회하지 않고 픽스처를 표시한다", async () => {
+    const fetchMock = stubFetch({ stations: [] });
+
+    render(<DashboardView />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: /종로소방서/ }),
+    );
+
+    expect(
+      await screen.findByText(/펌프차/, { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      fetchMock.mock.calls.some(([path]) =>
+        /^\/api\/station\/\d+/.test(String(path)),
+      ),
+    ).toBe(false);
+  });
+
+  it("소방서와 위험도 실데이터가 있으면 배지를 표시하지 않는다", async () => {
+    stubFetch({ stations: [STATION], features: [FEATURE] });
+
+    render(<DashboardView />);
+    await screen.findByRole("button", { name: /종로소방서/ });
+
+    expect(
+      screen.queryByText("시연 데이터 · 실제 집계가 아닙니다"),
+    ).not.toBeInTheDocument();
   });
 
   it("위험도 레이어를 region과 함께 조회한다", async () => {
@@ -131,16 +170,17 @@ describe("DashboardView", () => {
     expect(screen.getByText("8.4")).toBeInTheDocument();
   });
 
-  it("집계된 행정동이 없으면 빈 상태를 표시한다", async () => {
+  it("위험도 레이어가 비면 시연 데이터와 배지를 표시한다", async () => {
     stubFetch({ features: [] });
 
     render(<DashboardView />);
 
     expect(
-      await screen.findByText("집계된 행정동 위험도가 없습니다.", {
-        exact: false,
-      }),
+      await screen.findByRole("heading", { name: "종로구 창신동" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getAllByText("시연 데이터 · 실제 집계가 아닙니다").length,
+    ).toBeGreaterThan(0);
   });
 
   it("소방서 선택 후 상세 정보를 표시한다", async () => {

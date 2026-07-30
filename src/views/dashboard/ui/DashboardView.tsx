@@ -136,7 +136,7 @@ export default function DashboardView() {
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           위험도 상황 지도
         </h1>
-        <p className="mt-1.5 text-[13px] text-[#8b909a]">
+        <p className="mt-1.5 text-[13px] text-[#5c6672]">
           행정동별 화재 출동 위험도를 지도 위에 시각화합니다.
         </p>
       </div>
@@ -388,7 +388,7 @@ export default function DashboardView() {
                         <span className="block text-sm font-semibold text-ink">
                           {station.name}
                         </span>
-                        <span className="block text-[11px] text-[#8b909a]">
+                        <span className="block text-[11px] text-[#6b7280]">
                           {station.address}
                         </span>
                       </button>

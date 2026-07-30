@@ -97,7 +97,7 @@ export default function AnalysisNewView() {
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           신고 시뮬레이션
         </h1>
-        <p className="mt-1.5 text-[13px] text-[#8b909a]">
+        <p className="mt-1.5 text-[13px] text-[#5c6672]">
           신고 위치와 사고 정보를 입력하면 AI가 출동 분석 결과를 산출합니다.
         </p>
       </div>
@@ -110,7 +110,7 @@ export default function AnalysisNewView() {
               <span className="h-3.5 w-[3px] bg-ember" />
               <h2 className="text-sm font-bold text-ink">신고 위치 지정</h2>
             </div>
-            <span className="text-[11.5px] text-[#9aa1ab]">
+            <span className="text-[11.5px] text-[#6b7280]">
               지도를 클릭해 위치를 지정하세요
             </span>
           </div>
@@ -193,7 +193,7 @@ export default function AnalysisNewView() {
                         <span className="block text-[13px] font-semibold text-ink">
                           {result.name}
                         </span>
-                        <span className="block text-[11px] text-[#8b909a]">
+                        <span className="block text-[11px] text-[#6b7280]">
                           {result.address}
                         </span>
                       </button>

@@ -220,7 +220,7 @@ export default function DispatchRequestForm({
           value={occurredAt ? formatOccurredAt(new Date(occurredAt)) : ""}
           className="mono mt-[9px] w-full rounded-xl border border-[#ebedf0] px-3 py-2.5 text-sm text-ink card-shadow"
         />
-        <div className="mt-1 text-[11px] text-[#adb3bd]">기본값: 현재 시각</div>
+        <div className="mt-1 text-[11px] text-[#6b7280]">기본값: 현재 시각</div>
       </div>
 
       <div>
@@ -228,7 +228,7 @@ export default function DispatchRequestForm({
           htmlFor="building-type"
           className="text-[13px] font-semibold text-[#374151]"
         >
-          건물 유형 <span className="font-normal text-[#adb3bd]">(선택)</span>
+          건물 유형 <span className="font-normal text-[#6b7280]">(선택)</span>
         </label>
         <select
           id="building-type"

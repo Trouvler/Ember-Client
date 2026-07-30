@@ -45,7 +45,7 @@ export default function RecommendedTeamTable({
                 <span className="text-sm font-bold text-ink">
                   {team.stationName}
                 </span>{" "}
-                <span className="text-[11px] text-[#8a919c]">
+                <span className="text-[11px] text-[#6b7280]">
                   {team.reason}
                 </span>
               </td>
@@ -53,7 +53,7 @@ export default function RecommendedTeamTable({
                 <span className="mono text-sm font-semibold text-ink">
                   {team.estimatedArrivalMinutes}
                 </span>
-                <span className="text-[11px] text-[#9aa1ab]">분</span>
+                <span className="text-[11px] text-[#6b7280]">분</span>
               </td>
               <td className="px-3.5 py-3">
                 <ProgressBarCell

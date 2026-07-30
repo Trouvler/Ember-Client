@@ -45,7 +45,7 @@ export default function AiBriefingCard({
             </ul>
           </div>
         ) : null}
-        <div className="mt-4 rounded-md border border-[#eef0f3] bg-[#f8f9fb] px-3 py-2.5 text-[11px] leading-[1.6] text-[#8a919c]">
+        <div className="mt-4 rounded-md border border-[#eef0f3] bg-[#f8f9fb] px-3 py-2.5 text-[11px] leading-[1.6] text-[#6b7280]">
           ※ 본 브리핑은 과거 출동 데이터와 지리정보를 학습한 예측 결과이며, 실제
           현장 상황과 다를 수 있습니다.
         </div>

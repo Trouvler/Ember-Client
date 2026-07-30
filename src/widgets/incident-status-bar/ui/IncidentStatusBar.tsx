@@ -49,14 +49,14 @@ export default function IncidentStatusBar({
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-risk-high" />
               출동 대기
             </span>
-            <span className="mono text-[12.5px] text-[#adb3bd]">
+            <span className="mono text-[12.5px] text-[#6b7280]">
               #{incidentId}
             </span>
           </div>
           <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
             {title}
           </h1>
-          <div className="mt-1.5 flex flex-wrap items-center gap-3 text-[13px] text-[#8b909a]">
+          <div className="mt-1.5 flex flex-wrap items-center gap-3 text-[13px] text-[#5c6672]">
             <span className="inline-flex items-center gap-1.5 text-[#4e5560]">
               {address}
             </span>

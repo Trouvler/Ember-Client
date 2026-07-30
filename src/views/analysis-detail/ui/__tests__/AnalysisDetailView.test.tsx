@@ -118,7 +118,23 @@ describe("AnalysisDetailView", () => {
     expect(await screen.findByText("#1")).toBeInTheDocument();
     expect(screen.getByText("HIGH")).toBeInTheDocument();
     expect(screen.getByText("종로소방서")).toBeInTheDocument();
-    expect(screen.getByText("PUMP_TRUCK")).toBeInTheDocument();
+    expect(screen.getAllByText("PUMP_TRUCK").length).toBeGreaterThan(0);
+  });
+
+  it("추천 장비를 출동 결과 등록 폼의 선택 항목으로 전달한다", async () => {
+    render(
+      <DispatchAnalysisProvider>
+        <SeededDetail />
+      </DispatchAnalysisProvider>,
+    );
+    await screen.findByText("#1");
+
+    expect(
+      screen.getByRole("checkbox", { name: "PUMP_TRUCK" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "출동 결과 등록" }),
+    ).toBeInTheDocument();
   });
 
   it("context가 비어 있으면 상세 API로 결과를 복원한다", async () => {

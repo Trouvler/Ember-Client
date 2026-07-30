@@ -133,7 +133,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
             <button
               type="button"
               onClick={retryLoad}
-              className="self-start text-[12.5px] font-semibold text-[#5c6672] underline decoration-[#b6bcc5] underline-offset-[3px] hover:text-ink"
+              className="self-start text-[12.5px] font-semibold text-[#5c6672] underline decoration-[#b6bcc5] underline-offset-[3px] hover:text-ink print:hidden"
             >
               다시 시도
             </button>
@@ -148,7 +148,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.75fr_1fr] lg:items-start">
           <div className="flex flex-col gap-5">
-            <section className="rounded-xl border border-[#ebedf0] card-shadow">
+            <section className="rounded-xl border border-[#ebedf0] card-shadow print:hidden">
               <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
                 <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
                 <h2 className="text-sm font-bold text-ink">실시간 관제 지도</h2>
@@ -208,7 +208,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
             />
             <AiBriefingCard summary={result.briefing} reasons={[]} />
 
-            <section className="rounded-xl border border-[#ebedf0] card-shadow">
+            <section className="rounded-xl border border-[#ebedf0] card-shadow print:hidden">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
                 <div className="flex items-center gap-2">
                   <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />

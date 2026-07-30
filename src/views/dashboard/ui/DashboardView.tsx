@@ -131,7 +131,7 @@ export default function DashboardView() {
   const isArrivalLayer = activeLayer === LAYERS[1];
 
   return (
-    <div className="px-4 py-8 sm:px-[22px]">
+    <main className="px-4 py-8 sm:px-[22px]">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           위험도 상황 지도
@@ -418,6 +418,6 @@ export default function DashboardView() {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

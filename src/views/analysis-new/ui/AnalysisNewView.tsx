@@ -92,7 +92,7 @@ export default function AnalysisNewView() {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-[22px] sm:py-8">
+    <main className="px-4 py-6 sm:px-[22px] sm:py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           신고 시뮬레이션
@@ -232,6 +232,6 @@ export default function AnalysisNewView() {
           </div>
         </section>
       </div>
-    </div>
+    </main>
   );
 }

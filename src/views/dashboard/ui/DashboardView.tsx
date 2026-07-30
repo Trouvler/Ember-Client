@@ -131,7 +131,7 @@ export default function DashboardView() {
   const isArrivalLayer = activeLayer === LAYERS[1];
 
   return (
-    <div className="px-[22px] py-8">
+    <div className="px-4 py-8 sm:px-[22px]">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           위험도 상황 지도
@@ -141,7 +141,7 @@ export default function DashboardView() {
         </p>
       </div>
 
-      <div className="grid grid-cols-[2.3fr_1fr] items-start gap-5">
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[2.3fr_1fr]">
         {/* 지도 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">

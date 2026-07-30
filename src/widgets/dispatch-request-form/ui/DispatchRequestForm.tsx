@@ -11,6 +11,8 @@ import type {
 } from "@/entities/dispatch-analysis/model/types";
 import { BUILDING_TYPE_LABELS } from "@/entities/dispatch-analysis/model/types";
 import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
+import { getNearbyStations } from "@/entities/fire-station/api/fireStations";
+import type { NearbyStation } from "@/entities/fire-station/model/types";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 
@@ -46,6 +48,38 @@ export default function DispatchRequestForm({
     const id = setTimeout(() => setOccurredAt(new Date().toISOString()), 0);
     return () => clearTimeout(id);
   }, []);
+
+  // 요청 서명을 키로 들고 있어 결과가 어긋나지 않고, 로딩 상태를 파생할 수 있다.
+  const nearbyKey =
+    location && incidentType
+      ? `${location.lat},${location.lng},${incidentType}`
+      : null;
+  const [nearby, setNearby] = useState<{
+    key: string;
+    stations: NearbyStation[] | null;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!nearbyKey || !location || !incidentType) return;
+    let isMounted = true;
+    void getNearbyStations({
+      lat: location.lat,
+      lng: location.lng,
+      incidentType,
+    })
+      .then((stations) => {
+        if (isMounted) setNearby({ key: nearbyKey, stations });
+      })
+      .catch(() => {
+        if (isMounted) setNearby({ key: nearbyKey, stations: null });
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [nearbyKey, location, incidentType]);
+
+  const nearbyResult = nearby?.key === nearbyKey ? nearby : null;
+  const isLoadingNearby = nearbyKey !== null && nearbyResult === null;
 
   const isDisabled = !location || !incidentType || !occurredAt || isSubmitting;
 
@@ -115,6 +149,56 @@ export default function DispatchRequestForm({
           />
         </div>
       </div>
+
+      {nearbyKey ? (
+        <div>
+          <div className="text-[13px] font-semibold text-[#374151]">
+            인접 출동대
+          </div>
+          <div className="mt-[9px] rounded-xl border border-[#ebedf0] px-3 py-2.5 card-shadow">
+            {isLoadingNearby ? (
+              <LoadingSpinner label="인접 출동대 조회 중" size="sm" />
+            ) : null}
+
+            {!isLoadingNearby && nearbyResult?.stations === null ? (
+              <p className="py-1 text-center text-xs text-[#6b7280]">
+                인접 출동대를 불러오지 못했습니다.
+              </p>
+            ) : null}
+
+            {!isLoadingNearby && nearbyResult?.stations?.length === 0 ? (
+              <p className="py-1 text-center text-xs text-[#6b7280]">
+                인접 출동대 정보가 없습니다.
+              </p>
+            ) : null}
+
+            {!isLoadingNearby && nearbyResult?.stations?.length ? (
+              <ul>
+                {nearbyResult.stations.map((station) => (
+                  <li
+                    key={station.stationId}
+                    className="flex items-center justify-between gap-2 border-b border-[#eef0f3] py-2 text-xs last:border-b-0"
+                  >
+                    <span className="font-semibold text-ink">
+                      {station.name}
+                    </span>
+                    <span className="text-[#5c6672]">
+                      <span className="mono">
+                        {(station.distanceMeters / 1000).toFixed(1)}
+                      </span>
+                      km ·{" "}
+                      <span className="mono">
+                        {station.estimatedArrivalMinutes}
+                      </span>
+                      분
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
 
       <div>
         <label

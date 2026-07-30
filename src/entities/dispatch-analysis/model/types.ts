@@ -60,3 +60,31 @@ export interface DispatchAnalysisResult {
   recommendedEquipment: AiEquipmentRecommendation[];
   briefing: string;
 }
+
+export interface DispatchAnalysisSummary {
+  analysisId: number;
+  incidentType: IncidentType;
+  riskLevel: RiskLevel;
+  occurredAt: string;
+  goldenTimeFailureProbability: number;
+  // 실 응답에서 null로 내려온다.
+  estimatedArrivalMinutes: number | null;
+}
+
+export interface DispatchAnalysesPage {
+  content: DispatchAnalysisSummary[];
+  page: number;
+  size: number;
+  totalElements: number;
+}
+
+export interface DispatchFeedbackRequest {
+  actualArrivalMinutes: number;
+  usedEquipment: string[];
+  additionalDispatchRequired: boolean;
+  delayReasons: string[];
+}
+
+export interface DispatchFeedbackResponse {
+  feedbackId: number;
+}

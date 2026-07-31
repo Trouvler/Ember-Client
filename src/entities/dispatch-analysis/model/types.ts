@@ -54,10 +54,12 @@ export interface DispatchAnalysisResult {
   analysisId: number;
   degraded: boolean;
   riskLevel: RiskLevel;
-  estimatedArrivalMinutes: number;
+  // 실 응답에서 null로 내려온다.
+  estimatedArrivalMinutes: number | null;
   goldenTimeFailureProbability: number;
   recommendedUnits: DispatchUnitCandidate[];
   recommendedEquipment: AiEquipmentRecommendation[];
+  reasons: string[];
   briefing: string;
 }
 
@@ -83,6 +85,21 @@ export interface DispatchFeedbackRequest {
   usedEquipment: string[];
   additionalDispatchRequired: boolean;
   delayReasons: string[];
+}
+
+export interface DispatchOrderRequest {
+  stationId: number;
+  operatorName: string;
+  orderedAt?: string;
+}
+
+export interface DispatchOrderResponse {
+  orderId: number;
+  analysisId: number;
+  stationId: number;
+  stationName: string;
+  orderedAt: string;
+  operatorName: string;
 }
 
 export interface DispatchFeedbackResponse {

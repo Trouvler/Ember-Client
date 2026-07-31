@@ -30,7 +30,7 @@ describe("IncidentStatusBar", () => {
     expect(screen.getByText("00:03:34")).toBeInTheDocument();
   });
 
-  it("분석서는 출력하고 출동 지령 전송은 비활성화되어 있다", async () => {
+  it("분석서를 출력하고 출동 지령 전송 영역으로 이동한다", async () => {
     window.print = vi.fn();
     render(
       <IncidentStatusBar
@@ -45,8 +45,8 @@ describe("IncidentStatusBar", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: "출동 지령 전송 (준비 중)" }),
-    ).toBeDisabled();
+      screen.getByRole("link", { name: "출동 지령 전송" }),
+    ).toHaveAttribute("href", "#dispatch-order");
     await userEvent.click(screen.getByRole("button", { name: "분석서 출력" }));
     expect(window.print).toHaveBeenCalledOnce();
   });

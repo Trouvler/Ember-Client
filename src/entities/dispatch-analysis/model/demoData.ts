@@ -37,6 +37,11 @@ export const DEMO_ANALYSIS_RESULT: DispatchAnalysisResult = {
       reason: "노후 건물 밀집 지역 상층 대응",
     },
   ],
+  reasons: [
+    "노후 건물 밀집 지역",
+    "도로 폭 협소로 진입 지연 예상",
+    "인접 소방용수 확보 거리 200m 초과",
+  ],
   briefing:
     "해당 신고지는 노후 건물이 밀집한 지역으로 출동 지연 위험이 높습니다. 도로 폭이 좁아 접근 지연이 예상되며, 인접 출동대의 동시 편성을 검토하시기 바랍니다.",
 };

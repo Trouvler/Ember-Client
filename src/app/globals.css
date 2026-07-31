@@ -21,13 +21,6 @@
   --font-mono: var(--font-ibm-plex-mono), "SFMono-Regular", Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 @utility card-shadow {
   box-shadow:
     0 1px 2px rgba(17, 24, 39, 0.05),

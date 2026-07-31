@@ -119,7 +119,7 @@ describe("AnalysisDetailView", () => {
     );
     expect(await screen.findByText("#1")).toBeInTheDocument();
     expect(screen.getByText("HIGH")).toBeInTheDocument();
-    expect(screen.getByText("종로소방서")).toBeInTheDocument();
+    expect(screen.getAllByText("종로소방서").length).toBeGreaterThan(0);
     expect(screen.getAllByText("PUMP_TRUCK").length).toBeGreaterThan(0);
   });
 
@@ -152,7 +152,9 @@ describe("AnalysisDetailView", () => {
       </DispatchAnalysisProvider>,
     );
 
-    expect(await screen.findByText("강남소방서")).toBeInTheDocument();
+    expect((await screen.findAllByText("강남소방서")).length).toBeGreaterThan(
+      0,
+    );
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/dispatch/7",
       expect.anything(),
@@ -238,6 +240,8 @@ describe("AnalysisDetailView", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: "다시 시도" }));
 
-    expect(await screen.findByText("강남소방서")).toBeInTheDocument();
+    expect((await screen.findAllByText("강남소방서")).length).toBeGreaterThan(
+      0,
+    );
   });
 });

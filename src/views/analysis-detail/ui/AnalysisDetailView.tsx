@@ -5,6 +5,7 @@ import IncidentStatusBar from "@/widgets/incident-status-bar/ui/IncidentStatusBa
 import RiskAnalysisCard from "@/widgets/analysis-result-card/ui/RiskAnalysisCard";
 import AiBriefingCard from "@/widgets/analysis-result-card/ui/AiBriefingCard";
 import DispatchFeedbackForm from "@/widgets/dispatch-feedback-form/ui/DispatchFeedbackForm";
+import DispatchOrderForm from "@/widgets/dispatch-order-form/ui/DispatchOrderForm";
 import RecommendedTeamTable from "@/shared/ui/RecommendedTeamTable";
 import RecommendedEquipmentTable from "@/shared/ui/RecommendedEquipmentTable";
 import DegradedBanner from "@/shared/ui/DegradedBanner";
@@ -198,6 +199,25 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
               summary={result.briefing}
               reasons={result.reasons}
             />
+
+            <section
+              id="dispatch-order"
+              className="rounded-xl border border-[#ebedf0] border-l-[3px] border-l-ember card-shadow print:hidden"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
+                <div className="flex items-center gap-2">
+                  <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
+                  <h2 className="text-sm font-bold text-ink">출동 지령 전송</h2>
+                </div>
+                <span className="text-[11.5px] text-[#6b7280]">
+                  전송 후 취소 불가
+                </span>
+              </div>
+              <DispatchOrderForm
+                analysisId={result.analysisId}
+                units={result.recommendedUnits}
+              />
+            </section>
 
             <section className="rounded-xl border border-[#ebedf0] card-shadow print:hidden">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">

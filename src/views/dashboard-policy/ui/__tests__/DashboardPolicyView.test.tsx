@@ -7,6 +7,7 @@ const DASHBOARD = {
   region: "서울",
   totalAnalyzedCases: 12847,
   avgGoldenTimeFailureRate: 0.217,
+  avgAnalysisSeconds: 31,
   vulnerableDistrictTop5: [
     {
       districtName: "종로구 창신동",
@@ -70,6 +71,7 @@ describe("DashboardPolicyView", () => {
       region: "서울",
       totalAnalyzedCases: 0,
       avgGoldenTimeFailureRate: 0,
+      avgAnalysisSeconds: null,
       vulnerableDistrictTop5: [],
     });
 

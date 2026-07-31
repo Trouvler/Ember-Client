@@ -6,6 +6,7 @@ const DASHBOARD = {
   region: "서울",
   totalAnalyzedCases: 9120,
   avgGoldenTimeFailureRate: 0.217,
+  avgAnalysisSeconds: 31,
   vulnerableDistrictTop5: [
     {
       districtName: "종로구 창신동",
@@ -63,6 +64,7 @@ describe("HeroStats", () => {
       region: "서울",
       totalAnalyzedCases: 0,
       avgGoldenTimeFailureRate: 0,
+      avgAnalysisSeconds: null,
       vulnerableDistrictTop5: [],
     });
 
@@ -85,12 +87,21 @@ describe("HeroStats", () => {
     ).toBeInTheDocument();
   });
 
-  it("평균 분석 소요는 대응 API 필드가 없어 고정값을 표시한다", async () => {
+  it("평균 분석 소요를 API 값으로 표시한다", async () => {
     stubFetch();
 
     render(<HeroStats />);
     await screen.findByText("9,120");
 
-    expect(screen.getByText("28")).toBeInTheDocument();
+    expect(screen.getByText("31")).toBeInTheDocument();
+  });
+
+  it("평균 분석 소요가 집계되지 않으면 대체 문자를 표시한다", async () => {
+    stubFetch({ ...DASHBOARD, avgAnalysisSeconds: null });
+
+    render(<HeroStats />);
+    await screen.findByText("9,120");
+
+    expect(screen.getAllByText("—").length).toBeGreaterThan(0);
   });
 });

@@ -7,10 +7,6 @@ import { getPolicyDashboard } from "@/entities/policy-dashboard/api/getPolicyDas
 import { DEMO_POLICY_DASHBOARD } from "@/entities/policy-dashboard/model/demoData";
 import type { PolicyDashboard } from "@/entities/policy-dashboard/model/types";
 
-// policy-dashboard에 대응 필드가 없다. 골든타임 타임라인이 0:38 · 6:22를
-// 주장하는 근거이므로 지우지 않고 고정값으로 둔다.
-const ANALYSIS_SECONDS = "28";
-
 export default function HeroStats() {
   const [dashboard, setDashboard] = useState<PolicyDashboard | null>(null);
   const [failed, setFailed] = useState(false);
@@ -62,7 +58,9 @@ export default function HeroStats() {
     },
     {
       label: "평균 분석 소요",
-      value: ANALYSIS_SECONDS,
+      value: isLoading
+        ? placeholder
+        : (shown.avgAnalysisSeconds ?? placeholder),
       unit: "초",
       valueClassName: "text-ember",
       caption: "신고 입력 → 결과 산출",

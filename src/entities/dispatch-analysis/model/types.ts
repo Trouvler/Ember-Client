@@ -87,6 +87,21 @@ export interface DispatchFeedbackRequest {
   delayReasons: string[];
 }
 
+export interface DispatchOrderRequest {
+  stationId: number;
+  operatorName: string;
+  orderedAt?: string;
+}
+
+export interface DispatchOrderResponse {
+  orderId: number;
+  analysisId: number;
+  stationId: number;
+  stationName: string;
+  orderedAt: string;
+  operatorName: string;
+}
+
 export interface DispatchFeedbackResponse {
   feedbackId: number;
 }

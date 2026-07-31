@@ -5,6 +5,7 @@ export const DEMO_POLICY_DASHBOARD: PolicyDashboard = {
   region: "서울",
   totalAnalyzedCases: 12847,
   avgGoldenTimeFailureRate: 0.217,
+  avgAnalysisSeconds: 28,
   vulnerableDistrictTop5: [
     {
       districtName: "종로구 창신동",

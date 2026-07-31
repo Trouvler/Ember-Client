@@ -17,6 +17,7 @@ const RESULT: DispatchAnalysisResult = {
   recommendedEquipment: [
     { equipmentType: "PUMP_TRUCK", requiredProbability: 90, reason: "진화" },
   ],
+  reasons: ["노후 건물 밀집"],
   briefing: "출동을 권고합니다.",
 };
 

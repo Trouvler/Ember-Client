@@ -4,7 +4,7 @@ import RiskDonut from "@/shared/ui/RiskDonut";
 interface RiskAnalysisCardProps {
   riskLevel: RiskLevel;
   probability: number;
-  fastestEtaMinutes: number;
+  fastestEtaMinutes: number | null;
   goldenTimeGoalMinutes?: number;
 }
 
@@ -34,7 +34,10 @@ export default function RiskAnalysisCard({
   goldenTimeGoalMinutes = 7,
 }: RiskAnalysisCardProps) {
   const badge = LEVEL_BADGE[riskLevel];
-  const diff = fastestEtaMinutes - goldenTimeGoalMinutes;
+  const diff =
+    fastestEtaMinutes === null
+      ? null
+      : fastestEtaMinutes - goldenTimeGoalMinutes;
 
   return (
     <section className="rounded-xl border border-[#ebedf0] card-shadow">
@@ -75,21 +78,29 @@ export default function RiskAnalysisCard({
           </div>
           <div>
             <span className="mono text-xl font-bold text-ink">
-              {fastestEtaMinutes}
+              {fastestEtaMinutes ?? "—"}
             </span>
-            <span className="text-xs text-[#5c6672]"> 분</span>
+            {fastestEtaMinutes === null ? null : (
+              <span className="text-xs text-[#5c6672]"> 분</span>
+            )}
           </div>
         </div>
         <div className="px-4 py-3">
           <div className="mb-1 text-[11.5px] text-[#6b7280]">목표 대비</div>
           <div>
-            <span
-              className={`mono text-xl font-bold ${diff > 0 ? "text-risk-high" : "text-risk-low"}`}
-            >
-              {diff > 0 ? "+" : ""}
-              {diff.toFixed(1)}
-            </span>
-            <span className="text-xs text-[#5c6672]"> 분</span>
+            {diff === null ? (
+              <span className="mono text-xl font-bold text-[#5c6672]">—</span>
+            ) : (
+              <>
+                <span
+                  className={`mono text-xl font-bold ${diff > 0 ? "text-risk-high" : "text-risk-low"}`}
+                >
+                  {diff > 0 ? "+" : ""}
+                  {diff.toFixed(1)}
+                </span>
+                <span className="text-xs text-[#5c6672]"> 분</span>
+              </>
+            )}
           </div>
         </div>
       </div>

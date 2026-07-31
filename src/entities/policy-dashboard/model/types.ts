@@ -9,4 +9,6 @@ export interface PolicyDashboard {
   vulnerableDistrictTop5: VulnerableDistrict[];
   totalAnalyzedCases: number;
   avgGoldenTimeFailureRate: number;
+  // 집계 전에는 null로 내려온다.
+  avgAnalysisSeconds: number | null;
 }

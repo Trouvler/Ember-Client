@@ -5,19 +5,18 @@ import IncidentStatusBar from "@/widgets/incident-status-bar/ui/IncidentStatusBa
 import RiskAnalysisCard from "@/widgets/analysis-result-card/ui/RiskAnalysisCard";
 import AiBriefingCard from "@/widgets/analysis-result-card/ui/AiBriefingCard";
 import DispatchFeedbackForm from "@/widgets/dispatch-feedback-form/ui/DispatchFeedbackForm";
+import DispatchOrderForm from "@/widgets/dispatch-order-form/ui/DispatchOrderForm";
 import RecommendedTeamTable from "@/shared/ui/RecommendedTeamTable";
 import RecommendedEquipmentTable from "@/shared/ui/RecommendedEquipmentTable";
 import DegradedBanner from "@/shared/ui/DegradedBanner";
 import MapView from "@/shared/ui/MapView";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
-import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 import { probabilityAsPercent } from "@/shared/utils/probability";
 import { useDispatchAnalysis } from "@/entities/dispatch-analysis/model/DispatchAnalysisProvider";
 import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
 import { getDispatchAnalysis } from "@/entities/dispatch-analysis/api/getDispatchAnalysis";
 import type { DispatchAnalysisResult } from "@/entities/dispatch-analysis/model/types";
-import { DEMO_ANALYSIS_RESULT } from "@/entities/dispatch-analysis/model/demoData";
 
 interface AnalysisDetailViewProps {
   id: string;
@@ -74,9 +73,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
     );
   }
 
-  const loadedResult = hasContextResult ? analysis.result : fetchedResult;
-  const isDemoResult = loadedResult === null && fetchState === "failed";
-  const result = isDemoResult ? DEMO_ANALYSIS_RESULT : loadedResult;
+  const result = hasContextResult ? analysis.result : fetchedResult;
 
   if (!result) {
     return (
@@ -86,6 +83,14 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
           저장된 분석 결과를 불러오지 못했습니다. 신고 시뮬레이션에서 다시
           분석해 주세요.
         </p>
+        {fetchState === "failed" ? (
+          <div className="mt-5 max-w-[420px]">
+            <ErrorFallback
+              message="분석 결과 조회에 실패했습니다."
+              onRetry={retryLoad}
+            />
+          </div>
+        ) : null}
       </main>
     );
   }
@@ -124,22 +129,6 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
       />
 
       <main className="w-full px-4 py-6 sm:px-[22px] sm:py-8">
-        {isDemoResult ? (
-          <div className="mb-3.5 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <DemoDataBadge
-              visible
-              message="시연 데이터 · 분석 결과를 불러오지 못했습니다"
-            />
-            <button
-              type="button"
-              onClick={retryLoad}
-              className="self-start text-[12.5px] font-semibold text-[#5c6672] underline decoration-[#b6bcc5] underline-offset-[3px] hover:text-ink print:hidden"
-            >
-              다시 시도
-            </button>
-          </div>
-        ) : null}
-
         {result.degraded ? (
           <div className="mb-3.5">
             <DegradedBanner visible={result.degraded} />
@@ -206,7 +195,29 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
               probability={probability}
               fastestEtaMinutes={result.estimatedArrivalMinutes}
             />
-            <AiBriefingCard summary={result.briefing} reasons={[]} />
+            <AiBriefingCard
+              summary={result.briefing}
+              reasons={result.reasons}
+            />
+
+            <section
+              id="dispatch-order"
+              className="rounded-xl border border-[#ebedf0] border-l-[3px] border-l-ember card-shadow print:hidden"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">
+                <div className="flex items-center gap-2">
+                  <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
+                  <h2 className="text-sm font-bold text-ink">출동 지령 전송</h2>
+                </div>
+                <span className="text-[11.5px] text-[#6b7280]">
+                  전송 후 취소 불가
+                </span>
+              </div>
+              <DispatchOrderForm
+                analysisId={result.analysisId}
+                units={result.recommendedUnits}
+              />
+            </section>
 
             <section className="rounded-xl border border-[#ebedf0] card-shadow print:hidden">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">

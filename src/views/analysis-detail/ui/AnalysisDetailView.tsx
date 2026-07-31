@@ -11,13 +11,11 @@ import DegradedBanner from "@/shared/ui/DegradedBanner";
 import MapView from "@/shared/ui/MapView";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
-import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 import { probabilityAsPercent } from "@/shared/utils/probability";
 import { useDispatchAnalysis } from "@/entities/dispatch-analysis/model/DispatchAnalysisProvider";
 import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
 import { getDispatchAnalysis } from "@/entities/dispatch-analysis/api/getDispatchAnalysis";
 import type { DispatchAnalysisResult } from "@/entities/dispatch-analysis/model/types";
-import { DEMO_ANALYSIS_RESULT } from "@/entities/dispatch-analysis/model/demoData";
 
 interface AnalysisDetailViewProps {
   id: string;
@@ -74,9 +72,7 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
     );
   }
 
-  const loadedResult = hasContextResult ? analysis.result : fetchedResult;
-  const isDemoResult = loadedResult === null && fetchState === "failed";
-  const result = isDemoResult ? DEMO_ANALYSIS_RESULT : loadedResult;
+  const result = hasContextResult ? analysis.result : fetchedResult;
 
   if (!result) {
     return (
@@ -86,6 +82,14 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
           저장된 분석 결과를 불러오지 못했습니다. 신고 시뮬레이션에서 다시
           분석해 주세요.
         </p>
+        {fetchState === "failed" ? (
+          <div className="mt-5 max-w-[420px]">
+            <ErrorFallback
+              message="분석 결과 조회에 실패했습니다."
+              onRetry={retryLoad}
+            />
+          </div>
+        ) : null}
       </main>
     );
   }
@@ -124,22 +128,6 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
       />
 
       <main className="w-full px-4 py-6 sm:px-[22px] sm:py-8">
-        {isDemoResult ? (
-          <div className="mb-3.5 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <DemoDataBadge
-              visible
-              message="시연 데이터 · 분석 결과를 불러오지 못했습니다"
-            />
-            <button
-              type="button"
-              onClick={retryLoad}
-              className="self-start text-[12.5px] font-semibold text-[#5c6672] underline decoration-[#b6bcc5] underline-offset-[3px] hover:text-ink print:hidden"
-            >
-              다시 시도
-            </button>
-          </div>
-        ) : null}
-
         {result.degraded ? (
           <div className="mb-3.5">
             <DegradedBanner visible={result.degraded} />
@@ -206,7 +194,10 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
               probability={probability}
               fastestEtaMinutes={result.estimatedArrivalMinutes}
             />
-            <AiBriefingCard summary={result.briefing} reasons={[]} />
+            <AiBriefingCard
+              summary={result.briefing}
+              reasons={result.reasons}
+            />
 
             <section className="rounded-xl border border-[#ebedf0] card-shadow print:hidden">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6e9ee] px-4 py-3.5">

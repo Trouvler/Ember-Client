@@ -54,10 +54,12 @@ export interface DispatchAnalysisResult {
   analysisId: number;
   degraded: boolean;
   riskLevel: RiskLevel;
-  estimatedArrivalMinutes: number;
+  // 실 응답에서 null로 내려온다.
+  estimatedArrivalMinutes: number | null;
   goldenTimeFailureProbability: number;
   recommendedUnits: DispatchUnitCandidate[];
   recommendedEquipment: AiEquipmentRecommendation[];
+  reasons: string[];
   briefing: string;
 }
 

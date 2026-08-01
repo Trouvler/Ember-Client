@@ -1,7 +1,7 @@
 const SEGMENT_COUNT = 20;
 
 interface ProgressBarCellProps {
-  value: number;
+  value: number | null;
   colorClassName?: string;
 }
 
@@ -9,14 +9,14 @@ export default function ProgressBarCell({
   value,
   colorClassName = "bg-ember",
 }: ProgressBarCellProps) {
-  const filledSegments = Math.round((value / 100) * SEGMENT_COUNT);
+  const filledSegments = Math.round(((value ?? 0) / 100) * SEGMENT_COUNT);
 
   return (
     <div className="flex items-center gap-2">
       <div
         className="flex flex-1 gap-px"
         role="meter"
-        aria-valuenow={value}
+        aria-valuenow={value ?? undefined}
         aria-valuemin={0}
         aria-valuemax={100}
       >
@@ -28,7 +28,7 @@ export default function ProgressBarCell({
         ))}
       </div>
       <span className="mono w-8 shrink-0 text-right text-[13px] font-semibold text-ink">
-        {value}%
+        {value === null ? "—" : `${value}%`}
       </span>
     </div>
   );

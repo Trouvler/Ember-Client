@@ -5,7 +5,6 @@ import MapView from "@/shared/ui/MapView";
 import RiskDonut from "@/shared/ui/RiskDonut";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
-import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 import {
   getFireStation,
   getFireStations,
@@ -14,10 +13,11 @@ import type {
   FireStation,
   FireStationDetail,
 } from "@/entities/fire-station/model/types";
-import { DEMO_FIRE_STATIONS } from "@/entities/fire-station/model/demoData";
-import { getRiskLayers } from "@/entities/risk-layer/api/getRiskLayers";
+import {
+  DEFAULT_REGION,
+  getRiskLayers,
+} from "@/entities/risk-layer/api/getRiskLayers";
 import type { RiskLayerFeature } from "@/entities/risk-layer/model/types";
-import { DEMO_RISK_FEATURES } from "@/entities/risk-layer/model/demoData";
 import { probabilityAsPercent } from "@/shared/utils/probability";
 import type { RiskLevel } from "@/entities/dispatch-analysis/model/types";
 
@@ -40,7 +40,7 @@ export default function DashboardView() {
   const [activeLayer, setActiveLayer] = useState<(typeof LAYERS)[number]>(
     LAYERS[0],
   );
-  const [region, setRegion] = useState("");
+  const [region, setRegion] = useState(DEFAULT_REGION);
   const [stations, setStations] = useState<FireStation[]>([]);
   const [selectedStation, setSelectedStation] =
     useState<FireStationDetail | null>(null);
@@ -52,12 +52,7 @@ export default function DashboardView() {
   const [selectedDong, setSelectedDong] = useState<string | null>(null);
   const [isLoadingLayers, setIsLoadingLayers] = useState(true);
   const [layerError, setLayerError] = useState<string | null>(null);
-  const isDemoStations =
-    !isLoadingStations && !stationError && stations.length === 0;
-  const shownStations: FireStation[] = isDemoStations
-    ? DEMO_FIRE_STATIONS
-    : stations;
-  const stationMarkers = shownStations.map((station) => ({
+  const stationMarkers = stations.map((station) => ({
     id: station.stationId,
     lat: station.latitude,
     lng: station.longitude,
@@ -78,14 +73,6 @@ export default function DashboardView() {
   };
 
   const selectStation = async (station: FireStation) => {
-    const demo = DEMO_FIRE_STATIONS.find(
-      (item) => item.stationId === station.stationId,
-    );
-    if (demo) {
-      setDetailError(null);
-      setSelectedStation(demo);
-      return;
-    }
     setIsLoadingDetail(true);
     setDetailError(null);
     try {
@@ -113,37 +100,32 @@ export default function DashboardView() {
 
   useEffect(() => {
     const id = setTimeout(() => {
-      void loadStations();
-      void loadRiskLayers();
+      void loadStations(DEFAULT_REGION);
+      void loadRiskLayers(DEFAULT_REGION);
     }, 0);
     return () => clearTimeout(id);
   }, []);
 
-  const isDemoFeatures =
-    !isLoadingLayers && !layerError && features.length === 0;
-  const shownFeatures: RiskLayerFeature[] = isDemoFeatures
-    ? DEMO_RISK_FEATURES
-    : features;
   const selectedFeature =
-    shownFeatures.find(
-      (feature) => feature.properties.dongName === selectedDong,
-    ) ?? shownFeatures[0];
+    features.find((feature) => feature.properties.dongName === selectedDong) ??
+    features[0];
   const isArrivalLayer = activeLayer === LAYERS[1];
 
   return (
-    <main className="px-4 py-8 sm:px-[22px]">
+    <main className="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-[22px]">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           위험도 상황 지도
         </h1>
         <p className="mt-1.5 text-[13px] text-[#5c6672]">
-          행정동별 화재 출동 위험도를 지도 위에 시각화합니다.
+          서울시 소방서와 행정동별 출동 위험도를 비교하고, 마커를 선택해 소방서
+          상세 정보를 확인합니다.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[2.3fr_1fr]">
+      <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-[1.5fr_1fr]">
         {/* 지도 */}
-        <section className="rounded-xl border border-[#ebedf0] card-shadow">
+        <section className="flex min-h-[560px] flex-col rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
             <div className="flex items-center gap-2">
               <span aria-hidden="true" className="h-3.5 w-[3px] bg-ember" />
@@ -167,7 +149,7 @@ export default function DashboardView() {
                 : null
             }
             onClickMarker={(stationId) => {
-              const station = shownStations.find(
+              const station = stations.find(
                 (item) => item.stationId === stationId,
               );
               if (station) void selectStation(station);
@@ -219,12 +201,6 @@ export default function DashboardView() {
                   message={layerError}
                   onRetry={() => void loadRiskLayers(region)}
                 />
-              </div>
-            ) : null}
-
-            {isDemoFeatures ? (
-              <div className="px-4 pt-3">
-                <DemoDataBadge visible />
               </div>
             ) : null}
 
@@ -289,13 +265,13 @@ export default function DashboardView() {
                   </div>
                 </div>
 
-                {shownFeatures.length > 1 ? (
+                {features.length > 1 ? (
                   <div className="mt-1 border-t border-[#eef0f3] pt-3">
                     <div className="mb-2 text-[11.5px] text-[#6b7280]">
                       행정동 선택
                     </div>
                     <ul className="max-h-40 overflow-y-auto">
-                      {shownFeatures.map((feature) => (
+                      {features.map((feature) => (
                         <li key={feature.properties.dongName}>
                           <button
                             type="button"
@@ -326,6 +302,11 @@ export default function DashboardView() {
                   </div>
                 ) : null}
               </div>
+            ) : null}
+            {!isLoadingLayers && !layerError && !selectedFeature ? (
+              <p className="px-4 py-10 text-center text-[13px] text-[#6b7280]">
+                조회된 행정동 위험도 데이터가 없습니다.
+              </p>
             ) : null}
           </section>
 
@@ -370,12 +351,9 @@ export default function DashboardView() {
                   onRetry={() => void loadStations(region)}
                 />
               ) : null}
-              <DemoDataBadge visible={isDemoStations} />
-              {!isLoadingStations &&
-              !stationError &&
-              shownStations.length > 0 ? (
+              {!isLoadingStations && !stationError && stations.length > 0 ? (
                 <ul className="mt-2 max-h-48 overflow-y-auto">
-                  {shownStations.map((station) => (
+                  {stations.map((station) => (
                     <li
                       key={station.stationId}
                       className="border-b border-[#f2f4f6] last:border-b-0"
@@ -395,6 +373,11 @@ export default function DashboardView() {
                     </li>
                   ))}
                 </ul>
+              ) : null}
+              {!isLoadingStations && !stationError && stations.length === 0 ? (
+                <p className="py-4 text-center text-xs text-[#6b7280]">
+                  조회된 소방서가 없습니다.
+                </p>
               ) : null}
               {isLoadingDetail ? (
                 <LoadingSpinner label="상세 조회 중" size="sm" />

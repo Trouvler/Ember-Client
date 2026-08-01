@@ -25,6 +25,16 @@ describe("GlobalNav", () => {
     );
   });
 
+  it("브랜드 문구 대신 불 아이콘 홈 링크를 표시한다", () => {
+    usePathname.mockReturnValue("/");
+    render(<GlobalNav />);
+
+    expect(screen.getByRole("link", { name: "잉걸불 홈" })).toBeInTheDocument();
+    expect(
+      screen.queryByText("AI 출동 의사결정 보조 시스템"),
+    ).not.toBeInTheDocument();
+  });
+
   it("/analysis 경로에서는 출동 이력 링크가 활성 스타일을 갖는다", () => {
     usePathname.mockReturnValue("/analysis");
     render(<GlobalNav />);

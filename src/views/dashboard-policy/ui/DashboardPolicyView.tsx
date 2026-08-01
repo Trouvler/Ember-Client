@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
-import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 import { probabilityAsPercent } from "@/shared/utils/probability";
 import { getPolicyDashboard } from "@/entities/policy-dashboard/api/getPolicyDashboard";
 import type { PolicyDashboard } from "@/entities/policy-dashboard/model/types";
-import { DEMO_POLICY_DASHBOARD } from "@/entities/policy-dashboard/model/demoData";
 
 const RANK_BADGE_CLASSES = [
   "bg-risk-high",
@@ -48,11 +46,7 @@ export default function DashboardPolicyView() {
     setReloadToken((current) => current + 1);
   };
 
-  const isDemo =
-    dashboard !== null &&
-    dashboard.totalAnalyzedCases === 0 &&
-    dashboard.vulnerableDistrictTop5.length === 0;
-  const shown = isDemo ? DEMO_POLICY_DASHBOARD : dashboard;
+  const shown = dashboard;
   const districts = shown?.vulnerableDistrictTop5 ?? [];
 
   return (
@@ -88,12 +82,6 @@ export default function DashboardPolicyView() {
 
         {!isLoading && !error && shown ? (
           <>
-            {isDemo ? (
-              <div className="mb-4">
-                <DemoDataBadge visible />
-              </div>
-            ) : null}
-
             {/* 요약 카드 */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:mb-8 sm:grid-cols-2 sm:gap-5">
               <div className="rounded-2xl border border-[#ebedf0] px-5 py-6 card-shadow sm:px-7 sm:py-8">

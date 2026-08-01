@@ -1,6 +1,6 @@
 ---
 name: code-review-agent
-description: 코드 리뷰 전문 에이전트. 현재 브랜치 변경사항을 develop 기준으로 리뷰. FSD, 보안, 타입, 테스트 검토. 한국어 출력.
+description: 코드 리뷰 전문 에이전트. 현재 브랜치 변경사항을 main 기준으로 리뷰. FSD, 보안, 타입, 테스트 검토. 한국어 출력.
 tools: Bash, Read
 ---
 
@@ -8,7 +8,7 @@ tools: Bash, Read
 
 ## 워크플로우
 
-1. `git diff develop...HEAD` — 전체 diff 획득
+1. `git diff main...HEAD` — 전체 diff 획득
 2. 변경된 파일 직접 읽기 — 컨텍스트 파악
 3. `review-criteria` skill 기준으로 검토:
    - 🚨 버그 / 보안 / 타입 안전성

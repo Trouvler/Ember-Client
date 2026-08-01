@@ -72,12 +72,15 @@ function dispatchBodyOf(fetchMock: ReturnType<typeof stubFetch>) {
 describe("DispatchRequestForm", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("위치 또는 사고 유형이 없으면 제출 버튼이 비활성화된다", () => {
+  it("필수 입력이 없으면 버튼 클릭 시 이유를 안내한다", async () => {
     stubFetch();
     const { rerender } = render(
       <DispatchRequestForm location={null} onSubmitted={vi.fn()} />,
     );
-    expect(screen.getByRole("button", { name: "분석 요청" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "분석 요청" }));
+    expect(
+      screen.getByText("신고 위치와 사고 유형을 선택하세요."),
+    ).toBeInTheDocument();
 
     rerender(
       <DispatchRequestForm
@@ -85,7 +88,8 @@ describe("DispatchRequestForm", () => {
         onSubmitted={vi.fn()}
       />,
     );
-    expect(screen.getByRole("button", { name: "분석 요청" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "분석 요청" }));
+    expect(screen.getByText("사고 유형을 선택하세요.")).toBeInTheDocument();
   });
 
   it("Swagger 요청 형식으로 분석과 전용 장비를 조회한다", async () => {
@@ -188,7 +192,7 @@ describe("DispatchRequestForm", () => {
     expect(nearbyCall?.[0]).toContain("lat=37.5");
   });
 
-  it("인접 출동대가 비면 시연 데이터와 배지를 표시한다", async () => {
+  it("인접 출동대가 비면 빈 상태를 표시한다", async () => {
     stubFetch({ nearby: [] });
     render(
       <DispatchRequestForm
@@ -199,9 +203,8 @@ describe("DispatchRequestForm", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "화재" }));
 
-    expect(await screen.findByText("종로소방서")).toBeInTheDocument();
     expect(
-      screen.getByText("시연 데이터 · 실제 집계가 아닙니다"),
+      await screen.findByText("조회된 인접 출동대가 없습니다."),
     ).toBeInTheDocument();
   });
 

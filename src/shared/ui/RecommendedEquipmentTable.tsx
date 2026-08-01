@@ -34,7 +34,10 @@ export default function RecommendedEquipmentTable({
                 <ProgressBarCell
                   value={item.requiredProbability}
                   colorClassName={
-                    item.requiredProbability >= 90 ? "bg-ember" : "bg-ink"
+                    item.requiredProbability !== null &&
+                    item.requiredProbability >= 90
+                      ? "bg-ember"
+                      : "bg-ink"
                   }
                 />
               </td>

@@ -7,8 +7,8 @@ import { DispatchAnalysisProvider } from "@/entities/dispatch-analysis/model/Dis
 
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
-function MockScript({ onLoad }: { onLoad?: () => void }) {
-  useEffect(() => onLoad?.(), [onLoad]);
+function MockScript({ onReady }: { onReady?: () => void }) {
+  useEffect(() => onReady?.(), [onReady]);
   return null;
 }
 vi.mock("next/script", () => ({ default: MockScript }));

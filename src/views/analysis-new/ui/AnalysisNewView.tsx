@@ -92,17 +92,18 @@ export default function AnalysisNewView() {
   };
 
   return (
-    <main className="px-4 py-6 sm:px-[22px] sm:py-8">
+    <main className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-[22px] sm:py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-[-0.03em] text-ink">
           신고 시뮬레이션
         </h1>
         <p className="mt-1.5 text-[13px] text-[#5c6672]">
-          신고 위치와 사고 정보를 입력하면 AI가 출동 분석 결과를 산출합니다.
+          신고 위치와 사고 유형을 선택하면 AI가 위험도, 추천 출동대와 필요
+          장비를 분석합니다.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.5fr_1fr] lg:items-start">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.35fr_1fr] lg:items-start">
         {/* 좌: 지도 */}
         <section className="rounded-xl border border-[#ebedf0] card-shadow">
           <div className="flex items-center justify-between border-b border-[#e6e9ee] px-4 py-3.5">
@@ -117,7 +118,6 @@ export default function AnalysisNewView() {
           <div className="relative">
             <MapView
               marker={location}
-              enableServices
               onClickLocation={(nextLocation) => {
                 setLocation(nextLocation);
                 setResults([]);

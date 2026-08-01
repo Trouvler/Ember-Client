@@ -2,23 +2,23 @@
 
 ## 보호 브랜치
 
-`main`과 `develop`에 직접 커밋/푸시 절대 금지.
+`main`에 직접 커밋/푸시 절대 금지.
 위반 시 즉시 중단하고 feature 브랜치 생성을 안내.
 
 ## 브랜치 전략
 
 ```
-main ← develop ← feat/<name>
-                ← fix/<name>
-                ← test/<name>
-                ← chore/<name>
-                ← refactor/<name>
-                ← perf/<name>
-                ← design/<name>
-                ← docs/<name>
+main ← feat/<name>
+     ← fix/<name>
+     ← test/<name>
+     ← chore/<name>
+     ← refactor/<name>
+     ← perf/<name>
+     ← design/<name>
+     ← docs/<name>
 ```
 
-- 모든 feature 브랜치는 `develop`에서 생성
+- 모든 작업 브랜치는 최신 `origin/main`에서 생성
 - `<name>`: lowercase + kebab-case
 - 성능 작업은 반드시 `perf/<name>` 브랜치 사용
 
@@ -36,14 +36,14 @@ main ← develop ← feat/<name>
 
 - 제목: `type: 한국어 설명` (70자 이내)
 - **모든 PR 내용은 한국어** (제목, 요약, 작업 내용, 참고사항)
-- Base 브랜치: 항상 `develop` (main으로 직접 PR 금지)
+- Base 브랜치: 항상 `main`
 - 본문: 프로젝트 템플릿 필수 (`.github/PULL_REQUEST_TEMPLATE.md`, `skills/pr-template.md` 참조)
 - CI(`pnpm check`) 통과 후에만 머지 가능
 
 ## 워크플로우
 
-1. `git fetch origin develop`
-2. `git checkout -b <type>/<name> origin/develop`
+1. `git fetch origin main`
+2. `git checkout -b <type>/<name> origin/main`
 3. 작업 + 커밋 (granularity 규칙 준수)
-4. PR 생성 (base: develop, 한국어 내용)
+4. PR 생성 (base: main, 한국어 내용)
 5. CI 통과 확인 후 머지

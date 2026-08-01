@@ -25,7 +25,7 @@ export default function IncidentTypeSelector({
           type="button"
           aria-pressed={value === type}
           onClick={() => onChange(type)}
-          className={`rounded-xl border py-3 text-sm font-bold ${
+          className={`rounded-xl border py-3 text-sm font-bold transition-none ${
             value === type
               ? "border-ember bg-ember text-white"
               : "border-[#ebedf0] bg-white text-[#5c6672] card-shadow"

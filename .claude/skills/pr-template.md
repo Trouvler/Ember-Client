@@ -27,7 +27,7 @@ type: 한국어로 간결하게 (70자 이내)
 ## 생성 명령
 
 ```bash
-gh pr create --base develop --title "type: 한국어 설명" --body "$(cat <<'EOF'
+gh pr create --base main --title "type: 한국어 설명" --body "$(cat <<'EOF'
 ## Summary
 
 - ...

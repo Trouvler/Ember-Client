@@ -8,7 +8,7 @@ tools: Bash, Read, Edit
 
 ## 워크플로우
 
-1. `git rev-parse --abbrev-ref HEAD` — `main`/`develop`이면 즉시 중단 (`perf/<name>` 브랜치 필요)
+1. `git rev-parse --abbrev-ref HEAD` — `main`이면 즉시 중단 (`perf/<name>` 브랜치 필요)
 2. 대상 파일 읽기 — 병목 파악
 3. 병목 확인 후 최적화 적용 (`perf-patterns` skill 참조)
 4. 동작 변경 없음 확인

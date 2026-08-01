@@ -8,21 +8,21 @@ let scriptSrc = "";
 
 function MockScript({
   src,
-  onLoad,
+  onReady,
   onError,
 }: {
   src: string;
-  onLoad?: () => void;
+  onReady?: () => void;
   onError?: () => void;
 }) {
   useEffect(() => {
     scriptSrc = src;
     if (scriptBehavior === "load") {
-      onLoad?.();
+      onReady?.();
     } else if (scriptBehavior === "error") {
       onError?.();
     }
-  }, [src, onLoad, onError]);
+  }, [src, onReady, onError]);
   return null;
 }
 
@@ -88,11 +88,8 @@ describe("MapView", () => {
     expect(container.querySelector("div")).toBeInTheDocument();
   });
 
-  it("주소 검색이 필요할 때만 services 라이브러리를 불러온다", () => {
-    const { rerender } = render(<MapView />);
-    expect(scriptSrc).not.toContain("libraries=services");
-
-    rerender(<MapView enableServices />);
+  it("모든 화면에서 동일한 services 포함 SDK를 불러온다", () => {
+    render(<MapView />);
     expect(scriptSrc).toContain("libraries=services");
   });
 

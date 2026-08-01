@@ -59,7 +59,7 @@ describe("HeroStats", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("집계가 비면 시연 데이터와 배지를 표시한다", async () => {
+  it("집계가 비면 실제 0을 표시한다", async () => {
     stubFetch({
       region: "서울",
       totalAnalyzedCases: 0,
@@ -70,21 +70,16 @@ describe("HeroStats", () => {
 
     render(<HeroStats />);
 
-    expect(await screen.findByText("12,847")).toBeInTheDocument();
-    expect(
-      screen.getByText("시연 데이터 · 실제 집계가 아닙니다"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("0")).toBeInTheDocument();
+    expect(screen.getByText("100.0")).toBeInTheDocument();
   });
 
-  it("조회에 실패하면 시연 데이터와 배지를 표시한다", async () => {
+  it("조회에 실패하면 대체 문자를 표시한다", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network")));
 
     render(<HeroStats />);
 
-    expect(await screen.findByText("12,847")).toBeInTheDocument();
-    expect(
-      screen.getByText("시연 데이터 · 실제 집계가 아닙니다"),
-    ).toBeInTheDocument();
+    expect((await screen.findAllByText("—")).length).toBeGreaterThan(0);
   });
 
   it("평균 분석 소요를 API 값으로 표시한다", async () => {

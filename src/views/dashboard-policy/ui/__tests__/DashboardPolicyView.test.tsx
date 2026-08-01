@@ -66,7 +66,7 @@ describe("DashboardPolicyView", () => {
     expect(screen.getByText("71%")).toBeInTheDocument();
   });
 
-  it("집계가 비면 시연 데이터와 배지를 표시한다", async () => {
+  it("집계가 비면 실제 0과 빈 상태를 표시한다", async () => {
     stubFetch({
       region: "서울",
       totalAnalyzedCases: 0,
@@ -77,10 +77,9 @@ describe("DashboardPolicyView", () => {
 
     render(<DashboardPolicyView />);
 
-    expect(await screen.findByText("12,847")).toBeInTheDocument();
-    expect(screen.getByText("종로구 창신동")).toBeInTheDocument();
+    expect(await screen.findByText("0")).toBeInTheDocument();
     expect(
-      screen.getByText("시연 데이터 · 실제 집계가 아닙니다"),
+      screen.getByText("아직 집계된 취약 행정동이 없습니다."),
     ).toBeInTheDocument();
   });
 

@@ -65,13 +65,14 @@ export default function GlobalNav() {
     <header className="border-b border-[#edeff2] bg-white print:hidden">
       <div className="flex h-[60px] items-center justify-between gap-3 px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-4 sm:gap-[30px]">
-          <Link href="/" className="flex shrink-0 items-baseline gap-[9px]">
-            <span className="text-xl font-bold tracking-[-0.03em] text-ember">
-              잉걸불
-            </span>
-            <span className="hidden text-[11.5px] font-medium text-[#6b7280] sm:inline">
-              AI 출동 의사결정 보조 시스템
-            </span>
+          <Link href="/" aria-label="잉걸불 홈" className="shrink-0">
+            <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24">
+              <rect width="24" height="24" rx="5" fill="#E85D2C" />
+              <path
+                d="M12 3c-3 4-5 6-5 10a5 5 0 0 0 10 0c0-2-1-3-2-4.5.3 2-1 2.5-1 1.5 0-2-2-3-2-7z"
+                fill="#fff"
+              />
+            </svg>
           </Link>
           <nav className="flex items-center gap-3 overflow-x-auto text-sm whitespace-nowrap sm:gap-[26px]">
             {NAV_ITEMS.map((item) => (

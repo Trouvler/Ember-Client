@@ -1,5 +1,6 @@
 import type { RiskLevel } from "@/entities/dispatch-analysis/model/types";
 import RiskDonut from "@/shared/ui/RiskDonut";
+import { riskLevelLabel } from "@/shared/lib/labels";
 
 interface RiskAnalysisCardProps {
   riskLevel: RiskLevel;
@@ -61,7 +62,7 @@ export default function RiskAnalysisCard({
                       : "text-[#5c6672]"
               }`}
             >
-              {riskLevel}
+              {riskLevelLabel(riskLevel)}
             </div>
             <div
               className={`mt-2 inline-block rounded px-2 py-0.5 text-[11px] font-bold ${badge.className}`}

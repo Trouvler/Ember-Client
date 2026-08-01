@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
 import { probabilityAsPercent } from "@/shared/utils/probability";
+import { riskLevelLabel } from "@/shared/lib/labels";
 import { getDispatchAnalyses } from "@/entities/dispatch-analysis/api/getDispatchAnalyses";
 import { INCIDENT_TYPE_LABELS } from "@/entities/dispatch-analysis/model/types";
 import type {
@@ -190,7 +191,7 @@ export default function AnalysisListView() {
                     <td
                       className={`px-4 py-5 text-[13px] font-bold whitespace-nowrap ${RISK_TEXT_CLASS[row.riskLevel]}`}
                     >
-                      {row.riskLevel}
+                      {riskLevelLabel(row.riskLevel)}
                     </td>
                     <td className="mono px-4 py-5 text-[13px] whitespace-nowrap text-[#5c6672]">
                       {row.goldenTimeFailureProbability === null

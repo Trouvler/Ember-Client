@@ -1,4 +1,5 @@
 import type { AiEquipmentRecommendation } from "@/entities/dispatch-analysis/model/types";
+import { equipmentLabel } from "@/shared/lib/labels";
 import ProgressBarCell from "./ProgressBarCell";
 
 interface RecommendedEquipmentTableProps {
@@ -28,7 +29,7 @@ export default function RecommendedEquipmentTable({
           {equipment.map((item) => (
             <tr key={item.equipmentType} className="border-b border-[#eef0f3]">
               <td className="px-3.5 py-3 text-sm font-bold text-ink">
-                {item.equipmentType}
+                {equipmentLabel(item.equipmentType)}
               </td>
               <td className="px-3.5 py-3">
                 <ProgressBarCell

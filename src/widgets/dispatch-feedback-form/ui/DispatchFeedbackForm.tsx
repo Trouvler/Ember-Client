@@ -4,6 +4,7 @@ import { useState } from "react";
 import { postDispatchFeedback } from "@/entities/dispatch-analysis/api/postDispatchFeedback";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
+import { equipmentLabel } from "@/shared/lib/labels";
 
 interface DispatchFeedbackFormProps {
   analysisId: number;
@@ -115,7 +116,7 @@ export default function DispatchFeedbackForm({
                     setUsedEquipment((current) => toggle(current, option))
                   }
                 />
-                {option}
+                {equipmentLabel(option)}
               </label>
             ))}
           </div>

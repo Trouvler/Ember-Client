@@ -19,6 +19,11 @@ import {
 } from "@/entities/risk-layer/api/getRiskLayers";
 import type { RiskLayerFeature } from "@/entities/risk-layer/model/types";
 import { probabilityAsPercent } from "@/shared/utils/probability";
+import {
+  equipmentLabel,
+  riskLevelLabel,
+  stationTypeLabel,
+} from "@/shared/lib/labels";
 import type { RiskLevel } from "@/entities/dispatch-analysis/model/types";
 
 const LAYERS = ["골든타임 실패율", "평균 도착시간"] as const;
@@ -155,6 +160,56 @@ export default function DashboardView() {
               if (station) void selectStation(station);
             }}
           />
+
+          <div className="border-t border-[#e6e9ee] px-4 py-4">
+            {isLoadingDetail ? (
+              <LoadingSpinner label="소방서 상세 조회 중" size="sm" />
+            ) : null}
+            {!isLoadingDetail && detailError ? (
+              <ErrorFallback message={detailError} />
+            ) : null}
+            {!isLoadingDetail && !detailError && selectedStation ? (
+              <div>
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <span className="text-[15px] font-bold text-ink">
+                    {selectedStation.name}
+                  </span>
+                  <span className="rounded bg-[#f2f4f6] px-2 py-0.5 text-[11px] font-semibold text-[#5c6672]">
+                    {stationTypeLabel(selectedStation.type)}
+                  </span>
+                </div>
+                <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-2.5 sm:grid-cols-2">
+                  <div>
+                    <dt className="text-[11.5px] text-[#6b7280]">주소</dt>
+                    <dd className="text-[13px] text-ink">
+                      {selectedStation.address}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[11.5px] text-[#6b7280]">좌표</dt>
+                    <dd className="mono text-[13px] text-ink">
+                      {`${selectedStation.latitude.toFixed(5)}, ${selectedStation.longitude.toFixed(5)}`}
+                    </dd>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <dt className="text-[11.5px] text-[#6b7280]">보유 장비</dt>
+                    <dd className="text-[13px] text-ink">
+                      {selectedStation.equipment?.length
+                        ? selectedStation.equipment
+                            .map(equipmentLabel)
+                            .join(", ")
+                        : "등록된 장비 정보가 없습니다."}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            ) : null}
+            {!isLoadingDetail && !detailError && !selectedStation ? (
+              <p className="text-center text-[13px] text-[#6b7280]">
+                지도에서 소방서 마커를 선택하면 상세 정보가 표시됩니다.
+              </p>
+            ) : null}
+          </div>
         </section>
 
         {/* 사이드바 */}
@@ -226,9 +281,11 @@ export default function DashboardView() {
                     <div
                       className={`text-[22px] leading-none font-bold ${RISK_TEXT_CLASS[riskLevelOf(probabilityAsPercent(selectedFeature.properties.riskScore))]}`}
                     >
-                      {riskLevelOf(
-                        probabilityAsPercent(
-                          selectedFeature.properties.riskScore,
+                      {riskLevelLabel(
+                        riskLevelOf(
+                          probabilityAsPercent(
+                            selectedFeature.properties.riskScore,
+                          ),
                         ),
                       )}
                     </div>
@@ -378,24 +435,6 @@ export default function DashboardView() {
                 <p className="py-4 text-center text-xs text-[#6b7280]">
                   조회된 소방서가 없습니다.
                 </p>
-              ) : null}
-              {isLoadingDetail ? (
-                <LoadingSpinner label="상세 조회 중" size="sm" />
-              ) : null}
-              {detailError ? <ErrorFallback message={detailError} /> : null}
-              {selectedStation ? (
-                <div className="mt-3 border-t border-[#eef0f3] pt-3 text-xs leading-6 text-[#5c6672]">
-                  <p className="font-bold text-ink">{selectedStation.name}</p>
-                  <p>
-                    {selectedStation.type} · {selectedStation.address}
-                  </p>
-                  <p>
-                    보유 장비:{" "}
-                    {selectedStation.equipment.length
-                      ? selectedStation.equipment.join(", ")
-                      : "정보 없음"}
-                  </p>
-                </div>
               ) : null}
             </div>
           </section>

@@ -8,7 +8,8 @@ export interface FireStation {
 }
 
 export interface FireStationDetail extends FireStation {
-  equipment: string[];
+  // 실 응답에서 null로 내려온다.
+  equipment: string[] | null;
 }
 
 // dispatch-analysis의 IncidentType과 같은 값이지만 cross-slice import가 금지되어 자체 선언한다.

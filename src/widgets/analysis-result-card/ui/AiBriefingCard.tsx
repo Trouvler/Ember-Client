@@ -1,3 +1,5 @@
+import { featureLabel, localizeEnums } from "@/shared/lib/labels";
+
 interface AiBriefingCardProps {
   summary: string;
   reasons: string[];
@@ -14,7 +16,9 @@ export default function AiBriefingCard({
         <h2 className="text-sm font-bold text-ink">AI 상황 브리핑</h2>
       </div>
       <div className="p-4">
-        <p className="text-[13.5px] leading-[1.8] text-[#374151]">{summary}</p>
+        <p className="text-[13.5px] leading-[1.8] text-[#374151]">
+          {localizeEnums(summary)}
+        </p>
         {reasons.length > 0 ? (
           <div className="mt-4 border-t border-[#eef0f3] pt-3.5">
             <div className="mb-2.5 text-[11.5px] font-semibold text-[#6b7280]">
@@ -39,7 +43,7 @@ export default function AiBriefingCard({
                   >
                     <path d="M20 6 9 17l-5-5" />
                   </svg>
-                  {reason}
+                  {featureLabel(reason)}
                 </li>
               ))}
             </ul>

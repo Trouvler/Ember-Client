@@ -157,7 +157,7 @@ describe("DashboardView", () => {
     render(<DashboardView />);
 
     expect(await screen.findByText("종로구 창신동")).toBeInTheDocument();
-    expect(screen.getByText("HIGH")).toBeInTheDocument();
+    expect(screen.getByText("높음")).toBeInTheDocument();
     expect(screen.getByText("8.4")).toBeInTheDocument();
   });
 
@@ -179,7 +179,7 @@ describe("DashboardView", () => {
       await screen.findByRole("button", { name: /종로소방서/ }),
     );
 
-    expect(await screen.findByText("보유 장비: 펌프차")).toBeInTheDocument();
+    expect(await screen.findByText("펌프차")).toBeInTheDocument();
   });
 
   it("소방서 마커 클릭으로 상세 정보를 표시한다", async () => {
@@ -196,7 +196,23 @@ describe("DashboardView", () => {
     )?.[2];
     clickHandler();
 
-    expect(await screen.findByText("보유 장비: 펌프차")).toBeInTheDocument();
+    expect(await screen.findByText("펌프차")).toBeInTheDocument();
+  });
+
+  it("보유 장비가 null이어도 상세 정보를 표시한다", async () => {
+    stubFetch({
+      stations: [STATION],
+      detail: { ...STATION, equipment: null },
+    });
+
+    render(<DashboardView />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: /종로소방서/ }),
+    );
+
+    expect(
+      await screen.findByText("등록된 장비 정보가 없습니다."),
+    ).toBeInTheDocument();
   });
 
   it("조회 오류를 재시도 UI로 표시한다", async () => {

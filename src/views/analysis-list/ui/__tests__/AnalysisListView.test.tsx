@@ -55,7 +55,7 @@ describe("AnalysisListView", () => {
     render(<AnalysisListView />);
 
     expect(await screen.findByText("3")).toBeInTheDocument();
-    expect(screen.getByText("HIGH")).toBeInTheDocument();
+    expect(screen.getByText("높음")).toBeInTheDocument();
     expect(screen.getByText("구조")).toBeInTheDocument();
   });
 

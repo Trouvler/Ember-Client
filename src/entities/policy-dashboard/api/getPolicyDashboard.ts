@@ -2,7 +2,8 @@ import { apiFetch } from "@/shared/api/httpClient";
 import type { PolicyDashboard } from "../model/types";
 
 // OpenAPI에는 region이 optional로 적혀 있으나 생략하면 400 INVALID_REQUEST가 온다.
-export const DEFAULT_REGION = "서울";
+// 서버가 region을 정규화하지 않아 "서울"은 빈 결과가 온다. 정식 시도명을 보내야 한다.
+export const DEFAULT_REGION = "서울특별시";
 
 export function getPolicyDashboard(region = DEFAULT_REGION) {
   const params = new URLSearchParams({

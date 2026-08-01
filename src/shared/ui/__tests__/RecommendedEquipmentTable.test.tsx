@@ -25,9 +25,9 @@ describe("RecommendedEquipmentTable", () => {
       />,
     );
 
-    expect(screen.getByText("PUMP_TRUCK")).toBeInTheDocument();
+    expect(screen.getByText("펌프차")).toBeInTheDocument();
     expect(screen.getByText("95%")).toBeInTheDocument();
     expect(screen.getByText("초기 진화")).toBeInTheDocument();
-    expect(screen.getByText("LADDER_TRUCK")).toBeInTheDocument();
+    expect(screen.getByText("고가사다리차")).toBeInTheDocument();
   });
 });

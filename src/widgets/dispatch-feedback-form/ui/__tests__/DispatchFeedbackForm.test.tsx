@@ -53,7 +53,7 @@ describe("DispatchFeedbackForm", () => {
 
     renderForm();
     await userEvent.type(screen.getByLabelText("실제 도착 시간 (분)"), "9.4");
-    await userEvent.click(screen.getByRole("checkbox", { name: "PUMP_TRUCK" }));
+    await userEvent.click(screen.getByRole("checkbox", { name: "펌프차" }));
     await userEvent.click(screen.getByRole("checkbox", { name: "교통 정체" }));
     await userEvent.click(
       screen.getByRole("checkbox", { name: "추가 출동이 필요했음" }),

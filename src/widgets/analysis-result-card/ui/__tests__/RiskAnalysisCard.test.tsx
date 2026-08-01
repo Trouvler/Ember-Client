@@ -16,7 +16,7 @@ describe("RiskAnalysisCard", () => {
       />,
     );
 
-    expect(screen.getByText("HIGH")).toBeInTheDocument();
+    expect(screen.getByText("높음")).toBeInTheDocument();
     expect(screen.getByText("즉시 대응 권고")).toBeInTheDocument();
   });
 
@@ -42,7 +42,7 @@ describe("RiskAnalysisCard", () => {
       />,
     );
 
-    expect(screen.getByText("MEDIUM")).toBeInTheDocument();
+    expect(screen.getByText("보통")).toBeInTheDocument();
     expect(screen.getByText("주의 관찰 필요")).toBeInTheDocument();
   });
 
@@ -55,7 +55,7 @@ describe("RiskAnalysisCard", () => {
       />,
     );
 
-    expect(screen.getByText("LOW")).toBeInTheDocument();
+    expect(screen.getByText("낮음")).toBeInTheDocument();
     expect(screen.getByText("정상 범위")).toBeInTheDocument();
   });
 });

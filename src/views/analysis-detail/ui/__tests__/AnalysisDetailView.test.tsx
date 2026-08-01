@@ -118,9 +118,9 @@ describe("AnalysisDetailView", () => {
       </DispatchAnalysisProvider>,
     );
     expect(await screen.findByText("#1")).toBeInTheDocument();
-    expect(screen.getByText("HIGH")).toBeInTheDocument();
+    expect(screen.getByText("높음")).toBeInTheDocument();
     expect(screen.getAllByText("종로소방서").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("PUMP_TRUCK").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("펌프차").length).toBeGreaterThan(0);
   });
 
   it("추천 장비를 출동 결과 등록 폼의 선택 항목으로 전달한다", async () => {
@@ -132,7 +132,7 @@ describe("AnalysisDetailView", () => {
     await screen.findByText("#1");
 
     expect(
-      screen.getByRole("checkbox", { name: "PUMP_TRUCK" }),
+      screen.getByRole("checkbox", { name: "펌프차" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "출동 결과 등록" }),

@@ -98,7 +98,10 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
   // API로만 복원한 분석에는 좌표가 없어 지도를 띄울 수 없다.
   const location = hasContextResult ? analysis.location : null;
   const equipmentError = hasContextResult ? analysis.equipmentError : false;
-  const probability = probabilityAsPercent(result.goldenTimeFailureProbability);
+  const probability =
+    result.goldenTimeFailureProbability === null
+      ? null
+      : probabilityAsPercent(result.goldenTimeFailureProbability);
 
   const retryEquipment = async () => {
     setIsRetryingEquipment(true);
@@ -128,14 +131,14 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
         initialElapsedSeconds={0}
       />
 
-      <main className="w-full px-4 py-6 sm:px-[22px] sm:py-8">
+      <main className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-[22px] sm:py-8">
         {result.degraded ? (
           <div className="mb-3.5">
             <DegradedBanner visible={result.degraded} />
           </div>
         ) : null}
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.75fr_1fr] lg:items-start">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_1fr] lg:items-start">
           <div className="flex flex-col gap-5">
             <section className="rounded-xl border border-[#ebedf0] card-shadow print:hidden">
               <div className="flex items-center gap-2 border-b border-[#e6e9ee] px-4 py-3.5">

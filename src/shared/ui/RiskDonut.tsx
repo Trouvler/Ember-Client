@@ -1,7 +1,7 @@
 import type { RiskLevel } from "@/entities/dispatch-analysis/model/types";
 
 interface RiskDonutProps {
-  value: number;
+  value: number | null;
   level: RiskLevel;
 }
 
@@ -23,7 +23,7 @@ const RADIUS = 42;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export default function RiskDonut({ value, level }: RiskDonutProps) {
-  const offset = CIRCUMFERENCE * (1 - value / 100);
+  const offset = CIRCUMFERENCE * (1 - (value ?? 0) / 100);
 
   return (
     <div className="relative h-24 w-24 shrink-0">
@@ -51,14 +51,14 @@ export default function RiskDonut({ value, level }: RiskDonutProps) {
       <div
         className="absolute inset-[13px] flex items-center justify-center rounded-full bg-white"
         role="meter"
-        aria-valuenow={value}
+        aria-valuenow={value ?? undefined}
         aria-valuemin={0}
         aria-valuemax={100}
       >
         <span
           className={`mono text-[26px] leading-none font-bold ${LEVEL_TEXT_CLASS[level]}`}
         >
-          {value}%
+          {value === null ? "—" : `${value}%`}
         </span>
       </div>
     </div>

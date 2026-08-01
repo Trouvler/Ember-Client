@@ -4,8 +4,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import DashboardView from "../DashboardView";
 
-function MockScript({ onLoad }: { onLoad?: () => void }) {
-  useEffect(() => onLoad?.(), [onLoad]);
+function MockScript({ onReady }: { onReady?: () => void }) {
+  useEffect(() => onReady?.(), [onReady]);
   return null;
 }
 vi.mock("next/script", () => ({ default: MockScript }));
@@ -105,35 +105,26 @@ describe("DashboardView", () => {
     );
   });
 
-  it("소방서 목록이 비면 시연 데이터와 배지를 표시한다", async () => {
+  it("소방서 목록이 비면 빈 상태를 표시한다", async () => {
     stubFetch({ stations: [] });
 
     render(<DashboardView />);
 
     expect(
-      await screen.findByRole("button", { name: /종로소방서/ }),
+      await screen.findByText("조회된 소방서가 없습니다."),
     ).toBeInTheDocument();
-    expect(
-      screen.getAllByText("시연 데이터 · 실제 집계가 아닙니다").length,
-    ).toBeGreaterThan(0);
   });
 
-  it("시연 소방서를 선택하면 상세를 조회하지 않고 픽스처를 표시한다", async () => {
+  it("최초 소방서 조회를 서울로 제한한다", async () => {
     const fetchMock = stubFetch({ stations: [] });
 
     render(<DashboardView />);
-    await userEvent.click(
-      await screen.findByRole("button", { name: /종로소방서/ }),
-    );
-
+    await screen.findByText("조회된 소방서가 없습니다.");
     expect(
-      await screen.findByText(/펌프차/, { exact: false }),
-    ).toBeInTheDocument();
-    expect(
-      fetchMock.mock.calls.some(([path]) =>
-        /^\/api\/station\/\d+/.test(String(path)),
-      ),
-    ).toBe(false);
+      fetchMock.mock.calls.find(([path]) =>
+        String(path).startsWith("/api/station?"),
+      )?.[0],
+    ).toContain("region=");
   });
 
   it("소방서와 위험도 실데이터가 있으면 배지를 표시하지 않는다", async () => {
@@ -170,17 +161,14 @@ describe("DashboardView", () => {
     expect(screen.getByText("8.4")).toBeInTheDocument();
   });
 
-  it("위험도 레이어가 비면 시연 데이터와 배지를 표시한다", async () => {
+  it("위험도 레이어가 비면 빈 상태를 표시한다", async () => {
     stubFetch({ features: [] });
 
     render(<DashboardView />);
 
     expect(
-      await screen.findByRole("heading", { name: "종로구 창신동" }),
+      await screen.findByText("조회된 행정동 위험도 데이터가 없습니다."),
     ).toBeInTheDocument();
-    expect(
-      screen.getAllByText("시연 데이터 · 실제 집계가 아닙니다").length,
-    ).toBeGreaterThan(0);
   });
 
   it("소방서 선택 후 상세 정보를 표시한다", async () => {

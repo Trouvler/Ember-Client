@@ -40,13 +40,13 @@ export interface DispatchUnitCandidate {
   rank: number;
   stationName: string;
   estimatedArrivalMinutes: number;
-  successProbability: number;
+  successProbability: number | null;
   reason: string;
 }
 
 export interface AiEquipmentRecommendation {
   equipmentType: string;
-  requiredProbability: number;
+  requiredProbability: number | null;
   reason: string;
 }
 
@@ -56,7 +56,7 @@ export interface DispatchAnalysisResult {
   riskLevel: RiskLevel;
   // 실 응답에서 null로 내려온다.
   estimatedArrivalMinutes: number | null;
-  goldenTimeFailureProbability: number;
+  goldenTimeFailureProbability: number | null;
   recommendedUnits: DispatchUnitCandidate[];
   recommendedEquipment: AiEquipmentRecommendation[];
   reasons: string[];
@@ -68,7 +68,7 @@ export interface DispatchAnalysisSummary {
   incidentType: IncidentType;
   riskLevel: RiskLevel;
   occurredAt: string;
-  goldenTimeFailureProbability: number;
+  goldenTimeFailureProbability: number | null;
   // 실 응답에서 null로 내려온다.
   estimatedArrivalMinutes: number | null;
 }

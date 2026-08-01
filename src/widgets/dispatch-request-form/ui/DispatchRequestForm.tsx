@@ -13,10 +13,8 @@ import { BUILDING_TYPE_LABELS } from "@/entities/dispatch-analysis/model/types";
 import { getRecommendedEquipment } from "@/entities/dispatch-analysis/api/getRecommendedEquipment";
 import { getNearbyStations } from "@/entities/fire-station/api/fireStations";
 import type { NearbyStation } from "@/entities/fire-station/model/types";
-import { DEMO_NEARBY_STATIONS } from "@/entities/fire-station/model/demoData";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
-import DemoDataBadge from "@/shared/ui/DemoDataBadge";
 
 interface DispatchRequestFormProps {
   location: DispatchLocation | null;
@@ -82,15 +80,23 @@ export default function DispatchRequestForm({
 
   const nearbyResult = nearby?.key === nearbyKey ? nearby : null;
   const isLoadingNearby = nearbyKey !== null && nearbyResult === null;
-  const isDemoNearby = nearbyResult?.stations?.length === 0;
-  const shownNearby = isDemoNearby
-    ? DEMO_NEARBY_STATIONS
-    : (nearbyResult?.stations ?? []);
-
-  const isDisabled = !location || !incidentType || !occurredAt || isSubmitting;
+  const shownNearby = nearbyResult?.stations ?? [];
 
   const handleSubmit = async () => {
-    if (!location || !incidentType) {
+    if (!location && !incidentType) {
+      setError("신고 위치와 사고 유형을 선택하세요.");
+      return;
+    }
+    if (!location) {
+      setError("신고 위치를 지도에서 선택하거나 검색하세요.");
+      return;
+    }
+    if (!incidentType) {
+      setError("사고 유형을 선택하세요.");
+      return;
+    }
+    if (!occurredAt) {
+      setError("발생 시각을 준비 중입니다. 잠시 후 다시 시도하세요.");
       return;
     }
 
@@ -123,26 +129,30 @@ export default function DispatchRequestForm({
 
   return (
     <div className="flex flex-col gap-4">
-      {!location ? (
-        <div className="flex items-start gap-2 rounded-xl border border-[#ebedf0] bg-[#f8f9fb] px-3 py-2.5 text-xs leading-[1.55] text-[#5c6672] card-shadow">
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            className="mt-px shrink-0 text-ember"
-            strokeWidth="1.9"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 16v-4" />
-            <path d="M12 8h.01" />
-          </svg>
-          신고 위치를 지도에서 클릭하거나 주소를 검색하세요.
-        </div>
-      ) : null}
+      <div className="flex min-h-[42px] items-start gap-2 rounded-xl border border-[#ebedf0] bg-[#f8f9fb] px-3 py-2.5 text-xs leading-[1.55] text-[#5c6672] card-shadow">
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          className="mt-px shrink-0 text-ember"
+          strokeWidth="1.9"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>
+        {location ? (
+          <span>
+            선택 위치: {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+          </span>
+        ) : (
+          <span>신고 위치를 지도에서 클릭하거나 주소를 검색하세요.</span>
+        )}
+      </div>
 
       <div>
         <label className="text-[13px] font-semibold text-[#374151]">
@@ -151,7 +161,10 @@ export default function DispatchRequestForm({
         <div className="mt-[9px]">
           <IncidentTypeSelector
             value={incidentType}
-            onChange={setIncidentType}
+            onChange={(nextType) => {
+              setIncidentType(nextType);
+              setError(null);
+            }}
           />
         </div>
       </div>
@@ -161,7 +174,7 @@ export default function DispatchRequestForm({
           <div className="text-[13px] font-semibold text-[#374151]">
             인접 출동대
           </div>
-          <div className="mt-[9px] rounded-xl border border-[#ebedf0] px-3 py-2.5 card-shadow">
+          <div className="mt-[9px] min-h-[58px] rounded-xl border border-[#ebedf0] px-3 py-2.5 card-shadow">
             {isLoadingNearby ? (
               <LoadingSpinner label="인접 출동대 조회 중" size="sm" />
             ) : null}
@@ -170,12 +183,6 @@ export default function DispatchRequestForm({
               <p className="py-1 text-center text-xs text-[#6b7280]">
                 인접 출동대를 불러오지 못했습니다.
               </p>
-            ) : null}
-
-            {isDemoNearby ? (
-              <div className="pb-2">
-                <DemoDataBadge visible />
-              </div>
             ) : null}
 
             {!isLoadingNearby && shownNearby.length > 0 ? (
@@ -201,6 +208,13 @@ export default function DispatchRequestForm({
                   </li>
                 ))}
               </ul>
+            ) : null}
+            {!isLoadingNearby &&
+            nearbyResult?.stations !== null &&
+            shownNearby.length === 0 ? (
+              <p className="py-1 text-center text-xs text-[#6b7280]">
+                조회된 인접 출동대가 없습니다.
+              </p>
             ) : null}
           </div>
         </div>
@@ -252,7 +266,7 @@ export default function DispatchRequestForm({
 
       <button
         type="button"
-        disabled={isDisabled}
+        disabled={isSubmitting}
         onClick={handleSubmit}
         className="mt-1.5 rounded-[14px] bg-ember px-4 py-3.5 text-[15px] font-bold text-white disabled:cursor-not-allowed disabled:bg-[#f2f4f6] disabled:text-[#b5bac2]"
       >

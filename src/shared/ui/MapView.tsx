@@ -21,7 +21,6 @@ export interface MapMarker extends MapLocation {
 interface MapViewProps {
   marker?: MapLocation | null;
   markers?: readonly MapMarker[];
-  enableServices?: boolean;
   center?: MapLocation | null;
   onClickLocation?: (location: MapLocation) => void;
   onClickMarker?: (id: MapMarker["id"]) => void;
@@ -31,7 +30,6 @@ interface MapViewProps {
 export default function MapView({
   marker,
   markers = EMPTY_MARKERS,
-  enableServices = false,
   center,
   onClickLocation,
   onClickMarker,
@@ -56,7 +54,7 @@ export default function MapView({
     onMapReadyRef.current = onMapReady;
   });
 
-  // ponytail: 8초 이내 로드를 못 하면 실패로 간주. 이후 지연 성공은 놓칠 수 있음(재시도는 새로고침으로 충분)
+  // ponytail: 8초 안에 준비되지 않으면 실패를 알리되, 지연 성공 시 즉시 복구한다.
   useEffect(() => {
     if (isSdkLoaded) {
       return;
@@ -73,7 +71,9 @@ export default function MapView({
       return;
     }
 
+    let isMounted = true;
     window.kakao.maps.load(() => {
+      if (!isMounted || !containerRef.current) return;
       const center = initialMarkerRef.current ?? DEFAULT_CENTER;
       const map = new window.kakao.maps.Map(
         containerRef.current as HTMLElement,
@@ -95,8 +95,14 @@ export default function MapView({
       // kakao.maps.load()의 콜백은 SDK 내부적으로 비동기 실행될 수 있어, mapRef가 실제로
       // 채워진 시점을 별도 state로 알려야 marker 동기화 effect가 그 시점에 재실행됨
       setIsMapReady(true);
+      setHasLoadError(false);
       onMapReadyRef.current?.();
     });
+    return () => {
+      isMounted = false;
+      mapRef.current = null;
+      setIsMapReady(false);
+    };
   }, [isSdkLoaded]);
 
   useEffect(() => {
@@ -205,9 +211,13 @@ export default function MapView({
   return (
     <>
       <Script
-        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}${enableServices ? "&libraries=services" : ""}&autoload=false`}
+        id="kakao-maps-sdk"
+        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&libraries=services&autoload=false`}
         strategy="afterInteractive"
-        onLoad={() => setIsSdkLoaded(true)}
+        onReady={() => {
+          setIsSdkLoaded(true);
+          setHasLoadError(false);
+        }}
         onError={() => {
           console.error("MapView: Kakao Maps SDK 스크립트 로드 실패");
           setHasLoadError(true);
@@ -216,7 +226,10 @@ export default function MapView({
       {hasLoadError ? (
         <ErrorFallback message="지도를 불러오지 못했습니다." />
       ) : (
-        <div ref={containerRef} className="h-[440px] w-full rounded-lg" />
+        <div
+          ref={containerRef}
+          className="h-full min-h-[440px] w-full rounded-lg"
+        />
       )}
     </>
   );

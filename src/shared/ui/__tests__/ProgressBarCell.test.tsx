@@ -22,4 +22,11 @@ describe("ProgressBarCell", () => {
     const filled = meter.querySelectorAll(".bg-risk-low");
     expect(filled.length).toBeGreaterThan(0);
   });
+
+  it("값이 null이면 0%로 오인하지 않도록 대체 문자를 표시한다", () => {
+    render(<ProgressBarCell value={null} />);
+
+    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.getByRole("meter")).not.toHaveAttribute("aria-valuenow");
+  });
 });

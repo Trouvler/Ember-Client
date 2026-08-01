@@ -59,6 +59,6 @@ design: 메인 배너 모바일 레이아웃 수정
 ## 브랜치 생성 명령
 
 ```bash
-git fetch origin develop
-git checkout -b feat/<name> origin/develop
+git fetch origin main
+git checkout -b feat/<name> origin/main
 ```

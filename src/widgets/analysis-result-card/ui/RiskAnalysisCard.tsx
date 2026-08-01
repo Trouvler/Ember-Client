@@ -3,7 +3,7 @@ import RiskDonut from "@/shared/ui/RiskDonut";
 
 interface RiskAnalysisCardProps {
   riskLevel: RiskLevel;
-  probability: number;
+  probability: number | null;
   fastestEtaMinutes: number | null;
   goldenTimeGoalMinutes?: number;
 }

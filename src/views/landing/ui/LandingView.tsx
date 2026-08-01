@@ -50,7 +50,7 @@ export default function LandingView() {
           aria-labelledby="landing-hero-title"
           className="border-b border-[#e6e9ee]"
         >
-          <div className="max-w-[1180px] px-4 py-12 sm:px-6 sm:py-20 lg:py-24">
+          <div className="mx-auto w-full max-w-[1180px] px-4 py-12 sm:px-6 sm:py-20 lg:py-24">
             <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
               <div className="max-w-[620px]">
                 <p className="flex items-center gap-2 text-[11.5px] font-bold tracking-[0.14em] text-ember">
@@ -74,7 +74,7 @@ export default function LandingView() {
                   <span className="font-semibold text-ink">30초 안에</span>{" "}
                   분석합니다. 최종 판단은 언제나 상황실 담당자의 몫입니다.
                 </p>
-                <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+                <div className="mt-9">
                   <Link
                     href="/analysis/new"
                     className="inline-flex items-center gap-2 rounded-lg bg-ember px-6 py-3.5 text-[15px] font-bold text-white hover:bg-[#d24f21]"
@@ -95,12 +95,6 @@ export default function LandingView() {
                       <path d="m12 5 7 7-7 7" />
                     </svg>
                   </Link>
-                  <Link
-                    href="/analysis/new"
-                    className="text-[14.5px] font-semibold text-[#5c6672] underline decoration-[#c4c9d0] underline-offset-[5px] hover:text-ink hover:decoration-ink"
-                  >
-                    직접 분석해 보기
-                  </Link>
                 </div>
               </div>
 
@@ -118,7 +112,7 @@ export default function LandingView() {
           aria-labelledby="golden-time-title"
           className="border-b border-[#e6e9ee] bg-[#f7f8f9]"
         >
-          <div className="max-w-[1180px] px-4 py-12 sm:px-6 sm:py-18 lg:py-20">
+          <div className="mx-auto w-full max-w-[1180px] px-4 py-12 sm:px-6 sm:py-18 lg:py-20">
             <p className="text-[11.5px] font-bold tracking-[0.14em] text-ember">
               골든타임 7분
             </p>
@@ -190,7 +184,7 @@ export default function LandingView() {
 
         {/* 결과 화면 미리보기 */}
         <section aria-labelledby="preview-title">
-          <div className="max-w-[1180px] px-4 py-12 sm:px-6 sm:py-18 lg:py-20">
+          <div className="mx-auto w-full max-w-[1180px] px-4 py-12 sm:px-6 sm:py-18 lg:py-20">
             <p className="text-[11.5px] font-bold tracking-[0.14em] text-ember">
               분석 결과
             </p>
@@ -322,7 +316,7 @@ export default function LandingView() {
       </main>
 
       <footer className="border-t border-[#e6e9ee]">
-        <div className="flex max-w-[1180px] flex-col gap-2 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p className="text-[12px] text-[#6b7280]">
             제6회 소방안전 빅데이터 활용 및 아이디어 경진대회 출품작
           </p>

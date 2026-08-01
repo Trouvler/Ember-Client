@@ -31,6 +31,12 @@ describe("LandingView", () => {
     }
   });
 
+  it("중복 분석 CTA를 표시하지 않는다", () => {
+    render(<LandingView />);
+
+    expect(screen.queryByText("직접 분석해 보기")).not.toBeInTheDocument();
+  });
+
   it("골든타임 배분과 출동 단계 3개를 안내한다", () => {
     render(<LandingView />);
 

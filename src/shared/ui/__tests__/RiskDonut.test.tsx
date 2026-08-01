@@ -25,4 +25,11 @@ describe("RiskDonut", () => {
     rerender(<RiskDonut value={80} level="HIGH" />);
     expect(screen.getByText("80%")).toHaveClass("text-risk-high");
   });
+
+  it("값이 null이면 대체 문자를 표시한다", () => {
+    render(<RiskDonut value={null} level="UNKNOWN" />);
+
+    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.getByRole("meter")).not.toHaveAttribute("aria-valuenow");
+  });
 });

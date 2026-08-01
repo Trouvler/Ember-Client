@@ -193,7 +193,9 @@ export default function AnalysisListView() {
                       {row.riskLevel}
                     </td>
                     <td className="mono px-4 py-5 text-[13px] whitespace-nowrap text-[#5c6672]">
-                      {`${probabilityAsPercent(row.goldenTimeFailureProbability).toFixed(1)}%`}
+                      {row.goldenTimeFailureProbability === null
+                        ? "—"
+                        : `${probabilityAsPercent(row.goldenTimeFailureProbability).toFixed(1)}%`}
                     </td>
                     <td className="mono px-4 py-5 text-[13px] whitespace-nowrap text-[#5c6672]">
                       {row.estimatedArrivalMinutes === null

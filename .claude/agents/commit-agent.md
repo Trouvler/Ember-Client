@@ -8,7 +8,7 @@ tools: Bash, Read
 
 ## 워크플로우
 
-1. `git rev-parse --abbrev-ref HEAD` — `main` 또는 `develop`이면 즉시 중단
+1. `git rev-parse --abbrev-ref HEAD` — `main`이면 즉시 중단
 2. `git diff --staged && git status` — 변경사항 파악
 3. 타입 결정 (`git-conventions` skill 참조)
 4. 변경 영역이 다르면 분리 방안 제안 (Feature/테스트/설정, 다른 FSD 도메인)

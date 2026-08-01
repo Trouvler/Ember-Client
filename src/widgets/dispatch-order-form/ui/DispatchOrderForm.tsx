@@ -89,7 +89,12 @@ export default function DispatchOrderForm({
               <span className="font-semibold text-ink">{unit.stationName}</span>
               <span className="ml-auto text-[12px] text-[#5c6672]">
                 <span className="mono">{unit.estimatedArrivalMinutes}</span>분 ·
-                성공률 <span className="mono">{unit.successProbability}</span>%
+                성공률{" "}
+                <span className="mono">
+                  {unit.successProbability === null
+                    ? "—"
+                    : `${unit.successProbability}%`}
+                </span>
               </span>
             </label>
           ))}

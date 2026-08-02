@@ -217,7 +217,7 @@ export default function LandingView() {
                         종합 위험도
                       </p>
                       <p className="mt-1.5 text-[26px] leading-none font-extrabold tracking-[-0.02em] text-risk-high">
-                        HIGH
+                        높음
                       </p>
                       <p className="mt-2.5 text-[12px] text-[#5c6672]">
                         골든타임 실패 확률 62% · 주거 화재

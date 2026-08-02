@@ -95,8 +95,13 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
     );
   }
 
-  // API로만 복원한 분석에는 좌표가 없어 지도를 띄울 수 없다.
-  const location = hasContextResult ? analysis.location : null;
+  // 응답이 신고 좌표를 그대로 돌려주므로 context 없이 복원한 분석도 지도를 띄울 수 있다.
+  const location =
+    Number.isFinite(result.latitude) && Number.isFinite(result.longitude)
+      ? { lat: result.latitude, lng: result.longitude }
+      : hasContextResult
+        ? analysis.location
+        : null;
   const equipmentError = hasContextResult ? analysis.equipmentError : false;
   const probability =
     result.goldenTimeFailureProbability === null
@@ -120,7 +125,11 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
       <IncidentStatusBar
         incidentId={id}
         title="신고 분석 결과"
-        address={location ? "선택한 신고 위치" : "위치 정보 없음"}
+        address={
+          location
+            ? `신고 위치 ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`
+            : "위치 정보 없음"
+        }
         lat={location?.lat}
         lng={location?.lng}
         receivedAtLabel={new Date().toLocaleTimeString("ko-KR", {

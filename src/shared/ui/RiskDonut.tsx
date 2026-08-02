@@ -58,7 +58,8 @@ export default function RiskDonut({ value, level }: RiskDonutProps) {
         <span
           className={`mono text-[26px] leading-none font-bold ${LEVEL_TEXT_CLASS[level]}`}
         >
-          {value === null ? "—" : `${value}%`}
+          {/* 0.14 * 100 = 14.000000000000002 같은 부동소수점 오차가 그대로 새어 나온다. */}
+          {value === null ? "—" : `${Math.round(value)}%`}
         </span>
       </div>
     </div>

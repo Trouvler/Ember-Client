@@ -15,6 +15,12 @@ describe("RiskDonut", () => {
     expect(screen.getByText("62%")).toBeInTheDocument();
   });
 
+  it("부동소수점 오차가 있는 값도 정수 퍼센트로 표시한다", () => {
+    render(<RiskDonut value={0.14 * 100} level="LOW" />);
+
+    expect(screen.getByText("14%")).toBeInTheDocument();
+  });
+
   it("등급별로 다른 색상 클래스를 적용한다", () => {
     const { rerender } = render(<RiskDonut value={20} level="LOW" />);
     expect(screen.getByText("20%")).toHaveClass("text-risk-low");

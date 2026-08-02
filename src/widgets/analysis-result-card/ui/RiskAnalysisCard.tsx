@@ -87,7 +87,9 @@ export default function RiskAnalysisCard({
           </div>
         </div>
         <div className="px-4 py-3">
-          <div className="mb-1 text-[11.5px] text-[#6b7280]">목표 대비</div>
+          <div className="mb-1 text-[11.5px] text-[#6b7280]">
+            목표 {goldenTimeGoalMinutes}분 대비
+          </div>
           <div>
             {diff === null ? (
               <span className="mono text-xl font-bold text-[#5c6672]">—</span>
@@ -96,10 +98,12 @@ export default function RiskAnalysisCard({
                 <span
                   className={`mono text-xl font-bold ${diff > 0 ? "text-risk-high" : "text-risk-low"}`}
                 >
-                  {diff > 0 ? "+" : ""}
-                  {diff.toFixed(1)}
+                  {Math.abs(diff).toFixed(1)}
                 </span>
-                <span className="text-xs text-[#5c6672]"> 분</span>
+                {/* 부호만 붙이면 -5.7분을 "5.7분 늦음"으로 읽는 오독이 생긴다. */}
+                <span className="text-xs text-[#5c6672]">
+                  {diff > 0 ? "분 초과" : "분 여유"}
+                </span>
               </>
             )}
           </div>

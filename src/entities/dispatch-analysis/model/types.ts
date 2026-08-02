@@ -53,6 +53,8 @@ export interface AiEquipmentRecommendation {
 export interface DispatchAnalysisResult {
   analysisId: number;
   degraded: boolean;
+  latitude: number;
+  longitude: number;
   riskLevel: RiskLevel;
   // 실 응답에서 null로 내려온다.
   estimatedArrivalMinutes: number | null;

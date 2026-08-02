@@ -20,7 +20,7 @@ describe("RiskAnalysisCard", () => {
     expect(screen.getByText("즉시 대응 권고")).toBeInTheDocument();
   });
 
-  it("목표 도착시간을 초과하면 목표 대비 값이 양수로 표시된다", () => {
+  it("목표 도착시간을 초과하면 초과 분량을 표시한다", () => {
     render(
       <RiskAnalysisCard
         riskLevel="HIGH"
@@ -30,7 +30,22 @@ describe("RiskAnalysisCard", () => {
       />,
     );
 
-    expect(screen.getByText("+0.6")).toBeInTheDocument();
+    expect(screen.getByText("0.6")).toBeInTheDocument();
+    expect(screen.getByText("분 초과")).toBeInTheDocument();
+  });
+
+  it("목표 도착시간보다 빠르면 부호 없이 여유 분량을 표시한다", () => {
+    render(
+      <RiskAnalysisCard
+        riskLevel="LOW"
+        probability={14}
+        fastestEtaMinutes={1.26}
+        goldenTimeGoalMinutes={7}
+      />,
+    );
+
+    expect(screen.getByText("5.7")).toBeInTheDocument();
+    expect(screen.getByText("분 여유")).toBeInTheDocument();
   });
 
   it("위험도 MEDIUM이면 주의 관찰 필요 배지를 표시한다", () => {

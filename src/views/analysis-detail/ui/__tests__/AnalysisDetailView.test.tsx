@@ -29,6 +29,8 @@ function FakeMarker(this: KakaoMarker) {
 const API_RESULT = {
   analysisId: 7,
   degraded: false,
+  latitude: 37.5679,
+  longitude: 126.9755,
   riskLevel: "MEDIUM",
   estimatedArrivalMinutes: 8.1,
   goldenTimeFailureProbability: 0.27,
@@ -62,6 +64,8 @@ function SeededDetail() {
       result: {
         analysisId: 1,
         degraded: false,
+        latitude: 37.5,
+        longitude: 127,
         riskLevel: "HIGH",
         estimatedArrivalMinutes: 6.3,
         goldenTimeFailureProbability: 0.62,
@@ -161,12 +165,40 @@ describe("AnalysisDetailView", () => {
     );
   });
 
-  it("API로 복원한 결과에는 좌표가 없어 지도 대신 안내를 표시한다", async () => {
+  it("API로 복원한 결과도 응답 좌표로 신고 위치를 표시한다", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve(API_RESULT),
+      }),
+    );
+
+    render(
+      <DispatchAnalysisProvider>
+        <AnalysisDetailView id="7" />
+      </DispatchAnalysisProvider>,
+    );
+
+    expect(
+      await screen.findByText("신고 위치 37.5679, 126.9755"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "저장된 분석에는 신고 좌표가 없어 지도를 표시할 수 없습니다.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it("응답에 좌표가 없으면 지도 대신 안내를 표시한다", async () => {
+    const { latitude, longitude, ...withoutLocation } = API_RESULT;
+    void latitude;
+    void longitude;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(withoutLocation),
       }),
     );
 

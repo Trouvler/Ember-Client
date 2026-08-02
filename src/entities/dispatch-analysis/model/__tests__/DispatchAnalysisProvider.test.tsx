@@ -10,6 +10,8 @@ import type { DispatchAnalysisResult } from "../types";
 const RESULT: DispatchAnalysisResult = {
   analysisId: 5,
   degraded: false,
+  latitude: 37.5,
+  longitude: 127,
   riskLevel: "HIGH",
   estimatedArrivalMinutes: 6.3,
   goldenTimeFailureProbability: 0.62,

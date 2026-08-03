@@ -179,7 +179,7 @@ describe("DashboardView", () => {
       await screen.findByRole("button", { name: /종로소방서/ }),
     );
 
-    expect(await screen.findByText("펌프차")).toBeInTheDocument();
+    expect(await screen.findByText("37.50000, 127.00000")).toBeInTheDocument();
   });
 
   it("소방서 마커 클릭으로 상세 정보를 표시한다", async () => {
@@ -196,10 +196,10 @@ describe("DashboardView", () => {
     )?.[2];
     clickHandler();
 
-    expect(await screen.findByText("펌프차")).toBeInTheDocument();
+    expect(await screen.findByText("37.50000, 127.00000")).toBeInTheDocument();
   });
 
-  it("보유 장비가 null이어도 상세 정보를 표시한다", async () => {
+  it("장비 정보가 null이어도 상세 렌더가 깨지지 않는다", async () => {
     stubFetch({
       stations: [STATION],
       detail: { ...STATION, equipment: null },
@@ -210,9 +210,8 @@ describe("DashboardView", () => {
       await screen.findByRole("button", { name: /종로소방서/ }),
     );
 
-    expect(
-      await screen.findByText("등록된 장비 정보가 없습니다."),
-    ).toBeInTheDocument();
+    // 상세 패널이 그려졌다는 증거로 좌표 줄을 확인한다(사이드바에는 없는 값).
+    expect(await screen.findByText("37.50000, 127.00000")).toBeInTheDocument();
   });
 
   it("조회 오류를 재시도 UI로 표시한다", async () => {

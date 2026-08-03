@@ -1,3 +1,5 @@
+import { probabilityAsPercent } from "@/shared/utils/probability";
+
 const SEGMENT_COUNT = 20;
 
 interface ProgressBarCellProps {
@@ -9,14 +11,17 @@ export default function ProgressBarCell({
   value,
   colorClassName = "bg-ember",
 }: ProgressBarCellProps) {
-  const filledSegments = Math.round(((value ?? 0) / 100) * SEGMENT_COUNT);
+  // 서버는 확률을 0~1로 준다(success_probability 컬럼이 NUMERIC(4,3)).
+  const percent =
+    value === null ? null : Math.round(probabilityAsPercent(value));
+  const filledSegments = Math.round(((percent ?? 0) / 100) * SEGMENT_COUNT);
 
   return (
     <div className="flex items-center gap-2">
       <div
         className="flex flex-1 gap-px"
         role="meter"
-        aria-valuenow={value ?? undefined}
+        aria-valuenow={percent ?? undefined}
         aria-valuemin={0}
         aria-valuemax={100}
       >
@@ -28,7 +33,7 @@ export default function ProgressBarCell({
         ))}
       </div>
       <span className="mono w-8 shrink-0 text-right text-[13px] font-semibold text-ink">
-        {value === null ? "—" : `${value}%`}
+        {percent === null ? "—" : `${percent}%`}
       </span>
     </div>
   );

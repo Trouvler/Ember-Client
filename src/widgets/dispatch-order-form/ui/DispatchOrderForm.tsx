@@ -5,6 +5,7 @@ import { postDispatchOrder } from "@/entities/dispatch-analysis/api/postDispatch
 import type { DispatchUnitCandidate } from "@/entities/dispatch-analysis/model/types";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorFallback from "@/shared/ui/ErrorFallback";
+import { probabilityAsPercent } from "@/shared/utils/probability";
 
 interface DispatchOrderFormProps {
   analysisId: number;
@@ -93,7 +94,7 @@ export default function DispatchOrderForm({
                 <span className="mono">
                   {unit.successProbability === null
                     ? "—"
-                    : `${unit.successProbability}%`}
+                    : `${Math.round(probabilityAsPercent(unit.successProbability))}%`}
                 </span>
               </span>
             </label>

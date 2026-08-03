@@ -15,6 +15,13 @@ describe("ProgressBarCell", () => {
     expect(screen.getByText("82%")).toBeInTheDocument();
   });
 
+  it("서버가 0~1로 주는 확률을 퍼센트로 변환한다", () => {
+    render(<ProgressBarCell value={0.824} />);
+
+    expect(screen.getByRole("meter")).toHaveAttribute("aria-valuenow", "82");
+    expect(screen.getByText("82%")).toBeInTheDocument();
+  });
+
   it("colorClassName을 채워진 세그먼트에 적용한다", () => {
     render(<ProgressBarCell value={50} colorClassName="bg-risk-low" />);
 

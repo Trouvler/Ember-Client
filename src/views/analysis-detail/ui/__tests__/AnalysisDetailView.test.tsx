@@ -180,9 +180,8 @@ describe("AnalysisDetailView", () => {
       </DispatchAnalysisProvider>,
     );
 
-    expect(
-      await screen.findByText("신고 위치 37.5679, 126.9755"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("신고 위치")).toBeInTheDocument();
+    expect(screen.getByText("37.5679, 126.9755")).toBeInTheDocument();
     expect(
       screen.queryByText(
         "저장된 분석에는 신고 좌표가 없어 지도를 표시할 수 없습니다.",

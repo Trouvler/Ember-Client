@@ -22,9 +22,12 @@ describe("AiBriefingCard", () => {
     expect(screen.getByText("근거 B")).toBeInTheDocument();
   });
 
-  it("판단 근거가 없으면 근거 섹션을 표시하지 않는다", () => {
+  it("판단 근거가 없으면 섹션을 지우지 않고 안내 문구를 표시한다", () => {
     render(<AiBriefingCard summary="출동을 권고합니다." reasons={[]} />);
 
-    expect(screen.queryByText("주요 판단 근거")).not.toBeInTheDocument();
+    expect(screen.getByText("주요 판단 근거")).toBeInTheDocument();
+    expect(
+      screen.getByText(/판단 근거를 산출하지 못했습니다/),
+    ).toBeInTheDocument();
   });
 });

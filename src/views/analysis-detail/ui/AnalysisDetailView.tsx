@@ -125,11 +125,8 @@ export default function AnalysisDetailView({ id }: AnalysisDetailViewProps) {
       <IncidentStatusBar
         incidentId={id}
         title="신고 분석 결과"
-        address={
-          location
-            ? `신고 위치 ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`
-            : "위치 정보 없음"
-        }
+        // 좌표는 lat/lng으로 따로 렌더되므로 여기서 다시 붙이면 중복된다.
+        address={location ? "신고 위치" : "위치 정보 없음"}
         lat={location?.lat}
         lng={location?.lng}
         receivedAtLabel={new Date().toLocaleTimeString("ko-KR", {

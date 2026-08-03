@@ -49,7 +49,7 @@ export default function HeroStats() {
             ).toFixed(1),
       unit: "%",
       valueClassName: "text-risk-low",
-      caption: "7분 내 현장 도착 기준",
+      caption: "5분 내 현장 도착 기준",
     },
     {
       label: "평균 분석 소요",

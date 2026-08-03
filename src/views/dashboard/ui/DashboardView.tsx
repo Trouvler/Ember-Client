@@ -19,11 +19,7 @@ import {
 } from "@/entities/risk-layer/api/getRiskLayers";
 import type { RiskLayerFeature } from "@/entities/risk-layer/model/types";
 import { probabilityAsPercent } from "@/shared/utils/probability";
-import {
-  equipmentLabel,
-  riskLevelLabel,
-  stationTypeLabel,
-} from "@/shared/lib/labels";
+import { riskLevelLabel, stationTypeLabel } from "@/shared/lib/labels";
 import type { RiskLevel } from "@/entities/dispatch-analysis/model/types";
 
 const LAYERS = ["골든타임 실패율", "평균 도착시간"] as const;
@@ -189,16 +185,6 @@ export default function DashboardView() {
                     <dt className="text-[11.5px] text-[#6b7280]">좌표</dt>
                     <dd className="mono text-[13px] text-ink">
                       {`${selectedStation.latitude.toFixed(5)}, ${selectedStation.longitude.toFixed(5)}`}
-                    </dd>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <dt className="text-[11.5px] text-[#6b7280]">보유 장비</dt>
-                    <dd className="text-[13px] text-ink">
-                      {selectedStation.equipment?.length
-                        ? selectedStation.equipment
-                            .map(equipmentLabel)
-                            .join(", ")
-                        : "등록된 장비 정보가 없습니다."}
                     </dd>
                   </div>
                 </dl>

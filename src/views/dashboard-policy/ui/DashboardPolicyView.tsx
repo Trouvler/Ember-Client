@@ -109,7 +109,7 @@ export default function DashboardPolicyView() {
                   <span className="text-sm text-[#5c6672]">%</span>
                 </div>
                 <div className="mt-2 text-xs text-[#6b7280]">
-                  7분 내 현장 도착 실패 기준
+                  5분 내 현장 도착 실패 기준
                 </div>
               </div>
             </div>

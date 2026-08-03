@@ -32,7 +32,9 @@ export default function RiskAnalysisCard({
   riskLevel,
   probability,
   fastestEtaMinutes,
-  goldenTimeGoalMinutes = 7,
+  // 서버·AI가 골든타임을 5분으로 계산한다(app/risk.py, GetRiskLayersServiceImpl).
+  // 이 값을 바꾸면 화면 표기만 어긋나므로 함께 맞춘다.
+  goldenTimeGoalMinutes = 5,
 }: RiskAnalysisCardProps) {
   const badge = LEVEL_BADGE[riskLevel];
   const diff =

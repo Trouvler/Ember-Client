@@ -19,7 +19,7 @@ const DISPATCH_PHASES = [
     ruleClassName: "bg-ember",
   },
   {
-    timecode: "0:38 – 7:00",
+    timecode: "0:38 – 5:00",
     title: "브리핑 확인 · 출동 판단",
     description:
       "요약된 AI 브리핑과 판단 근거를 확인한 뒤, 최종 출동 결정은 상황실 담당자가 내립니다.",
@@ -27,13 +27,12 @@ const DISPATCH_PHASES = [
   },
 ];
 
+// 골든타임 5분(300초) 기준. 1분 간격 눈금.
 const MINUTE_TICK_CLASSES = [
-  "left-[14.286%]",
-  "left-[28.571%]",
-  "left-[42.857%]",
-  "left-[57.143%]",
-  "left-[71.429%]",
-  "left-[85.714%]",
+  "left-[20%]",
+  "left-[40%]",
+  "left-[60%]",
+  "left-[80%]",
 ];
 
 const RECOMMENDED_UNITS = [
@@ -114,7 +113,7 @@ export default function LandingView() {
         >
           <div className="mx-auto w-full max-w-[1180px] px-4 py-12 sm:px-6 sm:py-18 lg:py-20">
             <p className="text-[11.5px] font-bold tracking-[0.14em] text-ember">
-              골든타임 7분
+              골든타임 5분
             </p>
             <h2
               id="golden-time-title"
@@ -125,7 +124,7 @@ export default function LandingView() {
 
             <div
               role="img"
-              aria-label="골든타임 7분 중 신고 입력에 10초, AI 분석에 28초를 사용하고 남은 6분 22초는 상황실 담당자의 판단 시간입니다."
+              aria-label="골든타임 5분 중 신고 입력에 10초, AI 분석에 28초를 사용하고 남은 4분 22초는 상황실 담당자의 판단 시간입니다."
               className="mt-10 sm:mt-12"
             >
               <div
@@ -133,11 +132,11 @@ export default function LandingView() {
                 className="mono flex items-baseline justify-between text-[11.5px] text-[#6b7280]"
               >
                 <span>0:00 신고 접수</span>
-                <span className="font-semibold text-ink">7:00 골든타임</span>
+                <span className="font-semibold text-ink">5:00 골든타임</span>
               </div>
               <div aria-hidden="true" className="relative mt-3">
                 <div className="flex h-2.5 overflow-hidden rounded-[3px] bg-[#e0e4ea]">
-                  <div className="timeline-fill flex w-[9.048%] origin-left">
+                  <div className="timeline-fill flex w-[12.667%] origin-left">
                     <span className="w-[26.316%] bg-ink" />
                     <span className="w-[73.684%] bg-ember" />
                   </div>
@@ -148,13 +147,13 @@ export default function LandingView() {
                     className={`absolute top-0 h-2.5 w-px bg-white ${tickClassName}`}
                   />
                 ))}
-                <span className="absolute -top-1.5 left-[9.048%] h-[22px] w-px bg-ember" />
+                <span className="absolute -top-1.5 left-[12.667%] h-[22px] w-px bg-ember" />
               </div>
             </div>
             <p className="mt-5 max-w-[620px] text-[14px] leading-[1.7] text-[#5c6672] sm:text-[15px]">
               <span className="mono font-semibold text-ink">0:38</span>까지 AI가
               판단 근거를 산출합니다. 남은{" "}
-              <span className="mono font-semibold text-ink">6:22</span>는 상황실
+              <span className="mono font-semibold text-ink">4:22</span>는 상황실
               담당자가 브리핑을 읽고 출동을 지시하는 시간입니다.
             </p>
 
